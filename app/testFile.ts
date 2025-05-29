@@ -1,4 +1,3 @@
-import { Action as ActionType } from "@/app/types";
 import {RunSim} from "@/app/RunSim";
 import {Character} from "@/app/Character";
 import { Action } from "./Action";
@@ -12,7 +11,7 @@ const attackAction = new Action({
     targets: 1,
     onlyEnemies: true,
     targetingBehaviour: "random",
-    damageRoll: { n: 1, d: 8, flatBonus: 2 },
+    damageRoll: { n: 2, d: 8, flatBonus: 2 },
     bonusToHit: 3,
 }) ;
 
