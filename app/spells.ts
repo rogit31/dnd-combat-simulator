@@ -6039,4 +6039,4 @@ export const spells = {
     "concentration": false,
     "level": 0
   }
-} as const;
+};
