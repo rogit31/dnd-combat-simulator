@@ -1,46 +1,138 @@
-import {AbilityScores, Action as ActionType, DieFormat, UsageConstraint} from "./types"
+import {
+    AbilityScores,
+    Action as ActionType,
+    DieFormat,
+    DamageRoll,
+    UsageConstraint,
+    AOEType,
+    DCType,
+    ActionConstructorArgs
+} from "./types"
 
-export class Action implements ActionType{
-
+export class Action implements ActionType {
     name: string;
-    priority: number; //the smaller, the higher priority
-    actionTime: "action" | "bonusAction" | "freeAction" | "legendaryAction";
-    actionType: "attack" | "heal" | "buff" | "debuff";
-    targetingBehaviour: "random" | "lowestHP" | "highestHP" | "highestLVL" | "lowestLVL" | "highestDPM";
-    onlyEnemies: boolean;
+    actionTime?: "action" | "bonusAction" | "freeAction" | "legendaryAction" | "reaction" | "lairAction" | "passive";
+    actionType?: "attack" | "spell" | "item" | "feature";
+    targetingBehaviour?: "random" | "lowestHP" | "highestHP" | "highestLVL" | "lowestLVL" | "highestDPM";
+    range?: string;
     healingRoll?: DieFormat;
-    flatHealing?: number;
-    flatDamage?: number;
-    damageRoll?: DieFormat;
-    conditions?: [];
-    targets: number;
+    damageRoll?: DamageRoll;
+    appliesConditions?: [];
+    area_of_effect?: AOEType;
     effects?: [];
-    bonusToHit?: number;
-    spellSave?: number;
-    spellSaveStat?: keyof AbilityScores;
-    onSave?: "half" | "nothing";
     usageConstraints?: UsageConstraint[];
 
     constructor(data: ActionType) {
         this.name = data.name;
-        this.priority = data.priority;
-        this.actionTime = data.actionTime;
-        this.actionType = data.actionType;
-        this.targetingBehaviour = data.targetingBehaviour;
-        this.onlyEnemies = data.onlyEnemies;
+        this.actionTime = data.actionTime ?? "action";
+        this.actionType = this.inferActionType(data);
+        this.targetingBehaviour = data.targetingBehaviour ?? 'lowestHP';
+        this.range = data.range ?? "5 feet";
         this.healingRoll = data.healingRoll;
-        this.flatHealing = data.flatHealing;
         this.damageRoll = data.damageRoll;
-        this.flatDamage = data.flatDamage;
-        this.conditions = data.conditions;
-        this.targets = data.targets;
+        this.appliesConditions = data.appliesConditions;
+        this.area_of_effect = data.area_of_effect;
         this.effects = data.effects;
-        this.bonusToHit = data.bonusToHit;
-        this.spellSave = data.spellSave;
-        this.spellSaveStat = data.spellSaveStat;
-        this.onSave = data.onSave;
         this.usageConstraints = data.usageConstraints;
     }
 
+    private inferActionType(data: ActionConstructorArgs): "attack" | "spell" | "item" | "feature" {
+        // If explicitly provided, use it
+        if (data.actionType) {
+            return data.actionType;
+        }
+
+        // If it has a heal or damage roll and a usage constraint it will usually be a spell
+        if (data.damageRoll && data.usageConstraints || data.healingRoll && data.usageConstraints) {
+            return "spell";
+        }
+
+        //otherwise if it does damage it will usually be an attack
+        if (data.damageRoll) {
+            return "attack";
+        }
+
+        // Default to feature
+        return "feature";
+    }
 
 }
+
+// Factory functions for creating specific action types with better defaults
+export class SpellAction extends Action {
+    duration?: string;
+    concentration?: boolean;
+    level?: number;
+    dc?: DCType;
+
+    constructor(data: ActionConstructorArgs & {
+        duration?: string;
+        concentration?: boolean;
+        level?: number;
+        dc?: DCType;
+    }) {
+        super({
+            ...data,
+            actionType: "spell",
+            actionTime: data.actionTime ?? "action",
+            range: data.range ?? "60 ft"
+        });
+
+        this.duration = data.duration ?? "Instantaneous";
+        this.concentration = data.concentration ?? false;
+        this.level = data.level ?? 0; // cantrip by default
+        this.dc = data.dc;
+    }
+}
+
+export class AttackAction extends Action {
+    attackBonus?: number;
+
+    constructor(data: ActionConstructorArgs & {
+        attackBonus?: number;
+    }) {
+        super({
+            ...data,
+            actionType: "attack",
+            actionTime: data.actionTime ?? "action",
+            range: data.range ?? "5 ft"
+        });
+
+        this.attackBonus = data.attackBonus ?? 0;
+    }
+}
+
+// Convenience factory functions
+export function createSimpleAttack(name: string, damage?: DamageRoll, attackBonus?: number): AttackAction {
+    return new AttackAction({
+        name,
+        damageRoll: damage,
+        attackBonus
+    });
+}
+
+export function createSimpleSpell(name: string, options?: {
+    damage?: DamageRoll;
+    healing?: DieFormat;
+    level?: number;
+    dc?: DCType;
+    duration?: string;
+}): SpellAction {
+    return new SpellAction({
+        name,
+        damageRoll: options?.damage,
+        healingRoll: options?.healing,
+        level: options?.level,
+        dc: options?.dc,
+        duration: options?.duration
+    });
+}
+
+export function createSimpleHealing(name: string, healing: DieFormat): Action {
+    return new Action({
+        name,
+        healingRoll: healing,
+        targetingBehaviour: "lowestHP" // Makes sense for healing
+    });
+}
+

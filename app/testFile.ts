@@ -1,6 +1,7 @@
 import {RunSim} from "@/app/RunSim";
 import {Character} from "@/app/Character";
 import { Action } from "./Action";
+import {spells} from "@/app/spells";
 
 // Example Actions
 const attackAction = new Action({
@@ -17,11 +18,8 @@ const attackAction = new Action({
 
 const healAction: Action = ({
     name: "Healing Touch",
-    actionType: "heal",
+    actionType: "spell",
     actionTime: "action",
-    priority: 1,
-    targets: 1,
-    onlyEnemies: false,
     targetingBehaviour: "lowestHP",
     healingRoll: { n: 1, d: 6, flatBonus: 1 },
 });
@@ -183,7 +181,7 @@ const enemy3: Character = new Character({
     AC: 20,
     HP: 30,
     abilityScores: {dexterity: 14, charisma: 12, constitution: 12, intelligence: 12, strength: 12, wisdom: 12},
-    actions: [attackAction, healAction, boomStick],
+    actions: [attackAction, healAction, spells["Fireball"]],
     conditions: {
         incapacitated: false,
         paralyzed: false,
