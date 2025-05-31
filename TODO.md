@@ -11,6 +11,8 @@
       - Fits with the dnd 5e api
       - informative
       - documented
+    - [ ] How do characters 'decide' what action they take? We used to have a static priority list, which works ok.
+    - Is there a better way, maybe by inferring what action does the most damage or healing? 
 
 ### Core Combat Mechanics
 - [ ] **Implement remaining action types**

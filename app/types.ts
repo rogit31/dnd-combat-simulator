@@ -3,11 +3,14 @@ export type side = 'ally' | 'enemy';
 export interface Character{
     id: string,
     name: string,
-    level?: number,
+    level?: number, //monsters can have levels, but it's generally given just a flat proficiency bonus, so we have to account for both
+    proficiencyBonus?: number, //we could also use this as an optional pb override
     HP: number,
     maxHP?: number,
     AC: number,
+    class?: "barbarian" | "bard" | "cleric" | "druid" | "fighter" | "monk" | "paladin" | "ranger" | "rogue" | "sorcerer" | "warlock" | "wizard" | "artificer",
     abilityScores: AbilityScores,
+    spellCastingMod?: number //same thing here, generally they are class dependent but we could override them and this lets us have the same class for monsters.
     savingThrows?: Partial<SavingThrowMod>,
     actions: Action[],
     side: side,
@@ -26,7 +29,7 @@ export type Enemy = Character & { side: 'enemy' };
 //An action is the basic interface for anything a character or monster can do in D&D
 //It is intentionally very wide as a definition to allow for eventual maximum flexibility when it comes to homebrew
 //We want to infer the maximum amount of information
-export interface Action{
+export interface BaseAction{
     name: string,
     actionTime?: "action" | "bonusAction" | "freeAction" | "legendaryAction" | "reaction" | "lairAction" | "passive", //anything longer is not really combat relevant so we can probably ignore it for now
     actionType?: "attack" | "spell" | "item" | "feature", //maybe there are other things? unsure but this should cover most of it
@@ -44,20 +47,31 @@ export type ActionConstructorArgs = {
     name: string;
 } & Partial<Action>;
 
-export interface SpellAction extends Action {
+export interface SpellAction extends BaseAction {
+    actionType: "spell"
     duration?: string,
     concentration?: boolean,
     level?: number,
-    dc?: DCType
+    dc?: DCType,
+    attackBonus?: number //some spells have attack bonuses as well
 }
 
-export interface AttackAction extends Action {
-    attackBonus?: number,
+export interface AttackAction extends BaseAction {
+    actionType: "attack"
+    attackBonus?: number, //we could also imagine an attack with a dc, but for now we'll keep it inline with dnd rules and expand as we go
 }
 
-export interface ItemAction extends Action{
+export interface ItemAction extends BaseAction{
+    actionType: "item"
 
 }
+
+export interface FeatureAction extends BaseAction{
+    actionType: "feature"
+}
+
+export type Action = AttackAction | SpellAction | ItemAction | FeatureAction;
+
 
 export interface AOEType {
     type: "sphere" | "cone" | "cylinder" | "line" | "cube",
@@ -65,7 +79,8 @@ export interface AOEType {
 }
 
 export interface DCType{
-    dcSave: keyof AbilityScores,
+    dcSaveType: keyof AbilityScores,
+    dcDefaultValue?: number, //for monsters that have a set DC or as an optional override
     dcSuccess: "no effect" | "partial" | "half damage" | "full effect"
 }
 
@@ -77,7 +92,7 @@ export interface DieFormat{
 
 
 export interface DamageRoll{
-    damage: DieFormat | DieFormat[],
+    damage: DieFormat,
     damageType: DamageType
 }
 
@@ -109,9 +124,9 @@ export interface Damage{
 export type Scaling = {
     scalingOrigin: "characterLevel" | "spellSlotLevel" |  "characterHP" | "characterMaxHP" | "characterAC" | "targetLevel" | "targetHP" | "targetMissingHP",
     scalingValue: {
-        base: DamageRoll | number,
-        multiplier?: number,
-        flatBonus?: number
+        base: DamageRoll[] | number, //extra 1d4 per level for example
+        multiplier?: number, //2x damage if target is under a threshold of hp for example. This could apply only to the scaling or to the base damage as well
+        flatBonus?: number //an extra 2 points of damage per level for example
     }
 }
 
