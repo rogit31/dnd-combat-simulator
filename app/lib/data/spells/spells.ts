@@ -1,4 +1,6 @@
-export const spells = {
+import {SpellAction} from "@/app/types";
+
+export const spells: Record<string, SpellAction> = {
   "Acid Arrow": {
     "name": "Acid Arrow",
     "actionTime": "action",
@@ -6,35 +8,33 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "90 feet",
     "damageRoll": {
-      "baseDamage": [
+      "baseEffect": [
         {
-          "damage": [
-            {
-              "n": 4,
-              "d": 4
-            }
-          ],
-          "damageType": "Acid"
+          "effect": {
+            "n": 4,
+            "d": 4
+          },
+          "effectType": "acid"
         }
       ],
       "scaling": {
         "scalingOrigin": "spellSlotLevel",
         "scalingValue": {
-          "base": {
-            "damage": [
-              {
+          "base": [
+            {
+              "effect": {
                 "n": 5,
                 "d": 4
-              }
-            ],
-            "damageType": "Acid"
-          }
+              },
+              "effectType": "acid"
+            }
+          ]
         }
       }
     },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 2
   },
   "Acid Splash": {
     "name": "Acid Splash",
@@ -43,35 +43,37 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "60 feet",
     "damageRoll": {
-      "baseDamage": [
+      "baseEffect": [
         {
-          "damage": [
-            {
-              "n": 1,
-              "d": 6
-            }
-          ],
-          "damageType": "Acid"
+          "effect": {
+            "n": 1,
+            "d": 6
+          },
+          "effectType": "acid"
         }
       ],
       "scaling": {
         "scalingOrigin": "characterLevel",
         "scalingValue": {
-          "base": {
-            "damage": [
-              {
+          "base": [
+            {
+              "effect": {
                 "n": 2,
                 "d": 6
-              }
-            ],
-            "damageType": "Acid"
-          }
+              },
+              "effectType": "acid"
+            }
+          ]
         }
       }
     },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 0,
+    "dc": {
+      "dcSaveType": "dexterity",
+      "dcSuccess": "no effect"
+    }
   },
   "Aid": {
     "name": "Aid",
@@ -80,12 +82,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "30 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "8 hours",
     "concentration": false,
-    "level": 0
+    "level": 2
   },
   "Alarm": {
     "name": "Alarm",
@@ -94,12 +96,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "30 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "area_of_effect": {
+      "type": "cube",
+      "size": 20
+    },
+    "duration": "8 hours",
     "concentration": false,
-    "level": 0
+    "level": 1
   },
   "Alter Self": {
     "name": "Alter Self",
@@ -108,12 +114,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Self",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 1 hour",
+    "concentration": true,
+    "level": 2
   },
   "Animal Friendship": {
     "name": "Animal Friendship",
@@ -122,12 +128,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "30 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "24 hours",
     "concentration": false,
-    "level": 0
+    "level": 1,
+    "dc": {
+      "dcSaveType": "wisdom",
+      "dcSuccess": "no effect"
+    }
   },
   "Animal Messenger": {
     "name": "Animal Messenger",
@@ -136,12 +146,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "30 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "24 hours",
     "concentration": false,
-    "level": 0
+    "level": 2
   },
   "Animal Shapes": {
     "name": "Animal Shapes",
@@ -150,12 +160,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "30 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 24 hours",
+    "concentration": true,
+    "level": 8
   },
   "Animate Dead": {
     "name": "Animate Dead",
@@ -164,12 +174,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "10 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 3
   },
   "Animate Objects": {
     "name": "Animate Objects",
@@ -178,12 +188,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "120 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 1 minute",
+    "concentration": true,
+    "level": 5
   },
   "Antilife Shell": {
     "name": "Antilife Shell",
@@ -192,12 +202,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Self",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "area_of_effect": {
+      "type": "sphere",
+      "size": 10
+    },
+    "duration": "Up to 1 hour",
+    "concentration": true,
+    "level": 5
   },
   "Antimagic Field": {
     "name": "Antimagic Field",
@@ -206,12 +220,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Self",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "area_of_effect": {
+      "type": "sphere",
+      "size": 10
+    },
+    "duration": "Up to 1 hour",
+    "concentration": true,
+    "level": 8
   },
   "Antipathy/Sympathy": {
     "name": "Antipathy/Sympathy",
@@ -220,12 +238,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "60 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "area_of_effect": {
+      "type": "cube",
+      "size": 200
+    },
+    "duration": "10 days",
     "concentration": false,
-    "level": 0
+    "level": 8
   },
   "Arcane Eye": {
     "name": "Arcane Eye",
@@ -234,12 +256,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "30 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "area_of_effect": {
+      "type": "sphere",
+      "size": 30
+    },
+    "duration": "Up to 1 hour",
+    "concentration": true,
+    "level": 4
   },
   "Arcane Hand": {
     "name": "Arcane Hand",
@@ -248,12 +274,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "120 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 1 minute",
+    "concentration": true,
+    "level": 5
   },
   "Arcane Lock": {
     "name": "Arcane Lock",
@@ -262,12 +288,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Touch",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "Until dispelled",
     "concentration": false,
-    "level": 0
+    "level": 2
   },
   "Arcane Sword": {
     "name": "Arcane Sword",
@@ -276,35 +302,33 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "60 feet",
     "damageRoll": {
-      "baseDamage": [
+      "baseEffect": [
         {
-          "damage": [
-            {
-              "n": 3,
-              "d": 10
-            }
-          ],
-          "damageType": "Force"
+          "effect": {
+            "n": 3,
+            "d": 10
+          },
+          "effectType": "force"
         }
       ],
       "scaling": {
         "scalingOrigin": "spellSlotLevel",
         "scalingValue": {
-          "base": {
-            "damage": [
-              {
+          "base": [
+            {
+              "effect": {
                 "n": 3,
                 "d": 10
-              }
-            ],
-            "damageType": "Force"
-          }
+              },
+              "effectType": "force"
+            }
+          ]
         }
       }
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 1 minute",
+    "concentration": true,
+    "level": 7
   },
   "Arcanist's Magic Aura": {
     "name": "Arcanist's Magic Aura",
@@ -313,12 +337,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Touch",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "24 hours",
     "concentration": false,
-    "level": 0
+    "level": 2
   },
   "Astral Projection": {
     "name": "Astral Projection",
@@ -327,12 +351,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "10 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "Special",
     "concentration": false,
-    "level": 0
+    "level": 9
   },
   "Augury": {
     "name": "Augury",
@@ -341,12 +365,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Self",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 2
   },
   "Awaken": {
     "name": "Awaken",
@@ -355,12 +379,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Touch",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 5
   },
   "Bane": {
     "name": "Bane",
@@ -369,12 +393,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "30 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 1 minute",
+    "concentration": true,
+    "level": 1,
+    "dc": {
+      "dcSaveType": "charisma",
+      "dcSuccess": "no effect"
+    }
   },
   "Banishment": {
     "name": "Banishment",
@@ -383,12 +411,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "60 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 1 minute",
+    "concentration": true,
+    "level": 4,
+    "dc": {
+      "dcSaveType": "charisma",
+      "dcSuccess": "no effect"
+    }
   },
   "Barkskin": {
     "name": "Barkskin",
@@ -397,12 +429,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Touch",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 1 hour",
+    "concentration": true,
+    "level": 2
   },
   "Beacon of Hope": {
     "name": "Beacon of Hope",
@@ -411,12 +443,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "30 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 1 minute",
+    "concentration": true,
+    "level": 3
   },
   "Bestow Curse": {
     "name": "Bestow Curse",
@@ -425,12 +457,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Touch",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 1 minute",
+    "concentration": true,
+    "level": 3,
+    "dc": {
+      "dcSaveType": "wisdom",
+      "dcSuccess": "no effect"
+    }
   },
   "Black Tentacles": {
     "name": "Black Tentacles",
@@ -439,35 +475,41 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "90 feet",
     "damageRoll": {
-      "baseDamage": [
+      "baseEffect": [
         {
-          "damage": [
-            {
-              "n": 3,
-              "d": 6
-            }
-          ],
-          "damageType": "Bludgeoning"
+          "effect": {
+            "n": 3,
+            "d": 6
+          },
+          "effectType": "bludgeoning"
         }
       ],
       "scaling": {
         "scalingOrigin": "spellSlotLevel",
         "scalingValue": {
-          "base": {
-            "damage": [
-              {
+          "base": [
+            {
+              "effect": {
                 "n": 3,
                 "d": 6
-              }
-            ],
-            "damageType": "Bludgeoning"
-          }
+              },
+              "effectType": "bludgeoning"
+            }
+          ]
         }
       }
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "area_of_effect": {
+      "type": "cube",
+      "size": 20
+    },
+    "duration": "Up to 1 minute",
+    "concentration": true,
+    "level": 4,
+    "dc": {
+      "dcSaveType": "dexterity",
+      "dcSuccess": "no effect"
+    }
   },
   "Blade Barrier": {
     "name": "Blade Barrier",
@@ -476,35 +518,41 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "90 feet",
     "damageRoll": {
-      "baseDamage": [
+      "baseEffect": [
         {
-          "damage": [
-            {
-              "n": 6,
-              "d": 10
-            }
-          ],
-          "damageType": "Slashing"
+          "effect": {
+            "n": 6,
+            "d": 10
+          },
+          "effectType": "slashing"
         }
       ],
       "scaling": {
         "scalingOrigin": "spellSlotLevel",
         "scalingValue": {
-          "base": {
-            "damage": [
-              {
+          "base": [
+            {
+              "effect": {
                 "n": 6,
                 "d": 10
-              }
-            ],
-            "damageType": "Slashing"
-          }
+              },
+              "effectType": "slashing"
+            }
+          ]
         }
       }
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "area_of_effect": {
+      "type": "line",
+      "size": 100
+    },
+    "duration": "Up to 10 minutes",
+    "concentration": true,
+    "level": 6,
+    "dc": {
+      "dcSaveType": "dexterity",
+      "dcSuccess": "half damage"
+    }
   },
   "Bless": {
     "name": "Bless",
@@ -513,12 +561,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "30 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 1 minute",
+    "concentration": true,
+    "level": 1
   },
   "Blight": {
     "name": "Blight",
@@ -527,35 +575,37 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "30 feet",
     "damageRoll": {
-      "baseDamage": [
+      "baseEffect": [
         {
-          "damage": [
-            {
-              "n": 8,
-              "d": 8
-            }
-          ],
-          "damageType": "Necrotic"
+          "effect": {
+            "n": 8,
+            "d": 8
+          },
+          "effectType": "necrotic"
         }
       ],
       "scaling": {
         "scalingOrigin": "spellSlotLevel",
         "scalingValue": {
-          "base": {
-            "damage": [
-              {
+          "base": [
+            {
+              "effect": {
                 "n": 9,
                 "d": 8
-              }
-            ],
-            "damageType": "Necrotic"
-          }
+              },
+              "effectType": "necrotic"
+            }
+          ]
         }
       }
     },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 4,
+    "dc": {
+      "dcSaveType": "constitution",
+      "dcSuccess": "half damage"
+    }
   },
   "Blindness/Deafness": {
     "name": "Blindness/Deafness",
@@ -564,12 +614,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "30 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "1 minute",
     "concentration": false,
-    "level": 0
+    "level": 2,
+    "dc": {
+      "dcSaveType": "constitution",
+      "dcSuccess": "no effect"
+    }
   },
   "Blink": {
     "name": "Blink",
@@ -578,12 +632,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Self",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "1 minute",
     "concentration": false,
-    "level": 0
+    "level": 3
   },
   "Blur": {
     "name": "Blur",
@@ -592,49 +646,47 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Self",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 1 minute",
+    "concentration": true,
+    "level": 2
   },
   "Branding Smite": {
     "name": "Branding Smite",
-    "actionTime": "action",
+    "actionTime": "bonusAction",
     "actionType": "spell",
     "targetingBehaviour": "lowestHP",
     "range": "Self",
     "damageRoll": {
-      "baseDamage": [
+      "baseEffect": [
         {
-          "damage": [
-            {
-              "n": 2,
-              "d": 6
-            }
-          ],
-          "damageType": "Radiant"
+          "effect": {
+            "n": 2,
+            "d": 6
+          },
+          "effectType": "radiant"
         }
       ],
       "scaling": {
         "scalingOrigin": "spellSlotLevel",
         "scalingValue": {
-          "base": {
-            "damage": [
-              {
+          "base": [
+            {
+              "effect": {
                 "n": 3,
                 "d": 6
-              }
-            ],
-            "damageType": "Radiant"
-          }
+              },
+              "effectType": "radiant"
+            }
+          ]
         }
       }
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 1 minute",
+    "concentration": true,
+    "level": 2
   },
   "Burning Hands": {
     "name": "Burning Hands",
@@ -643,35 +695,41 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Self",
     "damageRoll": {
-      "baseDamage": [
+      "baseEffect": [
         {
-          "damage": [
-            {
-              "n": 3,
-              "d": 6
-            }
-          ],
-          "damageType": "Fire"
+          "effect": {
+            "n": 3,
+            "d": 6
+          },
+          "effectType": "fire"
         }
       ],
       "scaling": {
         "scalingOrigin": "spellSlotLevel",
         "scalingValue": {
-          "base": {
-            "damage": [
-              {
+          "base": [
+            {
+              "effect": {
                 "n": 4,
                 "d": 6
-              }
-            ],
-            "damageType": "Fire"
-          }
+              },
+              "effectType": "fire"
+            }
+          ]
         }
       }
     },
+    "area_of_effect": {
+      "type": "cone",
+      "size": 15
+    },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 1,
+    "dc": {
+      "dcSaveType": "dexterity",
+      "dcSuccess": "half damage"
+    }
   },
   "Call Lightning": {
     "name": "Call Lightning",
@@ -680,35 +738,37 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "120 feet",
     "damageRoll": {
-      "baseDamage": [
+      "baseEffect": [
         {
-          "damage": [
-            {
-              "n": 3,
-              "d": 10
-            }
-          ],
-          "damageType": "Lightning"
+          "effect": {
+            "n": 3,
+            "d": 10
+          },
+          "effectType": "lightning"
         }
       ],
       "scaling": {
         "scalingOrigin": "spellSlotLevel",
         "scalingValue": {
-          "base": {
-            "damage": [
-              {
+          "base": [
+            {
+              "effect": {
                 "n": 4,
                 "d": 10
-              }
-            ],
-            "damageType": "Lightning"
-          }
+              },
+              "effectType": "lightning"
+            }
+          ]
         }
       }
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "area_of_effect": {
+      "type": "sphere",
+      "size": 5
+    },
+    "duration": "Up to 10 minutes",
+    "concentration": true,
+    "level": 3
   },
   "Calm Emotions": {
     "name": "Calm Emotions",
@@ -717,12 +777,20 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "60 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "area_of_effect": {
+      "type": "sphere",
+      "size": 20
+    },
+    "duration": "Up to 1 minute",
+    "concentration": true,
+    "level": 2,
+    "dc": {
+      "dcSaveType": "charisma",
+      "dcSuccess": "no effect"
+    }
   },
   "Chain Lightning": {
     "name": "Chain Lightning",
@@ -731,35 +799,37 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "150 feet",
     "damageRoll": {
-      "baseDamage": [
+      "baseEffect": [
         {
-          "damage": [
-            {
-              "n": 10,
-              "d": 8
-            }
-          ],
-          "damageType": "Lightning"
+          "effect": {
+            "n": 10,
+            "d": 8
+          },
+          "effectType": "lightning"
         }
       ],
       "scaling": {
         "scalingOrigin": "spellSlotLevel",
         "scalingValue": {
-          "base": {
-            "damage": [
-              {
+          "base": [
+            {
+              "effect": {
                 "n": 10,
                 "d": 8
-              }
-            ],
-            "damageType": "Lightning"
-          }
+              },
+              "effectType": "lightning"
+            }
+          ]
         }
       }
     },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 6,
+    "dc": {
+      "dcSaveType": "dexterity",
+      "dcSuccess": "half damage"
+    }
   },
   "Charm Person": {
     "name": "Charm Person",
@@ -768,12 +838,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "30 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "1 hour",
     "concentration": false,
-    "level": 0
+    "level": 1,
+    "dc": {
+      "dcSaveType": "wisdom",
+      "dcSuccess": "no effect"
+    }
   },
   "Chill Touch": {
     "name": "Chill Touch",
@@ -782,33 +856,31 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "120 feet",
     "damageRoll": {
-      "baseDamage": [
+      "baseEffect": [
         {
-          "damage": [
-            {
-              "n": 1,
-              "d": 8
-            }
-          ],
-          "damageType": "Necrotic"
+          "effect": {
+            "n": 1,
+            "d": 8
+          },
+          "effectType": "necrotic"
         }
       ],
       "scaling": {
         "scalingOrigin": "characterLevel",
         "scalingValue": {
-          "base": {
-            "damage": [
-              {
+          "base": [
+            {
+              "effect": {
                 "n": 2,
                 "d": 8
-              }
-            ],
-            "damageType": "Necrotic"
-          }
+              },
+              "effectType": "necrotic"
+            }
+          ]
         }
       }
     },
-    "duration": "Instantaneous",
+    "duration": "1 round",
     "concentration": false,
     "level": 0
   },
@@ -819,35 +891,41 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "150 feet",
     "damageRoll": {
-      "baseDamage": [
+      "baseEffect": [
         {
-          "damage": [
-            {
-              "n": 8,
-              "d": 6
-            }
-          ],
-          "damageType": "Necrotic"
+          "effect": {
+            "n": 8,
+            "d": 6
+          },
+          "effectType": "necrotic"
         }
       ],
       "scaling": {
         "scalingOrigin": "spellSlotLevel",
         "scalingValue": {
-          "base": {
-            "damage": [
-              {
+          "base": [
+            {
+              "effect": {
                 "n": 10,
                 "d": 6
-              }
-            ],
-            "damageType": "Necrotic"
-          }
+              },
+              "effectType": "necrotic"
+            }
+          ]
         }
       }
     },
+    "area_of_effect": {
+      "type": "sphere",
+      "size": 60
+    },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 6,
+    "dc": {
+      "dcSaveType": "constitution",
+      "dcSuccess": "half damage"
+    }
   },
   "Clairvoyance": {
     "name": "Clairvoyance",
@@ -856,12 +934,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "1 mile",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 10 minutes",
+    "concentration": true,
+    "level": 3
   },
   "Clone": {
     "name": "Clone",
@@ -870,12 +948,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Touch",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 8
   },
   "Cloudkill": {
     "name": "Cloudkill",
@@ -884,35 +962,41 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "120 feet",
     "damageRoll": {
-      "baseDamage": [
+      "baseEffect": [
         {
-          "damage": [
-            {
-              "n": 5,
-              "d": 8
-            }
-          ],
-          "damageType": "Poison"
+          "effect": {
+            "n": 5,
+            "d": 8
+          },
+          "effectType": "poison"
         }
       ],
       "scaling": {
         "scalingOrigin": "spellSlotLevel",
         "scalingValue": {
-          "base": {
-            "damage": [
-              {
+          "base": [
+            {
+              "effect": {
                 "n": 6,
                 "d": 8
-              }
-            ],
-            "damageType": "Poison"
-          }
+              },
+              "effectType": "poison"
+            }
+          ]
         }
       }
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "area_of_effect": {
+      "type": "sphere",
+      "size": 20
+    },
+    "duration": "Up to 10 minutes",
+    "concentration": true,
+    "level": 5,
+    "dc": {
+      "dcSaveType": "constitution",
+      "dcSuccess": "half damage"
+    }
   },
   "Color Spray": {
     "name": "Color Spray",
@@ -921,12 +1005,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Self",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "area_of_effect": {
+      "type": "cone",
+      "size": 15
+    },
+    "duration": "1 round",
     "concentration": false,
-    "level": 0
+    "level": 1
   },
   "Command": {
     "name": "Command",
@@ -935,12 +1023,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "60 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "1 round",
     "concentration": false,
-    "level": 0
+    "level": 1,
+    "dc": {
+      "dcSaveType": "wisdom",
+      "dcSuccess": "no effect"
+    }
   },
   "Commune": {
     "name": "Commune",
@@ -949,12 +1041,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Self",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "1 minute",
     "concentration": false,
-    "level": 0
+    "level": 5
   },
   "Commune With Nature": {
     "name": "Commune With Nature",
@@ -963,12 +1055,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Self",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 5
   },
   "Comprehend Languages": {
     "name": "Comprehend Languages",
@@ -977,12 +1069,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Self",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "1 hour",
     "concentration": false,
-    "level": 0
+    "level": 1
   },
   "Compulsion": {
     "name": "Compulsion",
@@ -991,12 +1083,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "30 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 1 minute",
+    "concentration": true,
+    "level": 4,
+    "dc": {
+      "dcSaveType": "wisdom",
+      "dcSuccess": "no effect"
+    }
   },
   "Cone of Cold": {
     "name": "Cone of Cold",
@@ -1005,35 +1101,41 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Self",
     "damageRoll": {
-      "baseDamage": [
+      "baseEffect": [
         {
-          "damage": [
-            {
-              "n": 8,
-              "d": 8
-            }
-          ],
-          "damageType": "Cold"
+          "effect": {
+            "n": 8,
+            "d": 8
+          },
+          "effectType": "cold"
         }
       ],
       "scaling": {
         "scalingOrigin": "spellSlotLevel",
         "scalingValue": {
-          "base": {
-            "damage": [
-              {
+          "base": [
+            {
+              "effect": {
                 "n": 9,
                 "d": 8
-              }
-            ],
-            "damageType": "Cold"
-          }
+              },
+              "effectType": "cold"
+            }
+          ]
         }
       }
     },
+    "area_of_effect": {
+      "type": "cone",
+      "size": 60
+    },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 5,
+    "dc": {
+      "dcSaveType": "constitution",
+      "dcSuccess": "half damage"
+    }
   },
   "Confusion": {
     "name": "Confusion",
@@ -1042,12 +1144,20 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "90 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "area_of_effect": {
+      "type": "sphere",
+      "size": 10
+    },
+    "duration": "Up to 1 minute",
+    "concentration": true,
+    "level": 4,
+    "dc": {
+      "dcSaveType": "wisdom",
+      "dcSuccess": "no effect"
+    }
   },
   "Conjure Animals": {
     "name": "Conjure Animals",
@@ -1056,12 +1166,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "60 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 1 hour",
+    "concentration": true,
+    "level": 3
   },
   "Conjure Celestial": {
     "name": "Conjure Celestial",
@@ -1070,12 +1180,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "90 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 1 hour",
+    "concentration": true,
+    "level": 7
   },
   "Conjure Elemental": {
     "name": "Conjure Elemental",
@@ -1084,12 +1194,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "90 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "area_of_effect": {
+      "type": "cube",
+      "size": 10
+    },
+    "duration": "Up to 1 hour",
+    "concentration": true,
+    "level": 5
   },
   "Conjure Fey": {
     "name": "Conjure Fey",
@@ -1098,12 +1212,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "90 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 1 hour",
+    "concentration": true,
+    "level": 6
   },
   "Conjure Minor Elementals": {
     "name": "Conjure Minor Elementals",
@@ -1112,12 +1226,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "90 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 1 hour",
+    "concentration": true,
+    "level": 4
   },
   "Conjure Woodland Beings": {
     "name": "Conjure Woodland Beings",
@@ -1126,12 +1240,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "60 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 1 hour",
+    "concentration": true,
+    "level": 4
   },
   "Contact Other Plane": {
     "name": "Contact Other Plane",
@@ -1140,12 +1254,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Self",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "1 minute",
     "concentration": false,
-    "level": 0
+    "level": 5,
+    "dc": {
+      "dcSaveType": "intelligence",
+      "dcSuccess": "no effect"
+    }
   },
   "Contagion": {
     "name": "Contagion",
@@ -1154,12 +1272,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Touch",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "7 days",
     "concentration": false,
-    "level": 0
+    "level": 5,
+    "dc": {
+      "dcSaveType": "constitution",
+      "dcSuccess": "no effect"
+    }
   },
   "Contingency": {
     "name": "Contingency",
@@ -1168,12 +1290,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Self",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "10 days",
     "concentration": false,
-    "level": 0
+    "level": 6
   },
   "Continual Flame": {
     "name": "Continual Flame",
@@ -1182,12 +1304,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Touch",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "Until dispelled",
     "concentration": false,
-    "level": 0
+    "level": 2
   },
   "Control Water": {
     "name": "Control Water",
@@ -1196,35 +1318,41 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "300 feet",
     "damageRoll": {
-      "baseDamage": [
+      "baseEffect": [
         {
-          "damage": [
-            {
-              "n": 2,
-              "d": 8
-            }
-          ],
-          "damageType": "Bludgeoning"
+          "effect": {
+            "n": 2,
+            "d": 8
+          },
+          "effectType": "bludgeoning"
         }
       ],
       "scaling": {
         "scalingOrigin": "spellSlotLevel",
         "scalingValue": {
-          "base": {
-            "damage": [
-              {
+          "base": [
+            {
+              "effect": {
                 "n": 2,
                 "d": 8
-              }
-            ],
-            "damageType": "Bludgeoning"
-          }
+              },
+              "effectType": "bludgeoning"
+            }
+          ]
         }
       }
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "area_of_effect": {
+      "type": "cube",
+      "size": 100
+    },
+    "duration": "Up to 10 minutes",
+    "concentration": true,
+    "level": 4,
+    "dc": {
+      "dcSaveType": "strength",
+      "dcSuccess": "half damage"
+    }
   },
   "Control Weather": {
     "name": "Control Weather",
@@ -1233,12 +1361,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Self",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 8 hours",
+    "concentration": true,
+    "level": 8
   },
   "Counterspell": {
     "name": "Counterspell",
@@ -1247,12 +1375,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "60 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 3
   },
   "Create Food and Water": {
     "name": "Create Food and Water",
@@ -1261,12 +1389,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "30 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 3
   },
   "Create or Destroy Water": {
     "name": "Create or Destroy Water",
@@ -1275,12 +1403,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "30 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
+    },
+    "area_of_effect": {
+      "type": "cube",
+      "size": 30
     },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 1
   },
   "Create Undead": {
     "name": "Create Undead",
@@ -1289,12 +1421,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "10 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 6
   },
   "Creation": {
     "name": "Creation",
@@ -1303,12 +1435,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "30 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "area_of_effect": {
+      "type": "cube",
+      "size": 5
+    },
+    "duration": "Special",
     "concentration": false,
-    "level": 0
+    "level": 5
   },
   "Cure Wounds": {
     "name": "Cure Wounds",
@@ -1317,12 +1453,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Touch",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 1
   },
   "Dancing Lights": {
     "name": "Dancing Lights",
@@ -1331,11 +1467,11 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "120 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
+    "duration": "Up to 1 minute",
+    "concentration": true,
     "level": 0
   },
   "Darkness": {
@@ -1345,12 +1481,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "60 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "area_of_effect": {
+      "type": "sphere",
+      "size": 15
+    },
+    "duration": "Up to 10 minutes",
+    "concentration": true,
+    "level": 2
   },
   "Darkvision": {
     "name": "Darkvision",
@@ -1359,12 +1499,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Touch",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "8 hours",
     "concentration": false,
-    "level": 0
+    "level": 2
   },
   "Daylight": {
     "name": "Daylight",
@@ -1373,12 +1513,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "60 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "area_of_effect": {
+      "type": "sphere",
+      "size": 60
+    },
+    "duration": "1 hour",
     "concentration": false,
-    "level": 0
+    "level": 3
   },
   "Death Ward": {
     "name": "Death Ward",
@@ -1387,12 +1531,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Touch",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "8 hours",
     "concentration": false,
-    "level": 0
+    "level": 4
   },
   "Delayed Blast Fireball": {
     "name": "Delayed Blast Fireball",
@@ -1401,35 +1545,41 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "150 feet",
     "damageRoll": {
-      "baseDamage": [
+      "baseEffect": [
         {
-          "damage": [
-            {
-              "n": 12,
-              "d": 6
-            }
-          ],
-          "damageType": "Fire"
+          "effect": {
+            "n": 12,
+            "d": 6
+          },
+          "effectType": "fire"
         }
       ],
       "scaling": {
         "scalingOrigin": "spellSlotLevel",
         "scalingValue": {
-          "base": {
-            "damage": [
-              {
+          "base": [
+            {
+              "effect": {
                 "n": 13,
                 "d": 6
-              }
-            ],
-            "damageType": "Fire"
-          }
+              },
+              "effectType": "fire"
+            }
+          ]
         }
       }
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "area_of_effect": {
+      "type": "sphere",
+      "size": 20
+    },
+    "duration": "Up to 1 minute",
+    "concentration": true,
+    "level": 7,
+    "dc": {
+      "dcSaveType": "dexterity",
+      "dcSuccess": "half damage"
+    }
   },
   "Demiplane": {
     "name": "Demiplane",
@@ -1438,12 +1588,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "60 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "1 hour",
     "concentration": false,
-    "level": 0
+    "level": 8
   },
   "Detect Evil and Good": {
     "name": "Detect Evil and Good",
@@ -1452,12 +1602,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Self",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "area_of_effect": {
+      "type": "sphere",
+      "size": 30
+    },
+    "duration": "Up to 10 minutes",
+    "concentration": true,
+    "level": 1
   },
   "Detect Magic": {
     "name": "Detect Magic",
@@ -1466,12 +1620,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Self",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "area_of_effect": {
+      "type": "sphere",
+      "size": 30
+    },
+    "duration": "Up to 10 minutes",
+    "concentration": true,
+    "level": 1
   },
   "Detect Poison and Disease": {
     "name": "Detect Poison and Disease",
@@ -1480,12 +1638,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Self",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "area_of_effect": {
+      "type": "sphere",
+      "size": 30
+    },
+    "duration": "Up to 10 minutes",
+    "concentration": true,
+    "level": 1
   },
   "Detect Thoughts": {
     "name": "Detect Thoughts",
@@ -1494,12 +1656,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Self",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 1 minute",
+    "concentration": true,
+    "level": 2
   },
   "Dimension Door": {
     "name": "Dimension Door",
@@ -1508,35 +1670,33 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "500 feet",
     "damageRoll": {
-      "baseDamage": [
+      "baseEffect": [
         {
-          "damage": [
-            {
-              "n": 4,
-              "d": 6
-            }
-          ],
-          "damageType": "Force"
+          "effect": {
+            "n": 4,
+            "d": 6
+          },
+          "effectType": "force"
         }
       ],
       "scaling": {
         "scalingOrigin": "spellSlotLevel",
         "scalingValue": {
-          "base": {
-            "damage": [
-              {
+          "base": [
+            {
+              "effect": {
                 "n": 4,
                 "d": 6
-              }
-            ],
-            "damageType": "Force"
-          }
+              },
+              "effectType": "force"
+            }
+          ]
         }
       }
     },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 4
   },
   "Disguise Self": {
     "name": "Disguise Self",
@@ -1545,12 +1705,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Self",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "1 hour",
     "concentration": false,
-    "level": 0
+    "level": 1
   },
   "Disintegrate": {
     "name": "Disintegrate",
@@ -1559,45 +1719,41 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "60 feet",
     "damageRoll": {
-      "baseDamage": [
+      "baseEffect": [
         {
-          "damage": [
-            {
-              "n": 10,
-              "d": 6
-            },
-            {
-              "n": 0,
-              "d": 0,
-              "flatBonus": 40
-            }
-          ],
-          "damageType": "Force"
+          "effect": {
+            "n": 10,
+            "d": 6
+          },
+          "effectType": "force"
         }
       ],
       "scaling": {
         "scalingOrigin": "spellSlotLevel",
         "scalingValue": {
-          "base": {
-            "damage": [
-              {
+          "base": [
+            {
+              "effect": {
                 "n": 10,
                 "d": 6
               },
-              {
-                "n": 0,
-                "d": 0,
-                "flatBonus": 40
-              }
-            ],
-            "damageType": "Force"
-          }
+              "effectType": "force"
+            }
+          ]
         }
       }
     },
+    "area_of_effect": {
+      "type": "cube",
+      "size": 10
+    },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 6,
+    "dc": {
+      "dcSaveType": "dexterity",
+      "dcSuccess": "no effect"
+    }
   },
   "Dispel Evil and Good": {
     "name": "Dispel Evil and Good",
@@ -1606,12 +1762,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Self",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 1 minute",
+    "concentration": true,
+    "level": 5,
+    "dc": {
+      "dcSaveType": "charisma",
+      "dcSuccess": "no effect"
+    }
   },
   "Dispel Magic": {
     "name": "Dispel Magic",
@@ -1620,12 +1780,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "120 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 3
   },
   "Divination": {
     "name": "Divination",
@@ -1634,63 +1794,65 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Self",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 4
   },
   "Divine Favor": {
     "name": "Divine Favor",
-    "actionTime": "action",
+    "actionTime": "bonusAction",
     "actionType": "spell",
     "targetingBehaviour": "lowestHP",
     "range": "Self",
     "damageRoll": {
-      "baseDamage": [
+      "baseEffect": [
         {
-          "damage": [
-            {
-              "n": 1,
-              "d": 4
-            }
-          ],
-          "damageType": "Radiant"
+          "effect": {
+            "n": 1,
+            "d": 4
+          },
+          "effectType": "radiant"
         }
       ],
       "scaling": {
         "scalingOrigin": "spellSlotLevel",
         "scalingValue": {
-          "base": {
-            "damage": [
-              {
+          "base": [
+            {
+              "effect": {
                 "n": 1,
                 "d": 4
-              }
-            ],
-            "damageType": "Radiant"
-          }
+              },
+              "effectType": "radiant"
+            }
+          ]
         }
       }
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 1 minute",
+    "concentration": true,
+    "level": 1
   },
   "Divine Word": {
     "name": "Divine Word",
-    "actionTime": "action",
+    "actionTime": "bonusAction",
     "actionType": "spell",
     "targetingBehaviour": "lowestHP",
     "range": "30 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 7,
+    "dc": {
+      "dcSaveType": "charisma",
+      "dcSuccess": "no effect"
+    }
   },
   "Dominate Beast": {
     "name": "Dominate Beast",
@@ -1699,12 +1861,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "60 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 1 minute",
+    "concentration": true,
+    "level": 4,
+    "dc": {
+      "dcSaveType": "wisdom",
+      "dcSuccess": "no effect"
+    }
   },
   "Dominate Monster": {
     "name": "Dominate Monster",
@@ -1713,12 +1879,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "60 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 1 hour",
+    "concentration": true,
+    "level": 8,
+    "dc": {
+      "dcSaveType": "wisdom",
+      "dcSuccess": "no effect"
+    }
   },
   "Dominate Person": {
     "name": "Dominate Person",
@@ -1727,12 +1897,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "60 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 1 minute",
+    "concentration": true,
+    "level": 5,
+    "dc": {
+      "dcSaveType": "wisdom",
+      "dcSuccess": "no effect"
+    }
   },
   "Dream": {
     "name": "Dream",
@@ -1741,35 +1915,37 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Special",
     "damageRoll": {
-      "baseDamage": [
+      "baseEffect": [
         {
-          "damage": [
-            {
-              "n": 3,
-              "d": 6
-            }
-          ],
-          "damageType": "Psychic"
+          "effect": {
+            "n": 3,
+            "d": 6
+          },
+          "effectType": "psychic"
         }
       ],
       "scaling": {
         "scalingOrigin": "spellSlotLevel",
         "scalingValue": {
-          "base": {
-            "damage": [
-              {
+          "base": [
+            {
+              "effect": {
                 "n": 3,
                 "d": 6
-              }
-            ],
-            "damageType": "Psychic"
-          }
+              },
+              "effectType": "psychic"
+            }
+          ]
         }
       }
     },
-    "duration": "Instantaneous",
+    "duration": "8 hours",
     "concentration": false,
-    "level": 0
+    "level": 5,
+    "dc": {
+      "dcSaveType": "wisdom",
+      "dcSuccess": "no effect"
+    }
   },
   "Druidcraft": {
     "name": "Druidcraft",
@@ -1778,7 +1954,7 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "30 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
     "duration": "Instantaneous",
@@ -1792,12 +1968,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "500 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "area_of_effect": {
+      "type": "sphere",
+      "size": 100
+    },
+    "duration": "Up to 1 minute",
+    "concentration": true,
+    "level": 8
   },
   "Eldritch Blast": {
     "name": "Eldritch Blast",
@@ -1806,29 +1986,27 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "120 feet",
     "damageRoll": {
-      "baseDamage": [
+      "baseEffect": [
         {
-          "damage": [
-            {
-              "n": 1,
-              "d": 10
-            }
-          ],
-          "damageType": "Force"
+          "effect": {
+            "n": 1,
+            "d": 10
+          },
+          "effectType": "force"
         }
       ],
       "scaling": {
         "scalingOrigin": "characterLevel",
         "scalingValue": {
-          "base": {
-            "damage": [
-              {
+          "base": [
+            {
+              "effect": {
                 "n": 1,
                 "d": 10
-              }
-            ],
-            "damageType": "Force"
-          }
+              },
+              "effectType": "force"
+            }
+          ]
         }
       }
     },
@@ -1843,12 +2021,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Touch",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 1 hour",
+    "concentration": true,
+    "level": 2
   },
   "Enlarge/Reduce": {
     "name": "Enlarge/Reduce",
@@ -1857,12 +2035,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "30 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 1 minute",
+    "concentration": true,
+    "level": 2,
+    "dc": {
+      "dcSaveType": "constitution",
+      "dcSuccess": "no effect"
+    }
   },
   "Entangle": {
     "name": "Entangle",
@@ -1871,12 +2053,20 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "90 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "area_of_effect": {
+      "type": "cube",
+      "size": 20
+    },
+    "duration": "Up to 1 minute",
+    "concentration": true,
+    "level": 1,
+    "dc": {
+      "dcSaveType": "strength",
+      "dcSuccess": "no effect"
+    }
   },
   "Enthrall": {
     "name": "Enthrall",
@@ -1885,12 +2075,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "60 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "1 minute",
     "concentration": false,
-    "level": 0
+    "level": 2,
+    "dc": {
+      "dcSaveType": "wisdom",
+      "dcSuccess": "no effect"
+    }
   },
   "Etherealness": {
     "name": "Etherealness",
@@ -1899,26 +2093,26 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Self",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "8 hours",
     "concentration": false,
-    "level": 0
+    "level": 7
   },
   "Expeditious Retreat": {
     "name": "Expeditious Retreat",
-    "actionTime": "action",
+    "actionTime": "bonusAction",
     "actionType": "spell",
     "targetingBehaviour": "lowestHP",
     "range": "Self",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 10 minutes",
+    "concentration": true,
+    "level": 1
   },
   "Eyebite": {
     "name": "Eyebite",
@@ -1927,12 +2121,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Self",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 1 minute",
+    "concentration": true,
+    "level": 6,
+    "dc": {
+      "dcSaveType": "wisdom",
+      "dcSuccess": "no effect"
+    }
   },
   "Fabricate": {
     "name": "Fabricate",
@@ -1941,12 +2139,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "120 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 4
   },
   "Faerie Fire": {
     "name": "Faerie Fire",
@@ -1955,12 +2153,20 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "60 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "area_of_effect": {
+      "type": "cube",
+      "size": 20
+    },
+    "duration": "Up to 1 minute",
+    "concentration": true,
+    "level": 1,
+    "dc": {
+      "dcSaveType": "dexterity",
+      "dcSuccess": "no effect"
+    }
   },
   "Faithful Hound": {
     "name": "Faithful Hound",
@@ -1969,35 +2175,33 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "30 feet",
     "damageRoll": {
-      "baseDamage": [
+      "baseEffect": [
         {
-          "damage": [
-            {
-              "n": 4,
-              "d": 8
-            }
-          ],
-          "damageType": "Piercing"
+          "effect": {
+            "n": 4,
+            "d": 8
+          },
+          "effectType": "piercing"
         }
       ],
       "scaling": {
         "scalingOrigin": "spellSlotLevel",
         "scalingValue": {
-          "base": {
-            "damage": [
-              {
+          "base": [
+            {
+              "effect": {
                 "n": 4,
                 "d": 8
-              }
-            ],
-            "damageType": "Piercing"
-          }
+              },
+              "effectType": "piercing"
+            }
+          ]
         }
       }
     },
-    "duration": "Instantaneous",
+    "duration": "8 hours",
     "concentration": false,
-    "level": 0
+    "level": 4
   },
   "False Life": {
     "name": "False Life",
@@ -2006,12 +2210,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Self",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "1 hour",
     "concentration": false,
-    "level": 0
+    "level": 1
   },
   "Fear": {
     "name": "Fear",
@@ -2020,12 +2224,20 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Self",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "area_of_effect": {
+      "type": "cone",
+      "size": 30
+    },
+    "duration": "Up to 1 minute",
+    "concentration": true,
+    "level": 3,
+    "dc": {
+      "dcSaveType": "wisdom",
+      "dcSuccess": "no effect"
+    }
   },
   "Feather Fall": {
     "name": "Feather Fall",
@@ -2034,12 +2246,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "60 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "1 minute",
     "concentration": false,
-    "level": 0
+    "level": 1
   },
   "Feeblemind": {
     "name": "Feeblemind",
@@ -2048,35 +2260,37 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "150 feet",
     "damageRoll": {
-      "baseDamage": [
+      "baseEffect": [
         {
-          "damage": [
-            {
-              "n": 4,
-              "d": 6
-            }
-          ],
-          "damageType": "Psychic"
+          "effect": {
+            "n": 4,
+            "d": 6
+          },
+          "effectType": "psychic"
         }
       ],
       "scaling": {
         "scalingOrigin": "spellSlotLevel",
         "scalingValue": {
-          "base": {
-            "damage": [
-              {
+          "base": [
+            {
+              "effect": {
                 "n": 4,
                 "d": 6
-              }
-            ],
-            "damageType": "Psychic"
-          }
+              },
+              "effectType": "psychic"
+            }
+          ]
         }
       }
     },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 8,
+    "dc": {
+      "dcSaveType": "intelligence",
+      "dcSuccess": "no effect"
+    }
   },
   "Find Familiar": {
     "name": "Find Familiar",
@@ -2085,12 +2299,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "10 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 1
   },
   "Find Steed": {
     "name": "Find Steed",
@@ -2099,12 +2313,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "30 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 2
   },
   "Find the Path": {
     "name": "Find the Path",
@@ -2113,12 +2327,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Self",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 24 hours",
+    "concentration": true,
+    "level": 6
   },
   "Find Traps": {
     "name": "Find Traps",
@@ -2127,12 +2341,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "120 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 2
   },
   "Finger of Death": {
     "name": "Finger of Death",
@@ -2141,45 +2355,37 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "60 feet",
     "damageRoll": {
-      "baseDamage": [
+      "baseEffect": [
         {
-          "damage": [
-            {
-              "n": 7,
-              "d": 8
-            },
-            {
-              "n": 0,
-              "d": 0,
-              "flatBonus": 30
-            }
-          ],
-          "damageType": "Necrotic"
+          "effect": {
+            "n": 7,
+            "d": 8
+          },
+          "effectType": "necrotic"
         }
       ],
       "scaling": {
         "scalingOrigin": "spellSlotLevel",
         "scalingValue": {
-          "base": {
-            "damage": [
-              {
+          "base": [
+            {
+              "effect": {
                 "n": 7,
                 "d": 8
               },
-              {
-                "n": 0,
-                "d": 0,
-                "flatBonus": 30
-              }
-            ],
-            "damageType": "Necrotic"
-          }
+              "effectType": "necrotic"
+            }
+          ]
         }
       }
     },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 7,
+    "dc": {
+      "dcSaveType": "constitution",
+      "dcSuccess": "half damage"
+    }
   },
   "Fire Bolt": {
     "name": "Fire Bolt",
@@ -2188,29 +2394,27 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "120 feet",
     "damageRoll": {
-      "baseDamage": [
+      "baseEffect": [
         {
-          "damage": [
-            {
-              "n": 1,
-              "d": 10
-            }
-          ],
-          "damageType": "Fire"
+          "effect": {
+            "n": 1,
+            "d": 10
+          },
+          "effectType": "fire"
         }
       ],
       "scaling": {
         "scalingOrigin": "characterLevel",
         "scalingValue": {
-          "base": {
-            "damage": [
-              {
+          "base": [
+            {
+              "effect": {
                 "n": 2,
                 "d": 10
-              }
-            ],
-            "damageType": "Fire"
-          }
+              },
+              "effectType": "fire"
+            }
+          ]
         }
       }
     },
@@ -2225,35 +2429,37 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Self",
     "damageRoll": {
-      "baseDamage": [
+      "baseEffect": [
         {
-          "damage": [
-            {
-              "n": 2,
-              "d": 8
-            }
-          ],
-          "damageType": "Fire"
+          "effect": {
+            "n": 2,
+            "d": 8
+          },
+          "effectType": "fire"
         }
       ],
       "scaling": {
         "scalingOrigin": "spellSlotLevel",
         "scalingValue": {
-          "base": {
-            "damage": [
-              {
+          "base": [
+            {
+              "effect": {
                 "n": 2,
                 "d": 8
-              }
-            ],
-            "damageType": "Fire"
-          }
+              },
+              "effectType": "fire"
+            }
+          ]
         }
       }
     },
-    "duration": "Instantaneous",
+    "area_of_effect": {
+      "type": "sphere",
+      "size": 5
+    },
+    "duration": "10 minutes",
     "concentration": false,
-    "level": 0
+    "level": 4
   },
   "Fire Storm": {
     "name": "Fire Storm",
@@ -2262,35 +2468,41 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "150 feet",
     "damageRoll": {
-      "baseDamage": [
+      "baseEffect": [
         {
-          "damage": [
-            {
-              "n": 7,
-              "d": 10
-            }
-          ],
-          "damageType": "Fire"
+          "effect": {
+            "n": 7,
+            "d": 10
+          },
+          "effectType": "fire"
         }
       ],
       "scaling": {
         "scalingOrigin": "spellSlotLevel",
         "scalingValue": {
-          "base": {
-            "damage": [
-              {
+          "base": [
+            {
+              "effect": {
                 "n": 7,
                 "d": 10
-              }
-            ],
-            "damageType": "Fire"
-          }
+              },
+              "effectType": "fire"
+            }
+          ]
         }
       }
     },
+    "area_of_effect": {
+      "type": "cube",
+      "size": 100
+    },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 7,
+    "dc": {
+      "dcSaveType": "dexterity",
+      "dcSuccess": "half damage"
+    }
   },
   "Fireball": {
     "name": "Fireball",
@@ -2299,72 +2511,76 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "150 feet",
     "damageRoll": {
-      "baseDamage": [
+      "baseEffect": [
         {
-          "damage": [
-            {
-              "n": 8,
-              "d": 6
-            }
-          ],
-          "damageType": "Fire"
+          "effect": {
+            "n": 8,
+            "d": 6
+          },
+          "effectType": "fire"
         }
       ],
       "scaling": {
         "scalingOrigin": "spellSlotLevel",
         "scalingValue": {
-          "base": {
-            "damage": [
-              {
+          "base": [
+            {
+              "effect": {
                 "n": 9,
                 "d": 6
-              }
-            ],
-            "damageType": "Fire"
-          }
+              },
+              "effectType": "fire"
+            }
+          ]
         }
       }
     },
+    "area_of_effect": {
+      "type": "sphere",
+      "size": 20
+    },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 3,
+    "dc": {
+      "dcSaveType": "dexterity",
+      "dcSuccess": "half damage"
+    }
   },
   "Flame Blade": {
     "name": "Flame Blade",
-    "actionTime": "action",
+    "actionTime": "bonusAction",
     "actionType": "spell",
     "targetingBehaviour": "lowestHP",
     "range": "Self",
     "damageRoll": {
-      "baseDamage": [
+      "baseEffect": [
         {
-          "damage": [
-            {
-              "n": 3,
-              "d": 6
-            }
-          ],
-          "damageType": "Fire"
+          "effect": {
+            "n": 3,
+            "d": 6
+          },
+          "effectType": "fire"
         }
       ],
       "scaling": {
         "scalingOrigin": "spellSlotLevel",
         "scalingValue": {
-          "base": {
-            "damage": [
-              {
+          "base": [
+            {
+              "effect": {
                 "n": 4,
                 "d": 6
-              }
-            ],
-            "damageType": "Fire"
-          }
+              },
+              "effectType": "fire"
+            }
+          ]
         }
       }
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 10 minutes",
+    "concentration": true,
+    "level": 2
   },
   "Flame Strike": {
     "name": "Flame Strike",
@@ -2373,43 +2589,41 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "60 feet",
     "damageRoll": {
-      "baseDamage": [
+      "baseEffect": [
         {
-          "damage": [
-            {
-              "n": 4,
-              "d": 6
-            },
-            {
-              "n": 4,
-              "d": 6
-            }
-          ],
-          "damageType": "Fire"
+          "effect": {
+            "n": 4,
+            "d": 6
+          },
+          "effectType": "fire"
         }
       ],
       "scaling": {
         "scalingOrigin": "spellSlotLevel",
         "scalingValue": {
-          "base": {
-            "damage": [
-              {
+          "base": [
+            {
+              "effect": {
                 "n": 4,
                 "d": 6
               },
-              {
-                "n": 5,
-                "d": 6
-              }
-            ],
-            "damageType": "Fire"
-          }
+              "effectType": "fire"
+            }
+          ]
         }
       }
     },
+    "area_of_effect": {
+      "type": "cylinder",
+      "size": 40
+    },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 5,
+    "dc": {
+      "dcSaveType": "dexterity",
+      "dcSuccess": "half damage"
+    }
   },
   "Flaming Sphere": {
     "name": "Flaming Sphere",
@@ -2418,35 +2632,33 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "60 feet",
     "damageRoll": {
-      "baseDamage": [
+      "baseEffect": [
         {
-          "damage": [
-            {
-              "n": 2,
-              "d": 6
-            }
-          ],
-          "damageType": "Fire"
+          "effect": {
+            "n": 2,
+            "d": 6
+          },
+          "effectType": "fire"
         }
       ],
       "scaling": {
         "scalingOrigin": "spellSlotLevel",
         "scalingValue": {
-          "base": {
-            "damage": [
-              {
+          "base": [
+            {
+              "effect": {
                 "n": 3,
                 "d": 6
-              }
-            ],
-            "damageType": "Fire"
-          }
+              },
+              "effectType": "fire"
+            }
+          ]
         }
       }
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 1 minute",
+    "concentration": true,
+    "level": 2
   },
   "Flesh to Stone": {
     "name": "Flesh to Stone",
@@ -2455,12 +2667,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "60 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 1 minute",
+    "concentration": true,
+    "level": 6,
+    "dc": {
+      "dcSaveType": "constitution",
+      "dcSuccess": "no effect"
+    }
   },
   "Floating Disk": {
     "name": "Floating Disk",
@@ -2469,12 +2685,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "30 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "1 hour",
     "concentration": false,
-    "level": 0
+    "level": 1
   },
   "Fly": {
     "name": "Fly",
@@ -2483,12 +2699,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Touch",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 10 minutes",
+    "concentration": true,
+    "level": 3
   },
   "Fog Cloud": {
     "name": "Fog Cloud",
@@ -2497,12 +2713,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "120 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "area_of_effect": {
+      "type": "sphere",
+      "size": 20
+    },
+    "duration": "Up to 1 hour",
+    "concentration": true,
+    "level": 1
   },
   "Forbiddance": {
     "name": "Forbiddance",
@@ -2511,12 +2731,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Touch",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "area_of_effect": {
+      "type": "cube",
+      "size": 40000
+    },
+    "duration": "24 hours",
     "concentration": false,
-    "level": 0
+    "level": 6
   },
   "Forcecage": {
     "name": "Forcecage",
@@ -2525,12 +2749,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "100 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "area_of_effect": {
+      "type": "cube",
+      "size": 20
+    },
+    "duration": "1 hour",
     "concentration": false,
-    "level": 0
+    "level": 7
   },
   "Foresight": {
     "name": "Foresight",
@@ -2539,12 +2767,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Touch",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "8 hours",
     "concentration": false,
-    "level": 0
+    "level": 9
   },
   "Freedom of Movement": {
     "name": "Freedom of Movement",
@@ -2553,12 +2781,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Touch",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "1 hour",
     "concentration": false,
-    "level": 0
+    "level": 4
   },
   "Freezing Sphere": {
     "name": "Freezing Sphere",
@@ -2567,35 +2795,41 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "300 feet",
     "damageRoll": {
-      "baseDamage": [
+      "baseEffect": [
         {
-          "damage": [
-            {
-              "n": 10,
-              "d": 6
-            }
-          ],
-          "damageType": "Cold"
+          "effect": {
+            "n": 10,
+            "d": 6
+          },
+          "effectType": "cold"
         }
       ],
       "scaling": {
         "scalingOrigin": "spellSlotLevel",
         "scalingValue": {
-          "base": {
-            "damage": [
-              {
+          "base": [
+            {
+              "effect": {
                 "n": 10,
                 "d": 6
-              }
-            ],
-            "damageType": "Cold"
-          }
+              },
+              "effectType": "cold"
+            }
+          ]
         }
       }
     },
+    "area_of_effect": {
+      "type": "sphere",
+      "size": 60
+    },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 6,
+    "dc": {
+      "dcSaveType": "constitution",
+      "dcSuccess": "half damage"
+    }
   },
   "Gaseous Form": {
     "name": "Gaseous Form",
@@ -2604,12 +2838,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Touch",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 1 hour",
+    "concentration": true,
+    "level": 3
   },
   "Gate": {
     "name": "Gate",
@@ -2618,12 +2852,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "60 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 1 minute",
+    "concentration": true,
+    "level": 9
   },
   "Geas": {
     "name": "Geas",
@@ -2632,12 +2866,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "60 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "30 days",
     "concentration": false,
-    "level": 0
+    "level": 5,
+    "dc": {
+      "dcSaveType": "wisdom",
+      "dcSuccess": "no effect"
+    }
   },
   "Gentle Repose": {
     "name": "Gentle Repose",
@@ -2646,12 +2884,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Touch",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "10 days",
     "concentration": false,
-    "level": 0
+    "level": 2
   },
   "Giant Insect": {
     "name": "Giant Insect",
@@ -2660,12 +2898,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "30 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 10 minutes",
+    "concentration": true,
+    "level": 4
   },
   "Glibness": {
     "name": "Glibness",
@@ -2674,12 +2912,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Self",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "1 hour",
     "concentration": false,
-    "level": 0
+    "level": 8
   },
   "Globe of Invulnerability": {
     "name": "Globe of Invulnerability",
@@ -2688,12 +2926,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Self",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "area_of_effect": {
+      "type": "sphere",
+      "size": 10
+    },
+    "duration": "Up to 1 minute",
+    "concentration": true,
+    "level": 6
   },
   "Glyph of Warding": {
     "name": "Glyph of Warding",
@@ -2702,12 +2944,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Touch",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "Until dispelled",
     "concentration": false,
-    "level": 0
+    "level": 3
   },
   "Goodberry": {
     "name": "Goodberry",
@@ -2716,12 +2958,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Touch",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 1
   },
   "Grease": {
     "name": "Grease",
@@ -2730,12 +2972,20 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "60 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "area_of_effect": {
+      "type": "cube",
+      "size": 10
+    },
+    "duration": "1 minute",
     "concentration": false,
-    "level": 0
+    "level": 1,
+    "dc": {
+      "dcSaveType": "dexterity",
+      "dcSuccess": "no effect"
+    }
   },
   "Greater Invisibility": {
     "name": "Greater Invisibility",
@@ -2744,12 +2994,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Touch",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 1 minute",
+    "concentration": true,
+    "level": 4
   },
   "Greater Restoration": {
     "name": "Greater Restoration",
@@ -2758,12 +3008,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Touch",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 5
   },
   "Guardian of Faith": {
     "name": "Guardian of Faith",
@@ -2772,37 +3022,43 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "30 feet",
     "damageRoll": {
-      "baseDamage": [
+      "baseEffect": [
         {
-          "damage": [
-            {
-              "n": 0,
-              "d": 0,
-              "flatBonus": 20
-            }
-          ],
-          "damageType": "Radiant"
+          "effect": {
+            "n": 0,
+            "d": 0,
+            "flatBonus": 20
+          },
+          "effectType": "radiant"
         }
       ],
       "scaling": {
         "scalingOrigin": "spellSlotLevel",
         "scalingValue": {
-          "base": {
-            "damage": [
-              {
+          "base": [
+            {
+              "effect": {
                 "n": 0,
                 "d": 0,
                 "flatBonus": 20
-              }
-            ],
-            "damageType": "Radiant"
-          }
+              },
+              "effectType": "radiant"
+            }
+          ]
         }
       }
     },
-    "duration": "Instantaneous",
+    "area_of_effect": {
+      "type": "cylinder",
+      "size": 10
+    },
+    "duration": "8 hours",
     "concentration": false,
-    "level": 0
+    "level": 4,
+    "dc": {
+      "dcSaveType": "dexterity",
+      "dcSuccess": "half damage"
+    }
   },
   "Guards and Wards": {
     "name": "Guards and Wards",
@@ -2811,12 +3067,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Touch",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "area_of_effect": {
+      "type": "cube",
+      "size": 2500
+    },
+    "duration": "24 hours",
     "concentration": false,
-    "level": 0
+    "level": 6
   },
   "Guidance": {
     "name": "Guidance",
@@ -2825,11 +3085,11 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Touch",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
+    "duration": "Up to 1 minute",
+    "concentration": true,
     "level": 0
   },
   "Guiding Bolt": {
@@ -2839,35 +3099,33 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "120 feet",
     "damageRoll": {
-      "baseDamage": [
+      "baseEffect": [
         {
-          "damage": [
-            {
-              "n": 4,
-              "d": 6
-            }
-          ],
-          "damageType": "Radiant"
+          "effect": {
+            "n": 4,
+            "d": 6
+          },
+          "effectType": "radiant"
         }
       ],
       "scaling": {
         "scalingOrigin": "spellSlotLevel",
         "scalingValue": {
-          "base": {
-            "damage": [
-              {
+          "base": [
+            {
+              "effect": {
                 "n": 5,
                 "d": 6
-              }
-            ],
-            "damageType": "Radiant"
-          }
+              },
+              "effectType": "radiant"
+            }
+          ]
         }
       }
     },
-    "duration": "Instantaneous",
+    "duration": "1 round",
     "concentration": false,
-    "level": 0
+    "level": 1
   },
   "Gust of Wind": {
     "name": "Gust of Wind",
@@ -2876,12 +3134,20 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Self",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "area_of_effect": {
+      "type": "line",
+      "size": 60
+    },
+    "duration": "Up to 1 minute",
+    "concentration": true,
+    "level": 2,
+    "dc": {
+      "dcSaveType": "strength",
+      "dcSuccess": "no effect"
+    }
   },
   "Hallow": {
     "name": "Hallow",
@@ -2890,12 +3156,20 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Touch",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "area_of_effect": {
+      "type": "sphere",
+      "size": 60
+    },
+    "duration": "Until dispelled",
     "concentration": false,
-    "level": 0
+    "level": 5,
+    "dc": {
+      "dcSaveType": "charisma",
+      "dcSuccess": "no effect"
+    }
   },
   "Hallucinatory Terrain": {
     "name": "Hallucinatory Terrain",
@@ -2904,12 +3178,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "300 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "area_of_effect": {
+      "type": "cube",
+      "size": 150
+    },
+    "duration": "24 hours",
     "concentration": false,
-    "level": 0
+    "level": 4
   },
   "Harm": {
     "name": "Harm",
@@ -2918,35 +3196,37 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "60 feet",
     "damageRoll": {
-      "baseDamage": [
+      "baseEffect": [
         {
-          "damage": [
-            {
-              "n": 14,
-              "d": 6
-            }
-          ],
-          "damageType": "Necrotic"
+          "effect": {
+            "n": 14,
+            "d": 6
+          },
+          "effectType": "necrotic"
         }
       ],
       "scaling": {
         "scalingOrigin": "spellSlotLevel",
         "scalingValue": {
-          "base": {
-            "damage": [
-              {
+          "base": [
+            {
+              "effect": {
                 "n": 14,
                 "d": 6
-              }
-            ],
-            "damageType": "Necrotic"
-          }
+              },
+              "effectType": "necrotic"
+            }
+          ]
         }
       }
     },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 6,
+    "dc": {
+      "dcSaveType": "constitution",
+      "dcSuccess": "half damage"
+    }
   },
   "Haste": {
     "name": "Haste",
@@ -2955,12 +3235,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "30 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 1 minute",
+    "concentration": true,
+    "level": 3
   },
   "Heal": {
     "name": "Heal",
@@ -2969,26 +3249,26 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "60 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 6
   },
   "Healing Word": {
     "name": "Healing Word",
-    "actionTime": "action",
+    "actionTime": "bonusAction",
     "actionType": "spell",
     "targetingBehaviour": "lowestHP",
     "range": "60 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 1
   },
   "Heat Metal": {
     "name": "Heat Metal",
@@ -2997,35 +3277,37 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "60 feet",
     "damageRoll": {
-      "baseDamage": [
+      "baseEffect": [
         {
-          "damage": [
-            {
-              "n": 2,
-              "d": 8
-            }
-          ],
-          "damageType": "Fire"
+          "effect": {
+            "n": 2,
+            "d": 8
+          },
+          "effectType": "fire"
         }
       ],
       "scaling": {
         "scalingOrigin": "spellSlotLevel",
         "scalingValue": {
-          "base": {
-            "damage": [
-              {
+          "base": [
+            {
+              "effect": {
                 "n": 3,
                 "d": 8
-              }
-            ],
-            "damageType": "Fire"
-          }
+              },
+              "effectType": "fire"
+            }
+          ]
         }
       }
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 1 minute",
+    "concentration": true,
+    "level": 2,
+    "dc": {
+      "dcSaveType": "constitution",
+      "dcSuccess": "no effect"
+    }
   },
   "Hellish Rebuke": {
     "name": "Hellish Rebuke",
@@ -3034,35 +3316,37 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "60 feet",
     "damageRoll": {
-      "baseDamage": [
+      "baseEffect": [
         {
-          "damage": [
-            {
-              "n": 2,
-              "d": 10
-            }
-          ],
-          "damageType": "Fire"
+          "effect": {
+            "n": 2,
+            "d": 10
+          },
+          "effectType": "fire"
         }
       ],
       "scaling": {
         "scalingOrigin": "spellSlotLevel",
         "scalingValue": {
-          "base": {
-            "damage": [
-              {
+          "base": [
+            {
+              "effect": {
                 "n": 3,
                 "d": 10
-              }
-            ],
-            "damageType": "Fire"
-          }
+              },
+              "effectType": "fire"
+            }
+          ]
         }
       }
     },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 1,
+    "dc": {
+      "dcSaveType": "dexterity",
+      "dcSuccess": "half damage"
+    }
   },
   "Heroes' Feast": {
     "name": "Heroes' Feast",
@@ -3071,12 +3355,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "30 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 6
   },
   "Heroism": {
     "name": "Heroism",
@@ -3085,12 +3369,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Touch",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 1 minute",
+    "concentration": true,
+    "level": 1
   },
   "Hideous Laughter": {
     "name": "Hideous Laughter",
@@ -3099,12 +3383,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "30 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 1 minute",
+    "concentration": true,
+    "level": 1,
+    "dc": {
+      "dcSaveType": "wisdom",
+      "dcSuccess": "no effect"
+    }
   },
   "Hold Monster": {
     "name": "Hold Monster",
@@ -3113,12 +3401,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "90 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 1 minute",
+    "concentration": true,
+    "level": 5,
+    "dc": {
+      "dcSaveType": "wisdom",
+      "dcSuccess": "no effect"
+    }
   },
   "Hold Person": {
     "name": "Hold Person",
@@ -3127,12 +3419,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "60 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 1 minute",
+    "concentration": true,
+    "level": 2,
+    "dc": {
+      "dcSaveType": "wisdom",
+      "dcSuccess": "no effect"
+    }
   },
   "Holy Aura": {
     "name": "Holy Aura",
@@ -3141,26 +3437,30 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Self",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "area_of_effect": {
+      "type": "sphere",
+      "size": 30
+    },
+    "duration": "Up to 1 minute",
+    "concentration": true,
+    "level": 8
   },
   "Hunter's Mark": {
     "name": "Hunter's Mark",
-    "actionTime": "action",
+    "actionTime": "bonusAction",
     "actionType": "spell",
     "targetingBehaviour": "lowestHP",
     "range": "90 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 1 hour",
+    "concentration": true,
+    "level": 1
   },
   "Hypnotic Pattern": {
     "name": "Hypnotic Pattern",
@@ -3169,12 +3469,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "120 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 1 minute",
+    "concentration": true,
+    "level": 3,
+    "dc": {
+      "dcSaveType": "wisdom",
+      "dcSuccess": "no effect"
+    }
   },
   "Ice Storm": {
     "name": "Ice Storm",
@@ -3183,43 +3487,41 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "300 feet",
     "damageRoll": {
-      "baseDamage": [
+      "baseEffect": [
         {
-          "damage": [
-            {
-              "n": 2,
-              "d": 8
-            },
-            {
-              "n": 4,
-              "d": 6
-            }
-          ],
-          "damageType": "Bludgeoning"
+          "effect": {
+            "n": 2,
+            "d": 8
+          },
+          "effectType": "bludgeoning"
         }
       ],
       "scaling": {
         "scalingOrigin": "spellSlotLevel",
         "scalingValue": {
-          "base": {
-            "damage": [
-              {
+          "base": [
+            {
+              "effect": {
                 "n": 3,
                 "d": 8
               },
-              {
-                "n": 4,
-                "d": 6
-              }
-            ],
-            "damageType": "Bludgeoning"
-          }
+              "effectType": "bludgeoning"
+            }
+          ]
         }
       }
     },
+    "area_of_effect": {
+      "type": "cylinder",
+      "size": 20
+    },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 4,
+    "dc": {
+      "dcSaveType": "dexterity",
+      "dcSuccess": "half damage"
+    }
   },
   "Identify": {
     "name": "Identify",
@@ -3228,12 +3530,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Touch",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 1
   },
   "Illusory Script": {
     "name": "Illusory Script",
@@ -3242,12 +3544,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Touch",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "10 days",
     "concentration": false,
-    "level": 0
+    "level": 1
   },
   "Imprisonment": {
     "name": "Imprisonment",
@@ -3256,12 +3558,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "30 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "Until dispelled",
     "concentration": false,
-    "level": 0
+    "level": 9,
+    "dc": {
+      "dcSaveType": "wisdom",
+      "dcSuccess": "no effect"
+    }
   },
   "Incendiary Cloud": {
     "name": "Incendiary Cloud",
@@ -3270,35 +3576,41 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "150 feet",
     "damageRoll": {
-      "baseDamage": [
+      "baseEffect": [
         {
-          "damage": [
-            {
-              "n": 10,
-              "d": 8
-            }
-          ],
-          "damageType": "Fire"
+          "effect": {
+            "n": 10,
+            "d": 8
+          },
+          "effectType": "fire"
         }
       ],
       "scaling": {
         "scalingOrigin": "spellSlotLevel",
         "scalingValue": {
-          "base": {
-            "damage": [
-              {
+          "base": [
+            {
+              "effect": {
                 "n": 10,
                 "d": 8
-              }
-            ],
-            "damageType": "Fire"
-          }
+              },
+              "effectType": "fire"
+            }
+          ]
         }
       }
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "area_of_effect": {
+      "type": "sphere",
+      "size": 20
+    },
+    "duration": "Up to 1 minute",
+    "concentration": true,
+    "level": 8,
+    "dc": {
+      "dcSaveType": "dexterity",
+      "dcSuccess": "half damage"
+    }
   },
   "Inflict Wounds": {
     "name": "Inflict Wounds",
@@ -3307,35 +3619,33 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Touch",
     "damageRoll": {
-      "baseDamage": [
+      "baseEffect": [
         {
-          "damage": [
-            {
-              "n": 3,
-              "d": 10
-            }
-          ],
-          "damageType": "Necrotic"
+          "effect": {
+            "n": 3,
+            "d": 10
+          },
+          "effectType": "necrotic"
         }
       ],
       "scaling": {
         "scalingOrigin": "spellSlotLevel",
         "scalingValue": {
-          "base": {
-            "damage": [
-              {
+          "base": [
+            {
+              "effect": {
                 "n": 4,
                 "d": 10
-              }
-            ],
-            "damageType": "Necrotic"
-          }
+              },
+              "effectType": "necrotic"
+            }
+          ]
         }
       }
     },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 1
   },
   "Insect Plague": {
     "name": "Insect Plague",
@@ -3344,35 +3654,41 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "300 feet",
     "damageRoll": {
-      "baseDamage": [
+      "baseEffect": [
         {
-          "damage": [
-            {
-              "n": 4,
-              "d": 10
-            }
-          ],
-          "damageType": "Piercing"
+          "effect": {
+            "n": 4,
+            "d": 10
+          },
+          "effectType": "piercing"
         }
       ],
       "scaling": {
         "scalingOrigin": "spellSlotLevel",
         "scalingValue": {
-          "base": {
-            "damage": [
-              {
+          "base": [
+            {
+              "effect": {
                 "n": 5,
                 "d": 10
-              }
-            ],
-            "damageType": "Piercing"
-          }
+              },
+              "effectType": "piercing"
+            }
+          ]
         }
       }
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "area_of_effect": {
+      "type": "sphere",
+      "size": 20
+    },
+    "duration": "Up to 10 minutes",
+    "concentration": true,
+    "level": 5,
+    "dc": {
+      "dcSaveType": "constitution",
+      "dcSuccess": "half damage"
+    }
   },
   "Instant Summons": {
     "name": "Instant Summons",
@@ -3381,12 +3697,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Touch",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "Until dispelled",
     "concentration": false,
-    "level": 0
+    "level": 6
   },
   "Invisibility": {
     "name": "Invisibility",
@@ -3395,12 +3711,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Touch",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 1 hour",
+    "concentration": true,
+    "level": 2
   },
   "Irresistible Dance": {
     "name": "Irresistible Dance",
@@ -3409,12 +3725,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "30 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 1 minute",
+    "concentration": true,
+    "level": 6
   },
   "Jump": {
     "name": "Jump",
@@ -3423,12 +3739,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Touch",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "1 minute",
     "concentration": false,
-    "level": 0
+    "level": 1
   },
   "Knock": {
     "name": "Knock",
@@ -3437,12 +3753,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "60 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 2
   },
   "Legend Lore": {
     "name": "Legend Lore",
@@ -3451,12 +3767,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Self",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 5
   },
   "Lesser Restoration": {
     "name": "Lesser Restoration",
@@ -3465,12 +3781,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Touch",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 2
   },
   "Levitate": {
     "name": "Levitate",
@@ -3479,12 +3795,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "60 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 10 minutes",
+    "concentration": true,
+    "level": 2
   },
   "Light": {
     "name": "Light",
@@ -3493,12 +3809,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Touch",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "1 hour",
     "concentration": false,
-    "level": 0
+    "level": 0,
+    "dc": {
+      "dcSaveType": "dexterity",
+      "dcSuccess": "no effect"
+    }
   },
   "Lightning Bolt": {
     "name": "Lightning Bolt",
@@ -3507,35 +3827,41 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Self",
     "damageRoll": {
-      "baseDamage": [
+      "baseEffect": [
         {
-          "damage": [
-            {
-              "n": 8,
-              "d": 6
-            }
-          ],
-          "damageType": "Lightning"
+          "effect": {
+            "n": 8,
+            "d": 6
+          },
+          "effectType": "lightning"
         }
       ],
       "scaling": {
         "scalingOrigin": "spellSlotLevel",
         "scalingValue": {
-          "base": {
-            "damage": [
-              {
+          "base": [
+            {
+              "effect": {
                 "n": 9,
                 "d": 6
-              }
-            ],
-            "damageType": "Lightning"
-          }
+              },
+              "effectType": "lightning"
+            }
+          ]
         }
       }
     },
+    "area_of_effect": {
+      "type": "line",
+      "size": 100
+    },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 3,
+    "dc": {
+      "dcSaveType": "dexterity",
+      "dcSuccess": "half damage"
+    }
   },
   "Locate Animals or Plants": {
     "name": "Locate Animals or Plants",
@@ -3544,12 +3870,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Self",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 2
   },
   "Locate Creature": {
     "name": "Locate Creature",
@@ -3558,12 +3884,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Self",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 1 hour",
+    "concentration": true,
+    "level": 4
   },
   "Locate Object": {
     "name": "Locate Object",
@@ -3572,12 +3898,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Self",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 10 minutes",
+    "concentration": true,
+    "level": 2
   },
   "Longstrider": {
     "name": "Longstrider",
@@ -3586,12 +3912,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Touch",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "1 hour",
     "concentration": false,
-    "level": 0
+    "level": 1
   },
   "Mage Armor": {
     "name": "Mage Armor",
@@ -3600,12 +3926,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Touch",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "8 hours",
     "concentration": false,
-    "level": 0
+    "level": 1
   },
   "Mage Hand": {
     "name": "Mage Hand",
@@ -3614,10 +3940,10 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "30 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "1 minute",
     "concentration": false,
     "level": 0
   },
@@ -3628,12 +3954,20 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "10 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "area_of_effect": {
+      "type": "cylinder",
+      "size": 10
+    },
+    "duration": "1 hour",
     "concentration": false,
-    "level": 0
+    "level": 3,
+    "dc": {
+      "dcSaveType": "charisma",
+      "dcSuccess": "no effect"
+    }
   },
   "Magic Jar": {
     "name": "Magic Jar",
@@ -3642,12 +3976,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Self",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "Until dispelled",
     "concentration": false,
-    "level": 0
+    "level": 6,
+    "dc": {
+      "dcSaveType": "charisma",
+      "dcSuccess": "no effect"
+    }
   },
   "Magic Missile": {
     "name": "Magic Missile",
@@ -3656,45 +3994,33 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "120 feet",
     "damageRoll": {
-      "baseDamage": [
+      "baseEffect": [
         {
-          "damage": [
-            {
-              "n": 1,
-              "d": 4
-            },
-            {
-              "n": 0,
-              "d": 0,
-              "flatBonus": 1
-            }
-          ],
-          "damageType": "Force"
+          "effect": {
+            "n": 1,
+            "d": 4
+          },
+          "effectType": "force"
         }
       ],
       "scaling": {
         "scalingOrigin": "spellSlotLevel",
         "scalingValue": {
-          "base": {
-            "damage": [
-              {
+          "base": [
+            {
+              "effect": {
                 "n": 1,
                 "d": 4
               },
-              {
-                "n": 0,
-                "d": 0,
-                "flatBonus": 1
-              }
-            ],
-            "damageType": "Force"
-          }
+              "effectType": "force"
+            }
+          ]
         }
       }
     },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 1
   },
   "Magic Mouth": {
     "name": "Magic Mouth",
@@ -3703,26 +4029,26 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "30 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "Until dispelled",
     "concentration": false,
-    "level": 0
+    "level": 2
   },
   "Magic Weapon": {
     "name": "Magic Weapon",
-    "actionTime": "action",
+    "actionTime": "bonusAction",
     "actionType": "spell",
     "targetingBehaviour": "lowestHP",
     "range": "Touch",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 1 hour",
+    "concentration": true,
+    "level": 2
   },
   "Magnificent Mansion": {
     "name": "Magnificent Mansion",
@@ -3731,12 +4057,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "300 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "area_of_effect": {
+      "type": "cube",
+      "size": 5
+    },
+    "duration": "24 hours",
     "concentration": false,
-    "level": 0
+    "level": 7
   },
   "Major Image": {
     "name": "Major Image",
@@ -3745,12 +4075,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "120 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 10 minutes",
+    "concentration": true,
+    "level": 3
   },
   "Mass Cure Wounds": {
     "name": "Mass Cure Wounds",
@@ -3759,12 +4089,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "60 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
+    },
+    "area_of_effect": {
+      "type": "sphere",
+      "size": 30
     },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 5
   },
   "Mass Heal": {
     "name": "Mass Heal",
@@ -3773,26 +4107,26 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "60 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 9
   },
   "Mass Healing Word": {
     "name": "Mass Healing Word",
-    "actionTime": "action",
+    "actionTime": "bonusAction",
     "actionType": "spell",
     "targetingBehaviour": "lowestHP",
     "range": "60 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 3
   },
   "Mass Suggestion": {
     "name": "Mass Suggestion",
@@ -3801,12 +4135,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "60 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "24 hours",
     "concentration": false,
-    "level": 0
+    "level": 6,
+    "dc": {
+      "dcSaveType": "wisdom",
+      "dcSuccess": "no effect"
+    }
   },
   "Maze": {
     "name": "Maze",
@@ -3815,12 +4153,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "60 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 10 minutes",
+    "concentration": true,
+    "level": 8
   },
   "Meld Into Stone": {
     "name": "Meld Into Stone",
@@ -3829,12 +4167,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Touch",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "8 hours",
     "concentration": false,
-    "level": 0
+    "level": 3
   },
   "Mending": {
     "name": "Mending",
@@ -3843,7 +4181,7 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Touch",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
     "duration": "Instantaneous",
@@ -3857,10 +4195,10 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "120 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "1 round",
     "concentration": false,
     "level": 0
   },
@@ -3871,43 +4209,41 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "1 mile",
     "damageRoll": {
-      "baseDamage": [
+      "baseEffect": [
         {
-          "damage": [
-            {
-              "n": 20,
-              "d": 6
-            },
-            {
-              "n": 20,
-              "d": 6
-            }
-          ],
-          "damageType": "Fire"
+          "effect": {
+            "n": 20,
+            "d": 6
+          },
+          "effectType": "fire"
         }
       ],
       "scaling": {
         "scalingOrigin": "spellSlotLevel",
         "scalingValue": {
-          "base": {
-            "damage": [
-              {
+          "base": [
+            {
+              "effect": {
                 "n": 20,
                 "d": 6
               },
-              {
-                "n": 20,
-                "d": 6
-              }
-            ],
-            "damageType": "Fire"
-          }
+              "effectType": "fire"
+            }
+          ]
         }
       }
     },
+    "area_of_effect": {
+      "type": "sphere",
+      "size": 40
+    },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 9,
+    "dc": {
+      "dcSaveType": "dexterity",
+      "dcSuccess": "half damage"
+    }
   },
   "Mind Blank": {
     "name": "Mind Blank",
@@ -3916,12 +4252,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Touch",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "24 hours",
     "concentration": false,
-    "level": 0
+    "level": 8
   },
   "Minor Illusion": {
     "name": "Minor Illusion",
@@ -3930,10 +4266,10 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "30 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "1 minute",
     "concentration": false,
     "level": 0
   },
@@ -3944,12 +4280,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Sight",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "area_of_effect": {
+      "type": "cube",
+      "size": 5280
+    },
+    "duration": "10 days",
     "concentration": false,
-    "level": 0
+    "level": 7
   },
   "Mirror Image": {
     "name": "Mirror Image",
@@ -3958,12 +4298,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Self",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "1 minute",
     "concentration": false,
-    "level": 0
+    "level": 2
   },
   "Mislead": {
     "name": "Mislead",
@@ -3972,26 +4312,26 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Self",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 1 hour",
+    "concentration": true,
+    "level": 5
   },
   "Misty Step": {
     "name": "Misty Step",
-    "actionTime": "action",
+    "actionTime": "bonusAction",
     "actionType": "spell",
     "targetingBehaviour": "lowestHP",
     "range": "Self",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 2
   },
   "Modify Memory": {
     "name": "Modify Memory",
@@ -4000,12 +4340,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "30 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 1 minute",
+    "concentration": true,
+    "level": 5,
+    "dc": {
+      "dcSaveType": "wisdom",
+      "dcSuccess": "no effect"
+    }
   },
   "Moonbeam": {
     "name": "Moonbeam",
@@ -4014,35 +4358,41 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "120 feet",
     "damageRoll": {
-      "baseDamage": [
+      "baseEffect": [
         {
-          "damage": [
-            {
-              "n": 2,
-              "d": 10
-            }
-          ],
-          "damageType": "Radiant"
+          "effect": {
+            "n": 2,
+            "d": 10
+          },
+          "effectType": "radiant"
         }
       ],
       "scaling": {
         "scalingOrigin": "spellSlotLevel",
         "scalingValue": {
-          "base": {
-            "damage": [
-              {
+          "base": [
+            {
+              "effect": {
                 "n": 3,
                 "d": 10
-              }
-            ],
-            "damageType": "Radiant"
-          }
+              },
+              "effectType": "radiant"
+            }
+          ]
         }
       }
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "area_of_effect": {
+      "type": "cylinder",
+      "size": 5
+    },
+    "duration": "Up to 1 minute",
+    "concentration": true,
+    "level": 2,
+    "dc": {
+      "dcSaveType": "constitution",
+      "dcSuccess": "half damage"
+    }
   },
   "Move Earth": {
     "name": "Move Earth",
@@ -4051,12 +4401,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "120 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "area_of_effect": {
+      "type": "cone",
+      "size": 40
+    },
+    "duration": "Up to 2 hours",
+    "concentration": true,
+    "level": 6
   },
   "Nondetection": {
     "name": "Nondetection",
@@ -4065,12 +4419,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Touch",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "8 hours",
     "concentration": false,
-    "level": 0
+    "level": 3
   },
   "Pass Without Trace": {
     "name": "Pass Without Trace",
@@ -4079,12 +4433,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Self",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 1 hour",
+    "concentration": true,
+    "level": 2
   },
   "Passwall": {
     "name": "Passwall",
@@ -4093,12 +4447,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "30 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "1 hour",
     "concentration": false,
-    "level": 0
+    "level": 5
   },
   "Phantasmal Killer": {
     "name": "Phantasmal Killer",
@@ -4107,35 +4461,37 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "120 feet",
     "damageRoll": {
-      "baseDamage": [
+      "baseEffect": [
         {
-          "damage": [
-            {
-              "n": 4,
-              "d": 10
-            }
-          ],
-          "damageType": "Psychic"
+          "effect": {
+            "n": 4,
+            "d": 10
+          },
+          "effectType": "psychic"
         }
       ],
       "scaling": {
         "scalingOrigin": "spellSlotLevel",
         "scalingValue": {
-          "base": {
-            "damage": [
-              {
+          "base": [
+            {
+              "effect": {
                 "n": 4,
                 "d": 10
-              }
-            ],
-            "damageType": "Psychic"
-          }
+              },
+              "effectType": "psychic"
+            }
+          ]
         }
       }
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 1 minute",
+    "concentration": true,
+    "level": 4,
+    "dc": {
+      "dcSaveType": "wisdom",
+      "dcSuccess": "no effect"
+    }
   },
   "Phantom Steed": {
     "name": "Phantom Steed",
@@ -4144,12 +4500,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "30 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "1 hour",
     "concentration": false,
-    "level": 0
+    "level": 3
   },
   "Planar Ally": {
     "name": "Planar Ally",
@@ -4158,12 +4514,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "60 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 6
   },
   "Planar Binding": {
     "name": "Planar Binding",
@@ -4172,12 +4528,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "60 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "24 hours",
     "concentration": false,
-    "level": 0
+    "level": 5,
+    "dc": {
+      "dcSaveType": "charisma",
+      "dcSuccess": "no effect"
+    }
   },
   "Plane Shift": {
     "name": "Plane Shift",
@@ -4186,12 +4546,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Touch",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 7,
+    "dc": {
+      "dcSaveType": "charisma",
+      "dcSuccess": "no effect"
+    }
   },
   "Plant Growth": {
     "name": "Plant Growth",
@@ -4200,12 +4564,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "150 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 3
   },
   "Poison Spray": {
     "name": "Poison Spray",
@@ -4214,35 +4578,37 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "10 feet",
     "damageRoll": {
-      "baseDamage": [
+      "baseEffect": [
         {
-          "damage": [
-            {
-              "n": 1,
-              "d": 12
-            }
-          ],
-          "damageType": "Poison"
+          "effect": {
+            "n": 1,
+            "d": 12
+          },
+          "effectType": "poison"
         }
       ],
       "scaling": {
         "scalingOrigin": "characterLevel",
         "scalingValue": {
-          "base": {
-            "damage": [
-              {
+          "base": [
+            {
+              "effect": {
                 "n": 2,
                 "d": 12
-              }
-            ],
-            "damageType": "Poison"
-          }
+              },
+              "effectType": "poison"
+            }
+          ]
         }
       }
     },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 0,
+    "dc": {
+      "dcSaveType": "constitution",
+      "dcSuccess": "no effect"
+    }
   },
   "Polymorph": {
     "name": "Polymorph",
@@ -4251,12 +4617,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "60 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 1 hour",
+    "concentration": true,
+    "level": 4,
+    "dc": {
+      "dcSaveType": "wisdom",
+      "dcSuccess": "no effect"
+    }
   },
   "Power Word Kill": {
     "name": "Power Word Kill",
@@ -4265,12 +4635,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "60 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 9
   },
   "Power Word Stun": {
     "name": "Power Word Stun",
@@ -4279,12 +4649,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "60 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 8
   },
   "Prayer of Healing": {
     "name": "Prayer of Healing",
@@ -4293,12 +4663,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "30 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 2
   },
   "Prestidigitation": {
     "name": "Prestidigitation",
@@ -4307,10 +4677,10 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "10 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "1 hour",
     "concentration": false,
     "level": 0
   },
@@ -4321,35 +4691,41 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Self",
     "damageRoll": {
-      "baseDamage": [
+      "baseEffect": [
         {
-          "damage": [
-            {
-              "n": 10,
-              "d": 6
-            }
-          ],
-          "damageType": "unknown"
+          "effect": {
+            "n": 10,
+            "d": 6
+          },
+          "effectType": "force"
         }
       ],
       "scaling": {
         "scalingOrigin": "spellSlotLevel",
         "scalingValue": {
-          "base": {
-            "damage": [
-              {
+          "base": [
+            {
+              "effect": {
                 "n": 10,
                 "d": 6
-              }
-            ],
-            "damageType": "unknown"
-          }
+              },
+              "effectType": "force"
+            }
+          ]
         }
       }
     },
+    "area_of_effect": {
+      "type": "cone",
+      "size": 60
+    },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 7,
+    "dc": {
+      "dcSaveType": "dexterity",
+      "dcSuccess": "no effect"
+    }
   },
   "Prismatic Wall": {
     "name": "Prismatic Wall",
@@ -4358,12 +4734,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "60 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "area_of_effect": {
+      "type": "line",
+      "size": 90
+    },
+    "duration": "10 minutes",
     "concentration": false,
-    "level": 0
+    "level": 9
   },
   "Private Sanctum": {
     "name": "Private Sanctum",
@@ -4372,12 +4752,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "120 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "area_of_effect": {
+      "type": "cube",
+      "size": 100
+    },
+    "duration": "24 hours",
     "concentration": false,
-    "level": 0
+    "level": 4
   },
   "Produce Flame": {
     "name": "Produce Flame",
@@ -4386,33 +4770,31 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Self",
     "damageRoll": {
-      "baseDamage": [
+      "baseEffect": [
         {
-          "damage": [
-            {
-              "n": 1,
-              "d": 8
-            }
-          ],
-          "damageType": "Fire"
+          "effect": {
+            "n": 1,
+            "d": 8
+          },
+          "effectType": "fire"
         }
       ],
       "scaling": {
         "scalingOrigin": "characterLevel",
         "scalingValue": {
-          "base": {
-            "damage": [
-              {
+          "base": [
+            {
+              "effect": {
                 "n": 2,
                 "d": 8
-              }
-            ],
-            "damageType": "Fire"
-          }
+              },
+              "effectType": "fire"
+            }
+          ]
         }
       }
     },
-    "duration": "Instantaneous",
+    "duration": "10 minutes",
     "concentration": false,
     "level": 0
   },
@@ -4423,12 +4805,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "120 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "area_of_effect": {
+      "type": "cube",
+      "size": 30
+    },
+    "duration": "Until dispelled",
     "concentration": false,
-    "level": 0
+    "level": 6
   },
   "Project Image": {
     "name": "Project Image",
@@ -4437,12 +4823,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "500 miles",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 24 hours",
+    "concentration": true,
+    "level": 7
   },
   "Protection From Energy": {
     "name": "Protection From Energy",
@@ -4451,12 +4837,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Touch",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 1 hour",
+    "concentration": true,
+    "level": 3
   },
   "Protection from Evil and Good": {
     "name": "Protection from Evil and Good",
@@ -4465,12 +4851,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Touch",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 10 minutes",
+    "concentration": true,
+    "level": 1
   },
   "Protection from Poison": {
     "name": "Protection from Poison",
@@ -4479,12 +4865,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Touch",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "1 hour",
     "concentration": false,
-    "level": 0
+    "level": 2
   },
   "Purify Food and Drink": {
     "name": "Purify Food and Drink",
@@ -4493,12 +4879,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "10 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 1
   },
   "Raise Dead": {
     "name": "Raise Dead",
@@ -4507,12 +4893,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Touch",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 5
   },
   "Ray of Enfeeblement": {
     "name": "Ray of Enfeeblement",
@@ -4521,12 +4907,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "60 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 1 minute",
+    "concentration": true,
+    "level": 2,
+    "dc": {
+      "dcSaveType": "constitution",
+      "dcSuccess": "no effect"
+    }
   },
   "Ray of Frost": {
     "name": "Ray of Frost",
@@ -4535,29 +4925,27 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "60 feet",
     "damageRoll": {
-      "baseDamage": [
+      "baseEffect": [
         {
-          "damage": [
-            {
-              "n": 1,
-              "d": 8
-            }
-          ],
-          "damageType": "Cold"
+          "effect": {
+            "n": 1,
+            "d": 8
+          },
+          "effectType": "cold"
         }
       ],
       "scaling": {
         "scalingOrigin": "characterLevel",
         "scalingValue": {
-          "base": {
-            "damage": [
-              {
+          "base": [
+            {
+              "effect": {
                 "n": 2,
                 "d": 8
-              }
-            ],
-            "damageType": "Cold"
-          }
+              },
+              "effectType": "cold"
+            }
+          ]
         }
       }
     },
@@ -4572,12 +4960,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Touch",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "1 hour",
     "concentration": false,
-    "level": 0
+    "level": 7
   },
   "Reincarnate": {
     "name": "Reincarnate",
@@ -4586,12 +4974,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Touch",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 5
   },
   "Remove Curse": {
     "name": "Remove Curse",
@@ -4600,12 +4988,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Touch",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 3
   },
   "Resilient Sphere": {
     "name": "Resilient Sphere",
@@ -4614,12 +5002,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "30 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 1 minute",
+    "concentration": true,
+    "level": 4,
+    "dc": {
+      "dcSaveType": "dexterity",
+      "dcSuccess": "no effect"
+    }
   },
   "Resistance": {
     "name": "Resistance",
@@ -4628,11 +5020,11 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Touch",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
+    "duration": "Up to 1 minute",
+    "concentration": true,
     "level": 0
   },
   "Resurrection": {
@@ -4642,12 +5034,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Touch",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 7
   },
   "Reverse Gravity": {
     "name": "Reverse Gravity",
@@ -4656,12 +5048,20 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "100 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "area_of_effect": {
+      "type": "cylinder",
+      "size": 50
+    },
+    "duration": "Up to 1 minute",
+    "concentration": true,
+    "level": 7,
+    "dc": {
+      "dcSaveType": "dexterity",
+      "dcSuccess": "no effect"
+    }
   },
   "Revivify": {
     "name": "Revivify",
@@ -4670,12 +5070,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Touch",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 3
   },
   "Rope Trick": {
     "name": "Rope Trick",
@@ -4684,12 +5084,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Touch",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "1 hour",
     "concentration": false,
-    "level": 0
+    "level": 2
   },
   "Sacred Flame": {
     "name": "Sacred Flame",
@@ -4698,49 +5098,51 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "60 feet",
     "damageRoll": {
-      "baseDamage": [
+      "baseEffect": [
         {
-          "damage": [
-            {
-              "n": 1,
-              "d": 8
-            }
-          ],
-          "damageType": "Radiant"
+          "effect": {
+            "n": 1,
+            "d": 8
+          },
+          "effectType": "radiant"
         }
       ],
       "scaling": {
         "scalingOrigin": "characterLevel",
         "scalingValue": {
-          "base": {
-            "damage": [
-              {
+          "base": [
+            {
+              "effect": {
                 "n": 2,
                 "d": 8
-              }
-            ],
-            "damageType": "Radiant"
-          }
+              },
+              "effectType": "radiant"
+            }
+          ]
         }
       }
     },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 0,
+    "dc": {
+      "dcSaveType": "dexterity",
+      "dcSuccess": "no effect"
+    }
   },
   "Sanctuary": {
     "name": "Sanctuary",
-    "actionTime": "action",
+    "actionTime": "bonusAction",
     "actionType": "spell",
     "targetingBehaviour": "lowestHP",
     "range": "30 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "1 minute",
     "concentration": false,
-    "level": 0
+    "level": 1
   },
   "Scorching Ray": {
     "name": "Scorching Ray",
@@ -4749,35 +5151,33 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "120 feet",
     "damageRoll": {
-      "baseDamage": [
+      "baseEffect": [
         {
-          "damage": [
-            {
-              "n": 2,
-              "d": 6
-            }
-          ],
-          "damageType": "Fire"
+          "effect": {
+            "n": 2,
+            "d": 6
+          },
+          "effectType": "fire"
         }
       ],
       "scaling": {
         "scalingOrigin": "spellSlotLevel",
         "scalingValue": {
-          "base": {
-            "damage": [
-              {
+          "base": [
+            {
+              "effect": {
                 "n": 2,
                 "d": 6
-              }
-            ],
-            "damageType": "Fire"
-          }
+              },
+              "effectType": "fire"
+            }
+          ]
         }
       }
     },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 2
   },
   "Scrying": {
     "name": "Scrying",
@@ -4786,12 +5186,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Self",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 10 minutes",
+    "concentration": true,
+    "level": 5,
+    "dc": {
+      "dcSaveType": "wisdom",
+      "dcSuccess": "no effect"
+    }
   },
   "Secret Chest": {
     "name": "Secret Chest",
@@ -4800,12 +5204,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Touch",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 4
   },
   "See Invisibility": {
     "name": "See Invisibility",
@@ -4814,12 +5218,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Self",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "1 hour",
     "concentration": false,
-    "level": 0
+    "level": 2
   },
   "Seeming": {
     "name": "Seeming",
@@ -4828,12 +5232,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "30 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "8 hours",
     "concentration": false,
-    "level": 0
+    "level": 5
   },
   "Sending": {
     "name": "Sending",
@@ -4842,12 +5246,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Unlimited",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "1 round",
     "concentration": false,
-    "level": 0
+    "level": 3
   },
   "Sequester": {
     "name": "Sequester",
@@ -4856,12 +5260,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Touch",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "Until dispelled",
     "concentration": false,
-    "level": 0
+    "level": 7
   },
   "Shapechange": {
     "name": "Shapechange",
@@ -4870,12 +5274,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Self",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 1 hour",
+    "concentration": true,
+    "level": 9
   },
   "Shatter": {
     "name": "Shatter",
@@ -4884,35 +5288,41 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "60 feet",
     "damageRoll": {
-      "baseDamage": [
+      "baseEffect": [
         {
-          "damage": [
-            {
-              "n": 3,
-              "d": 8
-            }
-          ],
-          "damageType": "Thunder"
+          "effect": {
+            "n": 3,
+            "d": 8
+          },
+          "effectType": "thunder"
         }
       ],
       "scaling": {
         "scalingOrigin": "spellSlotLevel",
         "scalingValue": {
-          "base": {
-            "damage": [
-              {
+          "base": [
+            {
+              "effect": {
                 "n": 4,
                 "d": 8
-              }
-            ],
-            "damageType": "Thunder"
-          }
+              },
+              "effectType": "thunder"
+            }
+          ]
         }
       }
     },
+    "area_of_effect": {
+      "type": "sphere",
+      "size": 10
+    },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 2,
+    "dc": {
+      "dcSaveType": "constitution",
+      "dcSuccess": "half damage"
+    }
   },
   "Shield": {
     "name": "Shield",
@@ -4921,38 +5331,38 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Self",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "1 round",
     "concentration": false,
-    "level": 0
+    "level": 1
   },
   "Shield of Faith": {
     "name": "Shield of Faith",
-    "actionTime": "action",
+    "actionTime": "bonusAction",
     "actionType": "spell",
     "targetingBehaviour": "lowestHP",
     "range": "60 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 10 minutes",
+    "concentration": true,
+    "level": 1
   },
   "Shillelagh": {
     "name": "Shillelagh",
-    "actionTime": "action",
+    "actionTime": "bonusAction",
     "actionType": "spell",
     "targetingBehaviour": "lowestHP",
     "range": "Touch",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "1 minute",
     "concentration": false,
     "level": 0
   },
@@ -4963,29 +5373,27 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Touch",
     "damageRoll": {
-      "baseDamage": [
+      "baseEffect": [
         {
-          "damage": [
-            {
-              "n": 1,
-              "d": 8
-            }
-          ],
-          "damageType": "Lightning"
+          "effect": {
+            "n": 1,
+            "d": 8
+          },
+          "effectType": "lightning"
         }
       ],
       "scaling": {
         "scalingOrigin": "characterLevel",
         "scalingValue": {
-          "base": {
-            "damage": [
-              {
+          "base": [
+            {
+              "effect": {
                 "n": 2,
                 "d": 8
-              }
-            ],
-            "damageType": "Lightning"
-          }
+              },
+              "effectType": "lightning"
+            }
+          ]
         }
       }
     },
@@ -5000,12 +5408,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "120 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "area_of_effect": {
+      "type": "sphere",
+      "size": 20
+    },
+    "duration": "Up to 10 minutes",
+    "concentration": true,
+    "level": 2
   },
   "Silent Image": {
     "name": "Silent Image",
@@ -5014,12 +5426,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "60 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "area_of_effect": {
+      "type": "cube",
+      "size": 15
+    },
+    "duration": "Up to 10 minutes",
+    "concentration": true,
+    "level": 1
   },
   "Simulacrum": {
     "name": "Simulacrum",
@@ -5028,12 +5444,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Touch",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "Until dispelled",
     "concentration": false,
-    "level": 0
+    "level": 7
   },
   "Sleep": {
     "name": "Sleep",
@@ -5042,35 +5458,37 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "90 feet",
     "damageRoll": {
-      "baseDamage": [
+      "baseEffect": [
         {
-          "damage": [
-            {
-              "n": 5,
-              "d": 8
-            }
-          ],
-          "damageType": "unknown"
+          "effect": {
+            "n": 5,
+            "d": 8
+          },
+          "effectType": "force"
         }
       ],
       "scaling": {
         "scalingOrigin": "spellSlotLevel",
         "scalingValue": {
-          "base": {
-            "damage": [
-              {
+          "base": [
+            {
+              "effect": {
                 "n": 5,
                 "d": 8
-              }
-            ],
-            "damageType": "unknown"
-          }
+              },
+              "effectType": "force"
+            }
+          ]
         }
       }
     },
-    "duration": "Instantaneous",
+    "area_of_effect": {
+      "type": "sphere",
+      "size": 20
+    },
+    "duration": "1 minute",
     "concentration": false,
-    "level": 0
+    "level": 1
   },
   "Sleet Storm": {
     "name": "Sleet Storm",
@@ -5079,12 +5497,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "150 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "area_of_effect": {
+      "type": "cylinder",
+      "size": 40
+    },
+    "duration": "Up to 1 minute",
+    "concentration": true,
+    "level": 3
   },
   "Slow": {
     "name": "Slow",
@@ -5093,12 +5515,20 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "120 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "area_of_effect": {
+      "type": "cube",
+      "size": 40
+    },
+    "duration": "Up to 1 minute",
+    "concentration": true,
+    "level": 3,
+    "dc": {
+      "dcSaveType": "wisdom",
+      "dcSuccess": "no effect"
+    }
   },
   "Spare the Dying": {
     "name": "Spare the Dying",
@@ -5107,7 +5537,7 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Touch",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
     "duration": "Instantaneous",
@@ -5121,12 +5551,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Self",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "10 minutes",
     "concentration": false,
-    "level": 0
+    "level": 1
   },
   "Speak with Dead": {
     "name": "Speak with Dead",
@@ -5135,12 +5565,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "10 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "10 minutes",
     "concentration": false,
-    "level": 0
+    "level": 3
   },
   "Speak with Plants": {
     "name": "Speak with Plants",
@@ -5149,12 +5579,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Self",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "area_of_effect": {
+      "type": "sphere",
+      "size": 30
+    },
+    "duration": "10 minutes",
     "concentration": false,
-    "level": 0
+    "level": 3
   },
   "Spider Climb": {
     "name": "Spider Climb",
@@ -5163,12 +5597,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Touch",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 1 hour",
+    "concentration": true,
+    "level": 2
   },
   "Spike Growth": {
     "name": "Spike Growth",
@@ -5177,12 +5611,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "150 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "area_of_effect": {
+      "type": "cylinder",
+      "size": 20
+    },
+    "duration": "Up to 10 minutes",
+    "concentration": true,
+    "level": 2
   },
   "Spirit Guardians": {
     "name": "Spirit Guardians",
@@ -5191,49 +5629,47 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Self",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 10 minutes",
+    "concentration": true,
+    "level": 3
   },
   "Spiritual Weapon": {
     "name": "Spiritual Weapon",
-    "actionTime": "action",
+    "actionTime": "bonusAction",
     "actionType": "spell",
     "targetingBehaviour": "lowestHP",
     "range": "60 feet",
     "damageRoll": {
-      "baseDamage": [
+      "baseEffect": [
         {
-          "damage": [
-            {
-              "n": 1,
-              "d": 8
-            }
-          ],
-          "damageType": "Force"
+          "effect": {
+            "n": 1,
+            "d": 8
+          },
+          "effectType": "force"
         }
       ],
       "scaling": {
         "scalingOrigin": "spellSlotLevel",
         "scalingValue": {
-          "base": {
-            "damage": [
-              {
+          "base": [
+            {
+              "effect": {
                 "n": 1,
                 "d": 8
-              }
-            ],
-            "damageType": "Force"
-          }
+              },
+              "effectType": "force"
+            }
+          ]
         }
       }
     },
-    "duration": "Instantaneous",
+    "duration": "1 minute",
     "concentration": false,
-    "level": 0
+    "level": 2
   },
   "Stinking Cloud": {
     "name": "Stinking Cloud",
@@ -5242,12 +5678,20 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "90 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "area_of_effect": {
+      "type": "sphere",
+      "size": 20
+    },
+    "duration": "Up to 1 minute",
+    "concentration": true,
+    "level": 3,
+    "dc": {
+      "dcSaveType": "constitution",
+      "dcSuccess": "no effect"
+    }
   },
   "Stone Shape": {
     "name": "Stone Shape",
@@ -5256,12 +5700,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Touch",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 4
   },
   "Stoneskin": {
     "name": "Stoneskin",
@@ -5270,12 +5714,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Touch",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 1 hour",
+    "concentration": true,
+    "level": 4
   },
   "Storm of Vengeance": {
     "name": "Storm of Vengeance",
@@ -5284,35 +5728,41 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Sight",
     "damageRoll": {
-      "baseDamage": [
+      "baseEffect": [
         {
-          "damage": [
-            {
-              "n": 2,
-              "d": 6
-            }
-          ],
-          "damageType": "Thunder"
+          "effect": {
+            "n": 2,
+            "d": 6
+          },
+          "effectType": "thunder"
         }
       ],
       "scaling": {
         "scalingOrigin": "spellSlotLevel",
         "scalingValue": {
-          "base": {
-            "damage": [
-              {
+          "base": [
+            {
+              "effect": {
                 "n": 2,
                 "d": 6
-              }
-            ],
-            "damageType": "Thunder"
-          }
+              },
+              "effectType": "thunder"
+            }
+          ]
         }
       }
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "area_of_effect": {
+      "type": "sphere",
+      "size": 360
+    },
+    "duration": "Up to 1 minute",
+    "concentration": true,
+    "level": 9,
+    "dc": {
+      "dcSaveType": "constitution",
+      "dcSuccess": "no effect"
+    }
   },
   "Suggestion": {
     "name": "Suggestion",
@@ -5321,12 +5771,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "30 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 8 hours",
+    "concentration": true,
+    "level": 2,
+    "dc": {
+      "dcSaveType": "wisdom",
+      "dcSuccess": "no effect"
+    }
   },
   "Sunbeam": {
     "name": "Sunbeam",
@@ -5335,35 +5789,41 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Self",
     "damageRoll": {
-      "baseDamage": [
+      "baseEffect": [
         {
-          "damage": [
-            {
-              "n": 6,
-              "d": 8
-            }
-          ],
-          "damageType": "Radiant"
+          "effect": {
+            "n": 6,
+            "d": 8
+          },
+          "effectType": "radiant"
         }
       ],
       "scaling": {
         "scalingOrigin": "spellSlotLevel",
         "scalingValue": {
-          "base": {
-            "damage": [
-              {
+          "base": [
+            {
+              "effect": {
                 "n": 6,
                 "d": 8
-              }
-            ],
-            "damageType": "Radiant"
-          }
+              },
+              "effectType": "radiant"
+            }
+          ]
         }
       }
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "area_of_effect": {
+      "type": "line",
+      "size": 60
+    },
+    "duration": "Up to 1 minute",
+    "concentration": true,
+    "level": 6,
+    "dc": {
+      "dcSaveType": "constitution",
+      "dcSuccess": "half damage"
+    }
   },
   "Sunburst": {
     "name": "Sunburst",
@@ -5372,35 +5832,41 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "150 feet",
     "damageRoll": {
-      "baseDamage": [
+      "baseEffect": [
         {
-          "damage": [
-            {
-              "n": 12,
-              "d": 6
-            }
-          ],
-          "damageType": "Radiant"
+          "effect": {
+            "n": 12,
+            "d": 6
+          },
+          "effectType": "radiant"
         }
       ],
       "scaling": {
         "scalingOrigin": "spellSlotLevel",
         "scalingValue": {
-          "base": {
-            "damage": [
-              {
+          "base": [
+            {
+              "effect": {
                 "n": 12,
                 "d": 6
-              }
-            ],
-            "damageType": "Radiant"
-          }
+              },
+              "effectType": "radiant"
+            }
+          ]
         }
       }
     },
+    "area_of_effect": {
+      "type": "cylinder",
+      "size": 60
+    },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 8,
+    "dc": {
+      "dcSaveType": "constitution",
+      "dcSuccess": "half damage"
+    }
   },
   "Symbol": {
     "name": "Symbol",
@@ -5409,12 +5875,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Touch",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "area_of_effect": {
+      "type": "cube",
+      "size": 10
+    },
+    "duration": "Until dispelled",
     "concentration": false,
-    "level": 0
+    "level": 7
   },
   "Telekinesis": {
     "name": "Telekinesis",
@@ -5423,12 +5893,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "60 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "area_of_effect": {
+      "type": "sphere",
+      "size": 30
+    },
+    "duration": "Up to 10 minutes",
+    "concentration": true,
+    "level": 5
   },
   "Telepathic Bond": {
     "name": "Telepathic Bond",
@@ -5437,12 +5911,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "30 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "1 hour",
     "concentration": false,
-    "level": 0
+    "level": 5
   },
   "Teleport": {
     "name": "Teleport",
@@ -5451,12 +5925,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "10 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
+    },
+    "area_of_effect": {
+      "type": "cube",
+      "size": 10
     },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 7
   },
   "Teleportation Circle": {
     "name": "Teleportation Circle",
@@ -5465,12 +5943,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "10 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "area_of_effect": {
+      "type": "sphere",
+      "size": 10
+    },
+    "duration": "1 round",
     "concentration": false,
-    "level": 0
+    "level": 5
   },
   "Thaumaturgy": {
     "name": "Thaumaturgy",
@@ -5479,10 +5961,10 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "30 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "1 minute",
     "concentration": false,
     "level": 0
   },
@@ -5493,35 +5975,41 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Self",
     "damageRoll": {
-      "baseDamage": [
+      "baseEffect": [
         {
-          "damage": [
-            {
-              "n": 2,
-              "d": 8
-            }
-          ],
-          "damageType": "Thunder"
+          "effect": {
+            "n": 2,
+            "d": 8
+          },
+          "effectType": "thunder"
         }
       ],
       "scaling": {
         "scalingOrigin": "spellSlotLevel",
         "scalingValue": {
-          "base": {
-            "damage": [
-              {
+          "base": [
+            {
+              "effect": {
                 "n": 3,
                 "d": 8
-              }
-            ],
-            "damageType": "Thunder"
-          }
+              },
+              "effectType": "thunder"
+            }
+          ]
         }
       }
     },
+    "area_of_effect": {
+      "type": "cube",
+      "size": 15
+    },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 1,
+    "dc": {
+      "dcSaveType": "constitution",
+      "dcSuccess": "half damage"
+    }
   },
   "Time Stop": {
     "name": "Time Stop",
@@ -5530,12 +6018,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Self",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 9
   },
   "Tiny Hut": {
     "name": "Tiny Hut",
@@ -5544,12 +6032,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Self",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "area_of_effect": {
+      "type": "sphere",
+      "size": 10
+    },
+    "duration": "8 hours",
     "concentration": false,
-    "level": 0
+    "level": 3
   },
   "Tongues": {
     "name": "Tongues",
@@ -5558,12 +6050,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Touch",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "1 hour",
     "concentration": false,
-    "level": 0
+    "level": 3
   },
   "Transport via Plants": {
     "name": "Transport via Plants",
@@ -5572,12 +6064,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "10 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "1 round",
     "concentration": false,
-    "level": 0
+    "level": 6
   },
   "Tree Stride": {
     "name": "Tree Stride",
@@ -5586,12 +6078,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Self",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 1 minute",
+    "concentration": true,
+    "level": 5
   },
   "True Polymorph": {
     "name": "True Polymorph",
@@ -5600,12 +6092,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "30 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 1 hour",
+    "concentration": true,
+    "level": 9
   },
   "True Resurrection": {
     "name": "True Resurrection",
@@ -5614,12 +6106,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Touch",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 9
   },
   "True Seeing": {
     "name": "True Seeing",
@@ -5628,12 +6120,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Touch",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "1 hour",
     "concentration": false,
-    "level": 0
+    "level": 6
   },
   "True Strike": {
     "name": "True Strike",
@@ -5642,11 +6134,11 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "30 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
+    "duration": "Up to 1 round",
+    "concentration": true,
     "level": 0
   },
   "Unseen Servant": {
@@ -5656,12 +6148,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "60 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "1 hour",
     "concentration": false,
-    "level": 0
+    "level": 1
   },
   "Vampiric Touch": {
     "name": "Vampiric Touch",
@@ -5670,35 +6162,33 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Self",
     "damageRoll": {
-      "baseDamage": [
+      "baseEffect": [
         {
-          "damage": [
-            {
-              "n": 3,
-              "d": 6
-            }
-          ],
-          "damageType": "Necrotic"
+          "effect": {
+            "n": 3,
+            "d": 6
+          },
+          "effectType": "necrotic"
         }
       ],
       "scaling": {
         "scalingOrigin": "spellSlotLevel",
         "scalingValue": {
-          "base": {
-            "damage": [
-              {
+          "base": [
+            {
+              "effect": {
                 "n": 4,
                 "d": 6
-              }
-            ],
-            "damageType": "Necrotic"
-          }
+              },
+              "effectType": "necrotic"
+            }
+          ]
         }
       }
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 1 minute",
+    "concentration": true,
+    "level": 3
   },
   "Vicious Mockery": {
     "name": "Vicious Mockery",
@@ -5707,35 +6197,37 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "60 feet",
     "damageRoll": {
-      "baseDamage": [
+      "baseEffect": [
         {
-          "damage": [
-            {
-              "n": 1,
-              "d": 4
-            }
-          ],
-          "damageType": "Psychic"
+          "effect": {
+            "n": 1,
+            "d": 4
+          },
+          "effectType": "psychic"
         }
       ],
       "scaling": {
         "scalingOrigin": "characterLevel",
         "scalingValue": {
-          "base": {
-            "damage": [
-              {
+          "base": [
+            {
+              "effect": {
                 "n": 2,
                 "d": 4
-              }
-            ],
-            "damageType": "Psychic"
-          }
+              },
+              "effectType": "psychic"
+            }
+          ]
         }
       }
     },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 0,
+    "dc": {
+      "dcSaveType": "wisdom",
+      "dcSuccess": "no effect"
+    }
   },
   "Wall of Fire": {
     "name": "Wall of Fire",
@@ -5744,35 +6236,41 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "120 feet",
     "damageRoll": {
-      "baseDamage": [
+      "baseEffect": [
         {
-          "damage": [
-            {
-              "n": 5,
-              "d": 8
-            }
-          ],
-          "damageType": "Fire"
+          "effect": {
+            "n": 5,
+            "d": 8
+          },
+          "effectType": "fire"
         }
       ],
       "scaling": {
         "scalingOrigin": "spellSlotLevel",
         "scalingValue": {
-          "base": {
-            "damage": [
-              {
+          "base": [
+            {
+              "effect": {
                 "n": 5,
                 "d": 8
-              }
-            ],
-            "damageType": "Fire"
-          }
+              },
+              "effectType": "fire"
+            }
+          ]
         }
       }
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "area_of_effect": {
+      "type": "line",
+      "size": 60
+    },
+    "duration": "Up to 1 minute",
+    "concentration": true,
+    "level": 4,
+    "dc": {
+      "dcSaveType": "dexterity",
+      "dcSuccess": "half damage"
+    }
   },
   "Wall of Force": {
     "name": "Wall of Force",
@@ -5781,12 +6279,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "120 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 10 minutes",
+    "concentration": true,
+    "level": 5
   },
   "Wall of Ice": {
     "name": "Wall of Ice",
@@ -5795,35 +6293,41 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "120 feet",
     "damageRoll": {
-      "baseDamage": [
+      "baseEffect": [
         {
-          "damage": [
-            {
-              "n": 10,
-              "d": 6
-            }
-          ],
-          "damageType": "Cold"
+          "effect": {
+            "n": 10,
+            "d": 6
+          },
+          "effectType": "cold"
         }
       ],
       "scaling": {
         "scalingOrigin": "spellSlotLevel",
         "scalingValue": {
-          "base": {
-            "damage": [
-              {
+          "base": [
+            {
+              "effect": {
                 "n": 12,
                 "d": 6
-              }
-            ],
-            "damageType": "Cold"
-          }
+              },
+              "effectType": "cold"
+            }
+          ]
         }
       }
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "area_of_effect": {
+      "type": "sphere",
+      "size": 10
+    },
+    "duration": "Up to 10 minutes",
+    "concentration": true,
+    "level": 6,
+    "dc": {
+      "dcSaveType": "dexterity",
+      "dcSuccess": "half damage"
+    }
   },
   "Wall of Stone": {
     "name": "Wall of Stone",
@@ -5832,12 +6336,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "120 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "duration": "Up to 10 minutes",
+    "concentration": true,
+    "level": 5
   },
   "Wall of Thorns": {
     "name": "Wall of Thorns",
@@ -5846,35 +6350,41 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "120 feet",
     "damageRoll": {
-      "baseDamage": [
+      "baseEffect": [
         {
-          "damage": [
-            {
-              "n": 7,
-              "d": 8
-            }
-          ],
-          "damageType": "Piercing"
+          "effect": {
+            "n": 7,
+            "d": 8
+          },
+          "effectType": "piercing"
         }
       ],
       "scaling": {
         "scalingOrigin": "spellSlotLevel",
         "scalingValue": {
-          "base": {
-            "damage": [
-              {
+          "base": [
+            {
+              "effect": {
                 "n": 8,
                 "d": 8
-              }
-            ],
-            "damageType": "Piercing"
-          }
+              },
+              "effectType": "piercing"
+            }
+          ]
         }
       }
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "area_of_effect": {
+      "type": "line",
+      "size": 60
+    },
+    "duration": "Up to 10 minutes",
+    "concentration": true,
+    "level": 6,
+    "dc": {
+      "dcSaveType": "dexterity",
+      "dcSuccess": "half damage"
+    }
   },
   "Warding Bond": {
     "name": "Warding Bond",
@@ -5883,12 +6393,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Touch",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "1 hour",
     "concentration": false,
-    "level": 0
+    "level": 2
   },
   "Water Breathing": {
     "name": "Water Breathing",
@@ -5897,12 +6407,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "30 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "24 hours",
     "concentration": false,
-    "level": 0
+    "level": 3
   },
   "Water Walk": {
     "name": "Water Walk",
@@ -5911,12 +6421,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "30 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "1 hour",
     "concentration": false,
-    "level": 0
+    "level": 3
   },
   "Web": {
     "name": "Web",
@@ -5925,12 +6435,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "60 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "area_of_effect": {
+      "type": "cube",
+      "size": 20
+    },
+    "duration": "Up to 1 hour",
+    "concentration": true,
+    "level": 2
   },
   "Weird": {
     "name": "Weird",
@@ -5939,12 +6453,20 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "120 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "area_of_effect": {
+      "type": "sphere",
+      "size": 30
+    },
+    "duration": "Up to 1 minute",
+    "concentration": true,
+    "level": 9,
+    "dc": {
+      "dcSaveType": "wisdom",
+      "dcSuccess": "no effect"
+    }
   },
   "Wind Walk": {
     "name": "Wind Walk",
@@ -5953,12 +6475,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "30 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "duration": "8 hours",
     "concentration": false,
-    "level": 0
+    "level": 6
   },
   "Wind Wall": {
     "name": "Wind Wall",
@@ -5967,35 +6489,41 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "120 feet",
     "damageRoll": {
-      "baseDamage": [
+      "baseEffect": [
         {
-          "damage": [
-            {
-              "n": 3,
-              "d": 8
-            }
-          ],
-          "damageType": "Bludgeoning"
+          "effect": {
+            "n": 3,
+            "d": 8
+          },
+          "effectType": "bludgeoning"
         }
       ],
       "scaling": {
         "scalingOrigin": "spellSlotLevel",
         "scalingValue": {
-          "base": {
-            "damage": [
-              {
+          "base": [
+            {
+              "effect": {
                 "n": 3,
                 "d": 8
-              }
-            ],
-            "damageType": "Bludgeoning"
-          }
+              },
+              "effectType": "bludgeoning"
+            }
+          ]
         }
       }
     },
-    "duration": "Instantaneous",
-    "concentration": false,
-    "level": 0
+    "area_of_effect": {
+      "type": "line",
+      "size": 50
+    },
+    "duration": "Up to 1 minute",
+    "concentration": true,
+    "level": 3,
+    "dc": {
+      "dcSaveType": "strength",
+      "dcSuccess": "half damage"
+    }
   },
   "Wish": {
     "name": "Wish",
@@ -6004,12 +6532,12 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "Self",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 9
   },
   "Word of Recall": {
     "name": "Word of Recall",
@@ -6018,12 +6546,16 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "5 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
+    },
+    "area_of_effect": {
+      "type": "sphere",
+      "size": 5
     },
     "duration": "Instantaneous",
     "concentration": false,
-    "level": 0
+    "level": 6
   },
   "Zone of Truth": {
     "name": "Zone of Truth",
@@ -6032,11 +6564,15 @@ export const spells = {
     "targetingBehaviour": "lowestHP",
     "range": "60 feet",
     "damageRoll": {
-      "baseDamage": [],
+      "baseEffect": [],
       "scaling": false
     },
-    "duration": "Instantaneous",
+    "area_of_effect": {
+      "type": "sphere",
+      "size": 15
+    },
+    "duration": "10 minutes",
     "concentration": false,
-    "level": 0
+    "level": 2
   }
-};
+}

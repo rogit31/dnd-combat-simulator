@@ -5,7 +5,7 @@ import {
     Character as CharacterType,
     Resources,
     SavingThrowMod,
-    CharacterConstructorArgs
+    CharacterConstructorArgs, DamageSet, DamageType
 } from "@/app/types";
 
 export class Character implements CharacterType{
@@ -16,12 +16,17 @@ export class Character implements CharacterType{
     name: string;
     HP: number;
     side: 'ally' | 'enemy';
+    class?: CharacterType['class'];
     abilityScores: AbilityScores;
     actions: Action[];
     conditions: Conditions;
     initiative?: number;
     savingThrows: SavingThrowMod;
     resources: Resources;
+    resistances?: DamageType[];
+    immunities?: DamageType[];
+    vulnerabilities?: DamageType[];
+
 
     constructor(data: CharacterConstructorArgs) {
         this.id = data.id;
@@ -31,6 +36,10 @@ export class Character implements CharacterType{
         this.name = data.name;
         this.side = data.side;
         this.HP = data.HP ?? this.maxHP;
+        this.class = data.class;
+        this.resistances = data.resistances;
+        this.immunities = data.immunities;
+        this.vulnerabilities = data.immunities;
 
         this.abilityScores = data.abilityScores ?? {
             strength: 10,
@@ -94,12 +103,33 @@ export class Character implements CharacterType{
         );
     }
 
-    applyDamage(amount: number) {
-        this.HP = Math.max(this.HP - amount, 0);
+    takeDamage(damageSet: DamageSet) {
+    //TODO: Make a case for if the character has a vuln and resistance at the same time.
+        //obviously in that case they take the normal amount of damage.
+        for(const damage of damageSet){
+
+            if(this.immunities?.includes(damage.type)){
+                continue; //do nothing
+            }
+
+            if(this.resistances?.includes(damage.type)){
+                this.HP = Math.max(0, this.HP -  Math.floor(damage.value /2));
+                continue;//set to itself - the floor of dmg /2
+            }
+
+            if(this.vulnerabilities?.includes(damage.type)){
+                this.HP = Math.max(0, this.HP - (damage.value * 2));
+                continue;
+            }
+
+            this.HP = Math.max(0, this.HP - damage.value);
+
+        }
+
     }
 
-    applyHealing(amount: number) {
-        this.HP = Math.min(this.HP + amount, this.maxHP);
+    healSelf(value: number) {
+        this.HP = Math.min(this.HP + value, this.maxHP);
     }
 
     public reset() {

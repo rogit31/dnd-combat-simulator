@@ -1,22 +1,19 @@
 import {
-    AbilityScores,
     Action as ActionType,
-    DieFormat,
-    DamageRoll,
     UsageConstraint,
     AOEType,
     DCType,
-    ActionConstructorArgs
-} from "./types"
+    ActionConstructorArgs, RollSet, BaseAction
+} from "../../types"
 
-export class Action implements ActionType {
+export class Action implements BaseAction {
     name: string;
     actionTime?: "action" | "bonusAction" | "freeAction" | "legendaryAction" | "reaction" | "lairAction" | "passive";
-    actionType?: "attack" | "spell" | "item" | "feature";
+    actionType: "attack" | "spell" | "item" | "feature";
     targetingBehaviour?: "random" | "lowestHP" | "highestHP" | "highestLVL" | "lowestLVL" | "highestDPM";
     range?: string;
-    healingRoll?: DieFormat;
-    damageRoll?: DamageRoll;
+    healingRoll?: RollSet;
+    damageRoll?: RollSet;
     appliesConditions?: [];
     area_of_effect?: AOEType;
     effects?: [];
@@ -103,7 +100,7 @@ export class AttackAction extends Action {
 }
 
 // Convenience factory functions
-export function createSimpleAttack(name: string, damage?: DamageRoll, attackBonus?: number): AttackAction {
+export function createSimpleAttack(name: string, damage?: RollSet, attackBonus?: number): AttackAction {
     return new AttackAction({
         name,
         damageRoll: damage,
@@ -112,8 +109,8 @@ export function createSimpleAttack(name: string, damage?: DamageRoll, attackBonu
 }
 
 export function createSimpleSpell(name: string, options?: {
-    damage?: DamageRoll;
-    healing?: DieFormat;
+    damage?: RollSet;
+    healing?: RollSet;
     level?: number;
     dc?: DCType;
     duration?: string;
@@ -128,11 +125,12 @@ export function createSimpleSpell(name: string, options?: {
     });
 }
 
-export function createSimpleHealing(name: string, healing: DieFormat): Action {
+export function createSimpleHealing(name: string, healing: RollSet): Action {
     return new Action({
         name,
         healingRoll: healing,
-        targetingBehaviour: "lowestHP" // Makes sense for healing
+        targetingBehaviour: "lowestHP", // Makes sense for healing
+        actionType: "spell"
     });
 }
 

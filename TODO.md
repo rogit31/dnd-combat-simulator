@@ -107,6 +107,11 @@
     - [ ] Resource utilization rates
     - [ ] Action economy efficiency
     - [ ] Critical hit/miss rates
+- [ ] **EVEN MORE statistics**
+  - [ ] Confidence interval
+  - [ ] pValue
+  - [ ] variance/swing
+  - [ ] Different strategy evaluations, as in what strategy should each party take
 - [ ] **Encounter analysis**
     - [ ] Difficulty spike detection
     - [ ] Snowball effect measurement

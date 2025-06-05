@@ -1,9 +1,9 @@
 //Takes in an array of allies and enemies, and runs a simulation x amount of times
-import {Action} from "@/app/types";
-import {Character} from '@/app/Character';
+import {Action, BattleContext, Character} from "@/app/types";
+import {decideAction} from '@/app/lib/systems/ai/decideAction';
 import chalk from 'chalk';
 
-export class RunSim{
+export class CombatEngine {
 
     private combatants: Character[];
     private cycles: number;
@@ -27,7 +27,7 @@ export class RunSim{
         const combatants: Character[] = [...this.allies, ...this.enemies];
 
         combatants.forEach(c => {
-            c.initiative = rollDie(1, 20, c.abilityScores.dexterity);
+            c.initiative = rollDie(1, 20, calculateAbilityModifier(c.abilityScores.dexterity));
         });
 
         return combatants.sort((a,b) => b.initiative! - a.initiative!) //can't be undefined since we just rolled it
@@ -81,35 +81,40 @@ export class RunSim{
             roundCounter++;
             console.log(chalk.bold.white(`\n🔄 --- Round ${roundCounter} ---`));
 
-            let anyActionTaken = false; // <- add this
+            let anyActionTaken = false;
 
             //iterate for every combatant
             for(let i = 0; i < combatants.length; i++){
 
-                const isAlly = combatants[i].side === 'ally';
+                const actor = combatants[i];
+                const isAlly = actor.side === 'ally';
                 const nameColor = isAlly ? chalk.green : chalk.red;
-                console.log(chalk.yellow(`⏰ It's ${nameColor(combatants[i].name)}'s turn.`))
+                console.log(chalk.yellow(`⏰ It's ${nameColor(actor.name)}'s turn.`))
 
                 //characters can generally make one action and one bonus action
                 //as long as conditions don't impede them so let's check for that first
-                if(combatants[i].HP > 0 && checkHasAction(combatants[i])){
+                if(actor.HP > 0 && checkHasAction(actor)){
 
-                    //pick an action to make
-                    const action = pickHighestPriorityAction(combatants[i].actions, undefined, combatants[i]);
+                    // Create battle context for AI decision making
+                    const battleContext: BattleContext = {
+                        allCombatants: combatants,
+                        currentRound: roundCounter,
+                        allies: this.allies.filter(a => a.HP > 0),
+                        enemies: this.enemies.filter(e => e.HP > 0),
+                        turnOrder: combatants
+                    };
 
-                    if(action){
-                        let targets: Character[] = [];
+                    // Use AI to decide the best action
+                    const actionSet = decideAction(actor, battleContext, { verbose: false });
 
-                        if(action.actionType === "attack"){
-                            targets = pickTarget(action, combatants, combatants[i].side, true) //Exclude targets with 0 hp with if its an attack
-                        }
+                    if(actionSet){
+                        // Get targets from AI decision (we'll need to modify decideAction to return targets too)
 
-                        if(action.actionType === "heal"){
-                            targets = pickTarget(action, combatants, combatants[i].side, false) //Include targets with 0 hp with if its a heal
-                        }
+                        const action = actionSet.action;
+                        const targets = actionSet.optimalTargets;
 
                         //Now that we have targets, execute the action
-                        makeAction(combatants[i], action, targets);
+                        makeAction(actor, action, targets);
 
                         //Consume the resource if it has one
                         action.usageConstraints?.forEach(constraint => {
@@ -117,17 +122,15 @@ export class RunSim{
                                 constraint.type === "resource" &&
                                 constraint.resourceName
                             ) {
-                                consumeResource(combatants[i], constraint.cost, constraint.resourceName, constraint.tier);
+                                consumeResource(actor, constraint.cost, constraint.resourceName, constraint.tier);
                             }
                         });
                         anyActionTaken = true;
 
                     } else{
-                        console.log(chalk.dim.italic(`😴 ${combatants[i].name} don't have any actions, they skip their turn`))
+                        console.log(chalk.dim.italic(`😴 ${actor.name} don't have any actions, they skip their turn`))
                     }
 
-                } else{
-                    console.log(chalk.dim.red("💀 Combatant was unable to take an action, they are downed or incapacitated."))
                 }
             }
 
@@ -172,48 +175,14 @@ function rollDie(n: number = 1, sides: number = 20, bonus: number = 0){
     return total + bonus;
 }
 
+function calculateAbilityModifier(abilityScore: number): number{
+    return Math.floor((abilityScore - 10) / 2);
+}
+
 function checkHasAction(char: Character){
-    return !char.conditions.incapacitated && !char.conditions.paralyzed && !char.conditions.petrified && !char.conditions.stunned && !char.conditions.unconscious
+    return !char.conditions?.incapacitated && !char.conditions?.paralyzed && !char.conditions?.petrified && !char.conditions?.stunned && !char.conditions?.unconscious
 }
 
-function pickHighestPriorityAction(actions: Action[], actionTime: Action['actionTime'] = "action", character: Character): Action | null {
-    return actions
-        .filter(a => a.actionTime === actionTime)
-        .sort((a, b) => a.priority - b.priority)
-        .find(a => canUseAction(a, character)) || null
-}
-
-function canUseAction(action: Action, character: Character): boolean{
-    if(!action.usageConstraints) return true;
-
-    return action.usageConstraints.every(constraint => {
-        switch (constraint.type) {
-            case "perTurn":
-                return constraint.remaining! > 0;
-            case "recharge":
-                return constraint.available;
-            case "resource":{
-                const resource = character.resources?.[constraint.resourceName];
-                if(!resource) return false;
-
-                if(resource.type === "flat") {
-                    return resource.current > constraint.cost;
-                }
-
-                if(resource.type === "tiered"){
-                    const level = constraint.tier ?? 1;
-                    const tier = resource.tiers[level];
-                    return tier?.current >= constraint.cost;
-                }
-                break;
-            }
-            case "condition":
-                return true; //add condition check here eventually
-            default:
-                return true;
-        }
-    })
-}
 
 //consumes a spell slot
 function consumeResource(character: Character, cost: number, key: string, tier?: number) {
@@ -238,37 +207,6 @@ function consumeResource(character: Character, cost: number, key: string, tier?:
 }
 
 
-//takes an action and returns the targets based on targeting type
-function pickTarget(action: Action, targets: Character[], side: Character['side'], exclude0: boolean){
-
-    let validTargets = action.onlyEnemies ?
-        targets.filter((t) => t.side !== side) : //if the action only targets enemies, validTargets becomes the opposite of the callers side
-        targets.filter((t) => t.side === side);
-
-    if(exclude0){
-        validTargets = validTargets.filter((t) => t.HP > 0);
-    }
-
-    if(validTargets.length === 0){
-        console.log(chalk.dim.yellow(`⚠️  No valid targets found for ${action.name}. [DEBUG]`));
-        return [];
-    }
-    switch (action.targetingBehaviour){
-        case "random":
-            // Ensure we don't try to target more than available
-            const numTargets = Math.min(action.targets, validTargets.length);
-            return Array.from({ length: numTargets }, () =>
-                validTargets[Math.floor(Math.random() * validTargets.length)]
-            );
-        case "lowestHP":
-            return [...validTargets]
-                .sort((a,b) => a.HP - b.HP) //sort by ascending hp
-                .slice(0, Math.min(action.targets, validTargets.length)) //don't exceed available targets
-        default:
-            return [] //make other cases here
-    }
-}
-
 function makeAction(actor: Character, action: Action, targets: Character[]){
 
     // Early return if no targets
@@ -283,13 +221,13 @@ function makeAction(actor: Character, action: Action, targets: Character[]){
 
         case "attack": {
 
-            if(action.bonusToHit){
+            if(action.attackBonus !== undefined){
                 //determine if the attack hits
                 //i.e, roll a d20, add bonus to hit, compare to AC
                 //since we're taking an array of targets, attempt to hit all of them.
 
                 for(let i = 0; i < targets.length; i++){
-                    const attackRoll = rollDie(1, 20, action.bonusToHit);
+                    const attackRoll = rollDie(1, 20, action.attackBonus);
                     const targetColor = targets[i].side === 'ally' ? chalk.green : chalk.red;
 
                     if(attackRoll >= targets[i].AC){
@@ -297,9 +235,9 @@ function makeAction(actor: Character, action: Action, targets: Character[]){
                         let damage = 0;
 
                         if (action.damageRoll) {
-                            damage = rollDie(action.damageRoll.n, action.damageRoll.d, action.damageRoll.flatBonus);
+                            damage = calculateRollSetDamage(action.damageRoll);
                         } else {
-                            damage = action.flatDamage || 0;
+                            damage = 0; // No flat damage property in new type system
                         }
 
                         targets[i].HP = Math.max(0,targets[i].HP - damage); //clamp to prevent overkill
@@ -316,31 +254,62 @@ function makeAction(actor: Character, action: Action, targets: Character[]){
                         console.log(chalk.dim.gray(`❌ ${actorColor(actor.name)} missed their attack on ${targetColor(targets[i].name)}!`))
                     }
                 }
+            }
+            break;
+        }
 
-            } else if(action.spellSave){
-                //here instead of the actor making the roll, the target does.
-                //Outcome is determined based on saving throw as a bonus + d20
+        case "spell": {
 
+            if(action.attackBonus !== undefined){
+                // Spell attack roll
                 for(let i = 0; i < targets.length; i++){
-
-                    const saveType = action.spellSaveStat || "charisma"; //default to a charisma saving throw
-                    const saveBonus = targets[i].savingThrows[saveType]; //use the targets savingThrow stat of the spell type
-                    const spellSave = rollDie(1, 20, saveBonus) //roll their die...
+                    const attackRoll = rollDie(1, 20, action.attackBonus);
                     const targetColor = targets[i].side === 'ally' ? chalk.green : chalk.red;
 
-                    if(spellSave < action.spellSave){ //failed
+                    if(attackRoll >= targets[i].AC){
+                        let damage = 0;
+
+                        if (action.damageRoll) {
+                            damage = calculateRollSetDamage(action.damageRoll);
+                        }
+
+                        targets[i].HP = Math.max(0,targets[i].HP - damage);
+
+                        console.log(chalk.bold.red(`🔮 ${actorColor(actor.name)} dealt ${chalk.bold.red(damage)} spell damage to ${targetColor(targets[i].name)} with ${chalk.italic(action.name)}!`));
+
+                        if(targets[i].HP > 0) {
+                            console.log(chalk.blue(`   💗 ${targets[i].name} has ${chalk.bold(targets[i].HP)} HP remaining.`));
+                        } else {
+                            console.log(chalk.dim.red(`   💀 ${targets[i].name} has been defeated!`));
+                        }
+
+                    } else{
+                        console.log(chalk.dim.gray(`❌ ${actorColor(actor.name)} missed their spell attack on ${targetColor(targets[i].name)}!`))
+                    }
+                }
+
+            } else if(action.dc){
+                //saving throw spell
+                for(let i = 0; i < targets.length; i++){
+
+                    const saveType = action.dc.dcSaveType;
+                    const saveBonus = getSavingThrowModifier(targets[i], saveType);
+                    const dc = action.dc.dcDefaultValue || calculateSpellDc(actor);
+                    const spellSave = rollDie(1, 20, saveBonus);
+                    const targetColor = targets[i].side === 'ally' ? chalk.green : chalk.red;
+
+                    if(spellSave < dc){ //failed
 
                         let damage = 0;
 
                         if (action.damageRoll) {
-                            damage = rollDie(action.damageRoll.n, action.damageRoll.d, action.damageRoll.flatBonus);
-                        } else {
-                            damage = action.flatDamage || 0;
+                            damage = calculateRollSetDamage(action.damageRoll);
                         }
+
                         console.log(chalk.red(`❌ ${targetColor(targets[i].name)} failed their ${saveType} saving throw against ${chalk.italic(action.name)}!`));
                         console.log(chalk.bold.red(`🔮 ${actorColor(actor.name)} dealt ${chalk.bold.red(damage)} spell damage to ${targetColor(targets[i].name)}!`));
 
-                        targets[i].HP = Math.max(0,targets[i].HP - damage); //clamp to prevent overkill
+                        targets[i].HP = Math.max(0,targets[i].HP - damage);
 
                         if(targets[i].HP > 0) {
                             console.log(chalk.blue(`   💗 ${targets[i].name} has ${chalk.bold(targets[i].HP)} HP remaining.`));
@@ -348,20 +317,18 @@ function makeAction(actor: Character, action: Action, targets: Character[]){
                             console.log(chalk.dim.red(`   💀 ${targets[i].name} has been defeated!`));
                         }
                     }
-                    else if(action.onSave && action.onSave === "half"){ //succeeded
+                    else if(action.dc.dcSuccess === "half damage"){ //succeeded but still takes half damage
                         let damage = 0;
 
                         if (action.damageRoll) {
-                            damage = rollDie(action.damageRoll.n, action.damageRoll.d, action.damageRoll.flatBonus);
-                        } else {
-                            damage = action.flatDamage || 0;
+                            damage = calculateRollSetDamage(action.damageRoll);
                         }
                         const halfDamage = Math.floor(damage / 2);
 
                         console.log(chalk.green(`✅ ${targetColor(targets[i].name)} succeeded their ${saveType} saving throw against ${chalk.italic(action.name)}!`));
                         console.log(chalk.yellow(`🛡️  ${actorColor(actor.name)} dealt ${chalk.bold.yellow(halfDamage)} reduced spell damage to ${targetColor(targets[i].name)}!`));
 
-                        targets[i].HP = Math.max(0,targets[i].HP - halfDamage); //div by 2 since saved
+                        targets[i].HP = Math.max(0,targets[i].HP - halfDamage);
 
                         if(targets[i].HP > 0) {
                             console.log(chalk.blue(`   💗 ${targets[i].name} has ${chalk.bold(targets[i].HP)} HP remaining.`));
@@ -372,33 +339,94 @@ function makeAction(actor: Character, action: Action, targets: Character[]){
                         console.log(chalk.green(`✅ ${targetColor(targets[i].name)} succeeded their ${saveType} saving throw and took no damage!`));
                     }
                 }
+
+            } else if(action.healingRoll){
+                // Healing spell
+                const heal = calculateRollSetHealing(action.healingRoll);
+
+                for (let i = 0; i < targets.length; i++) {
+                    const previousHP = targets[i].HP;
+                    targets[i].HP = Math.min(targets[i].HP + heal, targets[i].maxHP!);
+                    const actualHealing = targets[i].HP - previousHP;
+                    const targetColor = targets[i].side === 'ally' ? chalk.green : chalk.red;
+
+                    console.log(chalk.bold.green(`💚 ${actorColor(actor.name)} healed ${targetColor(targets[i].name)} for ${chalk.bold.green(actualHealing)} HP with ${chalk.italic(action.name)}!`));
+                    console.log(chalk.blue(`   💗 ${targets[i].name} now has ${chalk.bold(targets[i].HP)} HP.`));
+                }
             }
             break;
         }
 
-
-        case "heal":{
-            let heal = 0;
-
-            if (action.healingRoll) {
-                heal = rollDie(action.healingRoll.n, action.healingRoll.d, action.healingRoll.flatBonus);
-            } else {
-                heal = action.flatHealing || 0;
-            }
-
-            for (let i = 0; i < targets.length; i++) {
-                const previousHP = targets[i].HP;
-                targets[i].HP = Math.min(targets[i].HP + heal, targets[i].maxHP!); //clamp to prevent overhealing
-                const actualHealing = targets[i].HP - previousHP;
-                const targetColor = targets[i].side === 'ally' ? chalk.green : chalk.red;
-
-                console.log(chalk.bold.green(`💚 ${actorColor(actor.name)} healed ${targetColor(targets[i].name)} for ${chalk.bold.green(actualHealing)} HP with ${chalk.italic(action.name)}!`));
-                console.log(chalk.blue(`   💗 ${targets[i].name} now has ${chalk.bold(targets[i].HP)} HP.`));
-            }
-
+        default:
+            console.log(chalk.dim.yellow(`⚠️  Action type ${action.actionType} not implemented yet.`));
             break;
-        }
+    }
+}
 
+function calculateRollSetDamage(rollSet: Action['damageRoll']): number {
+    if (!rollSet) return 0;
+
+    let total = 0;
+    for (const effectRoll of rollSet.baseEffect) {
+        const { n, d, flatBonus = 0 } = effectRoll.effect;
+        total += rollDie(n, d, flatBonus);
     }
 
+    // TODO: Implement scaling logic here if needed
+
+    return total;
+}
+
+function calculateRollSetHealing(rollSet: Action['healingRoll']): number {
+    if (!rollSet) return 0;
+
+    let total = 0;
+    for (const effectRoll of rollSet.baseEffect) {
+        const { n, d, flatBonus = 0 } = effectRoll.effect;
+        total += rollDie(n, d, flatBonus);
+    }
+
+    // TODO: Implement scaling logic here if needed
+
+    return total;
+}
+
+function getSavingThrowModifier(character: Character, ability: keyof Character['abilityScores']): number{
+    if(character.savingThrows && character.savingThrows[ability] !== undefined){
+        return character.savingThrows[ability]!;
+    } else{
+        const abilityScore = character.abilityScores[ability];
+        const mod = Math.floor((abilityScore - 10) / 2);
+        return mod;
+    }
+}
+
+function calculateSpellDc(character: Character): number {
+    const proficiencyBonus = character.proficiencyBonus || Math.ceil((character.level || 1) / 4) + 1;
+    const spellcastingMod = getSpellCastingMod(character);
+    return 8 + proficiencyBonus + spellcastingMod;
+}
+
+function getSpellCastingMod(character: Character): number {
+    if(character.spellCastingMod !== undefined) return character.spellCastingMod;
+
+    if(character.class){
+        switch (character.class){
+            case "artificer":
+                return calculateAbilityModifier(character.abilityScores.intelligence);
+            case "bard":
+            case "paladin":
+            case "sorcerer":
+            case "warlock":
+                return calculateAbilityModifier(character.abilityScores.charisma);
+            case "cleric":
+            case "druid":
+            case "monk":
+            case "ranger":
+                return calculateAbilityModifier(character.abilityScores.wisdom);
+            case "wizard":
+                return calculateAbilityModifier(character.abilityScores.intelligence);
+        }
+    }
+    return 0;
 }
