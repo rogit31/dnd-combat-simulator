@@ -36,7 +36,7 @@ export interface Character {
     /** Armor Class. */
     AC: number;
     /** Class of the character (if any). */
-    class?: "barbarian" | "bard" | "cleric" | "druid" | "fighter" | "monk" | "paladin" | "ranger" | "rogue" | "sorcerer" | "warlock" | "wizard" | "artificer";
+    classes?: ClassData[];
     /** Character ability scores. */
     abilityScores: AbilityScores;
     /** Optional override for spellcasting modifier. */
@@ -59,7 +59,10 @@ export interface Character {
     immunities?: DamageType[];
     /** Character's vulnerabilities, from which they will take double the damage. */
     vulnerabilities?: DamageType[];
-
+    /** Character's race or specie. */
+    race?: string;
+    /** Character's background. */
+    background?: string; //TODO: figure out a better data shape for this
     /** Resets a characters temp changes */
     reset: () => void;
 
@@ -68,6 +71,12 @@ export interface Character {
     healSelf(value: number): void;
 
     isAlive(): boolean
+}
+
+export interface ClassData {
+    level: number,
+    hitDice: number,
+    // classFeatures: [] TODO: add here
 }
 
 /**
@@ -327,3 +336,58 @@ type SimpleClassObject = {
     name: string;
     url: string;
 };
+
+/** A single numeric stat we might want to touch. */
+export type Stat =
+    | keyof AbilityScores   // strength, dexterity, …
+    | "AC"
+    | "maxHP"
+    | "speed"
+    | "proficiencyBonus";
+
+/** How a modifier treats that stat. */
+export type ModifierOp = "add" | "multiply" | "set";
+
+/** One line in the running list of active modifiers. */
+export interface StatModifier {
+    id: string;              // for easy remove() later
+    stat: Stat;
+    op: ModifierOp;
+    value: number;           // e.g. +2, ×1.5, or hard-set 21
+    source: string;          // "Belt of Hill Giant Strength"
+    expiresRound?: number;   // optional duration hook
+}
+
+/** All battle-engine moments you might want to listen to. */
+export type Trigger =
+    | "onHeal"            // character healed
+    | "onTakeDamage"
+    | "onDealDamage"
+    | "onTurnStart"
+    | "onTurnEnd"
+    | "onKill"
+    | "onCastSpell"
+    | "onRest";
+
+/** Data that accompanies each trigger. Narrowed by K. */
+export type TriggerCtx<K extends Trigger> =
+    K extends "onHeal"
+        ? { amount: number; healer: Character; battle: BattleContext }
+        : K extends "onDealDamage" | "onTakeDamage"
+            ? { amount: number; target: Character; battle: BattleContext; type: DamageType }
+            : { battle: BattleContext };          // fallback payload
+
+/** “When X happens, run this code.” */
+export interface TriggerEffect<K extends Trigger = Trigger> {
+    trigger: K;
+    cb: (self: Character, ctx: TriggerCtx<K>) => void;
+    source: string; // for UI/debug
+}
+
+export interface Feature {
+    name: string;
+    /** Passive, always-on numeric changes. */
+    modifiers?: StatModifier[];
+    /** Event-driven behaviour. */
+    triggers?: TriggerEffect[];
+}
