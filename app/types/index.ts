@@ -1,3 +1,5 @@
+import {Rarity} from "@/app/types/dndBeyondApiType";
+
 /**
  * Side of a character in the battle.
  */
@@ -63,6 +65,8 @@ export interface Character {
     race?: string;
     /** Character's background. */
     background?: string; //TODO: figure out a better data shape for this
+
+    inventory: Inventory;
     /** Resets a characters temp changes */
     reset: () => void;
 
@@ -76,7 +80,18 @@ export interface Character {
 export interface ClassData {
     level: number,
     hitDice: number,
+    name: string,
     // classFeatures: [] TODO: add here
+}
+
+export interface Item{
+    id: number;
+    description: string,
+    quantity: number;
+    isAttuned: boolean;
+    equipped: boolean;
+    rarity: Rarity;
+
 }
 
 /**
@@ -339,8 +354,9 @@ type SimpleClassObject = {
 
 /** A single numeric stat we might want to touch. */
 export type Stat =
-    | keyof AbilityScores   // strength, dexterity, …
+    | keyof AbilityScores
     | "AC"
+    | "HP"
     | "maxHP"
     | "speed"
     | "proficiencyBonus";

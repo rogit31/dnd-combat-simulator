@@ -1,9 +1,9 @@
-import { SpellAction } from "@/app/lib/models/Action";
+import { SpellAction } from "@/app/lib/models/character/actions/Action";
 import {ApiSpellShape, RollSet, EffectRoll, DieFormat, DamageType} from "@/app/types";
 import {writeFile} from "node:fs/promises";
 
 // D&D 5e API base URL
-const DND_API_BASE = "https://www.dnd5eapi.co/api/2014";
+export const DND_API_BASE = "https://www.dnd5eapi.co/api/2014";
 
 /**
  * Fetches a spell by index from the D&D 5e API
@@ -291,4 +291,3 @@ async function resetAndWrite() {
         console.error('Failed to write spells data:', error);
     }
 }
-resetAndWrite();

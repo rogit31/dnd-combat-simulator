@@ -1,8 +1,8 @@
 import {Action, BattleContext} from "@/app/types";
 import {decideAction} from "@/app/lib/systems/ai/decideAction";
 import {spells} from "../lib/data/spells/spells";
-import { Character } from "../lib/models/Character";
-import {SpellAction} from "@/app/lib/models/Action";
+import { Character } from "../lib/models/character/Character";
+import {SpellAction} from "@/app/lib/models/character/actions/Action";
 
 
 // Test Actions

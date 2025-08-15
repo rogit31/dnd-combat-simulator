@@ -90,11 +90,11 @@ export interface Data {
 }
 
 export interface Actions {
-    race:       ActionsClass[];
-    class:      ActionsClass[];
-    background: null;
-    item:       null;
-    feat:       ActionsClass[];
+    race:       ActionsClass[] | null;
+    class:      ActionsClass[] | null;
+    background: ActionsClass[] | null;
+    item:       ActionsClass[] | null;
+    feat:       ActionsClass[] | null;
 }
 
 export interface ActionsClass {
@@ -131,7 +131,7 @@ export interface ActionsClass {
 
 export interface Activation {
     activationTime: number | null;
-    activationType: number | null;
+    activationType: number | null; //1 is action, 3 is bonus action, 4 is reaction, 8 is free, 6 might be ritual?
 }
 
 export interface Die {
@@ -392,7 +392,7 @@ export interface SpellDefinition {
     healing:                null;
     healingDice:            any[];
     tempHpDice:             any[];
-    attackType:             number | null;
+    attackType:             number | null; //1 is melee, 2 is ranged spell attack
     canCastAtHigherLevel:   boolean;
     isHomebrew:             boolean;
     version:                null | string;
@@ -848,7 +848,7 @@ export interface InventoryDefinition {
     damageType:            DamageType | null;
     fixedDamage:           number | null;
     properties:            Property[] | null;
-    attackType:            number | null;
+    attackType:            number | null; //1 is melee 2 is ranged, applies to spells as well
     categoryId:            number | null;
     range:                 number | null;
     longRange:             number | null;

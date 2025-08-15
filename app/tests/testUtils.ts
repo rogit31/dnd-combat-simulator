@@ -1,6 +1,6 @@
 import {Action as ActionType, ActionConstructorArgs, Character as CharacterType} from "@/app/types";
-import { Action } from "../lib/models/Action";
-import { Character } from "../lib/models/Character";
+import { Action } from "../lib/models/character/actions/Action";
+import { Character } from "../lib/models/character/Character";
 
 export function createMockCharacter(overrides: Partial<Character> = {}): CharacterType {
     return new Character({

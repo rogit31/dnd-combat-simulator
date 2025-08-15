@@ -1,6 +1,6 @@
 import {CombatEngine} from "@/app/lib/systems/combat/CombatEngine";
-import {Character} from "@/app/lib/models/Character";
-import {Action, AttackAction, SpellAction} from "../lib/models/Action";
+import {Character} from "@/app/lib/models/character/Character";
+import {Action, AttackAction, SpellAction} from "../lib/models/character/actions/Action";
 import {longswordAttack} from "@/app/examples/testDecisionMaking";
 
 // Example Actions

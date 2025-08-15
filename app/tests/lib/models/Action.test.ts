@@ -1,4 +1,4 @@
-import { Action, SpellAction } from '../../../lib/models/Action';
+import { Action, SpellAction } from '../../../lib/models/character/actions/Action';
 
 describe('Action', () => {
     test('should infer action type correctly', () => {

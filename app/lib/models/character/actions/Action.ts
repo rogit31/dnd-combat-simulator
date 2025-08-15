@@ -4,7 +4,7 @@ import {
     AOEType,
     DCType,
     ActionConstructorArgs, RollSet, BaseAction
-} from "../../types"
+} from "../../../../types"
 
 export class Action implements BaseAction {
     name: string;
