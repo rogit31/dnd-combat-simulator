@@ -1,5 +1,8 @@
 # TODO: D&D 5e Combat Simulator
 
+## Note: This TODO was made when I was making only the dnd combat simulator, so basically all of this is now kind of irrelevant. I wouldn't reccomend reading it.
+
+
 ## 🚨 Critical/High Priority
 
 ### Data Modeling

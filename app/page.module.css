@@ -1,3 +1,13 @@
 .main{
     text-align: center;
 }
+
+.character{
+    border: 1px solid white;
+}
+
+.charactersWrapper{
+    width: 100%;
+    display: grid;
+    grid-auto-columns: 300px;
+}
