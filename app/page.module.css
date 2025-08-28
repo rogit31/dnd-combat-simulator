@@ -1,13 +1,54 @@
-.main{
-    text-align: center;
-}
-
 .character{
-    border: 1px solid white;
+    border: 1px solid rgba(256, 256, 256, 20%);
+    /*border-image-source: url('/borderTest.png');*/
+    /*border-image-slice: 8 fill;*/
+    /*border-image-repeat: round;*/
+    /*image-rendering: pixelated;*/
+    border-radius: 4px;
+    padding: 12px;
+    background-color: var(--neutral2);
 }
 
 .charactersWrapper{
     width: 100%;
     display: grid;
-    grid-auto-columns: 300px;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+}
+
+.characterTopWrapper{
+    display: flex;
+}
+
+.characterMetaWrapper{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    div{
+        display: flex;
+        gap: 8px;
+        span{
+            display: flex;
+            gap: 4px;
+        }
+    }
+}
+
+.saveActions{
+    display: flex;
+    gap: 8px;
+}
+
+.header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.characterButtonsWrapper{
+    display: flex;
+    gap: 4px;
+    button{
+        border: 1px solid rgba(256, 256, 256, 0.1);
+    }
 }
