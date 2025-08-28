@@ -3,6 +3,15 @@
 //TODO: Manager global context for the db and for character data.
 //TODO: Consider zustand for global context management
 
+import Header from "@/app/components/Header";
+import {useState, useEffect, useRef} from 'react';
+import styles from "./page.module.css";
+import {WebDB} from "@/src/database/web";
+import {CharacterRepository} from "@/src/persistence/CharacterRepository";
+import {Character} from "@/src/models/character/Character";
+import {manualTests} from "@/tests/manutalTests";
+import {HandCoins, HeartPulse, Shield, Pencil, Trash} from "lucide-react";
+
 const mockData = [
     {
         name: "Something",
@@ -58,14 +67,6 @@ const mockData = [
     }
 ];
 
-
-import {useState, useEffect, useRef} from 'react';
-import styles from "./page.module.css";
-import {WebDB} from "@/src/database/web";
-import {CharacterRepository} from "@/src/persistence/CharacterRepository";
-import {Character} from "@/src/models/character/Character";
-import {manualTests} from "@/tests/manutalTests";
-import {HardDriveDownload, FileUp, HandCoins, HeartPulse, Import, Shield, Eye, Pencil, Trash} from "lucide-react";
 
 export default function Home() {
     const characters = mockData;
@@ -161,25 +162,7 @@ export default function Home() {
     return (
         <div className={styles.page}>
             <main className={styles.main}>
-
-                <div className={styles.header}>
-                    <h1>BETTERD&D</h1>
-
-                    <nav className={styles.saveActions}>
-                        <button onClick={() => exportSave()}><HardDriveDownload/>Export</button>
-                        <input
-                            type="file"
-                            id="load-save"
-                            onChange={(e) => importSave(e)}
-                            style={{display: "none"}}
-                        />
-
-                        <label htmlFor="load-save" className="btn">
-                            <Import/> Import
-                        </label>
-                    </nav>
-                </div>
-
+                <Header exportSave={exportSave} importSave={importSave}/>
                 {characters.length === 0 ? (
                     <p>No characters found</p>
                 ) : (
@@ -188,7 +171,7 @@ export default function Home() {
                         <div className={styles.charactersWrapper}>
                             {characters.map((character) => (
                                 <div key={character.id} className={styles.character}>
-                                    <div className={styles.characterTopWrapper}>
+                                    <a className={styles.characterTopWrapper} href={`/view-character/${character.id}`}>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"
                                              viewBox="0 0 34 34"
                                              fill="none" stroke="#ffffff" strokeWidth="2" strokeLinecap="round"
@@ -212,9 +195,6 @@ export default function Home() {
 
                                             <nav className={styles.characterButtonsWrapper}>
                                                 <button>
-                                                    <Eye/>
-                                                </button>
-                                                <button>
                                                     <Pencil/>
                                                 </button>
                                                 <button>
@@ -224,7 +204,7 @@ export default function Home() {
 
                                         </div>
 
-                                    </div>
+                                    </a>
                                 </div>
                             ))}
                         </div>
