@@ -4,13 +4,10 @@
 //TODO: Consider zustand for global context management
 
 import Header from "@/app/components/Header";
-import {useState, useEffect, useRef} from 'react';
+import {useState, useRef} from 'react';
 import styles from "./page.module.css";
 import {WebDB} from "@/src/database/web";
-import {CharacterRepository} from "@/src/persistence/CharacterRepository";
-import {Character} from "@/src/models/character/Character";
-import {manualTests} from "@/tests/manutalTests";
-import {HandCoins, HeartPulse, Shield, Pencil, Trash} from "lucide-react";
+import CharacterCard from "@/app/components/CharacterCard";
 
 const mockData = [
     {
@@ -19,6 +16,7 @@ const mockData = [
         HP: 43,
         AC: 14,
         gold: 241,
+        avatar: 'sampleAvatar.png',
         class: {name: "Barbarian", level: 8},
         inventory: [
             {name: "Greatsword", weight: 12, rarity: "uncommon"},
@@ -161,7 +159,7 @@ export default function Home() {
 
     return (
         <div className={styles.page}>
-            <main className={styles.main}>
+            <main>
                 <Header exportSave={exportSave} importSave={importSave}/>
                 {characters.length === 0 ? (
                     <p>No characters found</p>
@@ -170,42 +168,7 @@ export default function Home() {
                         <h2>Characters:</h2>
                         <div className={styles.charactersWrapper}>
                             {characters.map((character) => (
-                                <div key={character.id} className={styles.character}>
-                                    <a className={styles.characterTopWrapper} href={`/view-character/${character.id}`}>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"
-                                             viewBox="0 0 34 34"
-                                             fill="none" stroke="#ffffff" strokeWidth="2" strokeLinecap="round"
-                                             strokeLinejoin="round"
-                                             className="lucide lucide-square-user-round-icon lucide-square-user-round">
-                                            <path d="M18 21a6 6 0 0 0-12 0"/>
-                                            <circle cx="12" cy="11" r="4"/>
-                                            <rect width="18" height="18" x="3" y="3" rx="2"/>
-                                        </svg>
-
-                                        <div className={styles.characterMetaWrapper}>
-
-                                            <h2>{character.name}</h2>
-                                            <p>{character.class.name} - Level {character.class.level}</p>
-
-                                            <div>
-                                                <span><HeartPulse/>{character.HP}</span>
-                                                <span><Shield/>{character.AC}</span>
-                                                <span><HandCoins/>{character.gold}</span>
-                                            </div>
-
-                                            <nav className={styles.characterButtonsWrapper}>
-                                                <button>
-                                                    <Pencil/>
-                                                </button>
-                                                <button>
-                                                    <Trash/>
-                                                </button>
-                                            </nav>
-
-                                        </div>
-
-                                    </a>
-                                </div>
+                                <CharacterCard character={character} key={character.id}/>
                             ))}
                         </div>
 

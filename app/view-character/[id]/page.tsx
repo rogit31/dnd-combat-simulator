@@ -1,7 +1,9 @@
 import React from 'react';
+import {ArrowLeft} from "lucide-react";
+import Link from "next/link";
 
-interface CharacterProps{
-    params: Promise<{id: number}>;
+interface CharacterProps {
+    params: Promise<{ id: number }>;
 }
 
 async function Page({params}: CharacterProps) {
@@ -16,6 +18,9 @@ async function Page({params}: CharacterProps) {
     return (
         <div>
             <h2>Character view</h2>
+            <Link href="/">
+                <ArrowLeft/>
+            </Link>
         </div>
     );
 }

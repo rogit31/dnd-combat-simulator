@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from "@/app/page.module.css";
+import styles from "./Header.module.css";
 import {HardDriveDownload, Import} from "lucide-react";
 
 interface HeaderProps{
@@ -11,7 +11,6 @@ function Header({exportSave,  importSave} : HeaderProps) {
     return (
         <div className={styles.header}>
             <h1>BETTERD&D</h1>
-
             <nav className={styles.saveActions}>
                 <button onClick={() => exportSave()}><HardDriveDownload/>Export</button>
                 <input
