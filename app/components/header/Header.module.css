@@ -1,0 +1,7 @@
+.header{
+    h1{
+        color: var(--accent2);
+        padding-left: 1rem;
+    }
+}
+

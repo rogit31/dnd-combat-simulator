@@ -3,11 +3,12 @@
 //TODO: Manager global context for the db and for character data.
 //TODO: Consider zustand for global context management
 
-import Header from "@/app/components/Header";
-import {useState, useRef} from 'react';
+import Header from "@/app/components/header/Header";
+import React, {useState, useRef} from 'react';
 import styles from "./page.module.css";
 import {WebDB} from "@/src/database/web";
-import CharacterCard from "@/app/components/CharacterCard";
+import CharacterCard from "@/app/components/characters/CharacterCard";
+import {HardDriveDownload, HardDriveUpload} from "lucide-react";
 
 const mockData = [
     {
@@ -160,7 +161,6 @@ export default function Home() {
     return (
         <div className={styles.page}>
             <main>
-                <Header exportSave={exportSave} importSave={importSave}/>
                 {characters.length === 0 ? (
                     <p>No characters found</p>
                 ) : (
@@ -171,7 +171,19 @@ export default function Home() {
                                 <CharacterCard character={character} key={character.id}/>
                             ))}
                         </div>
+                        <nav className={styles.saveActions}>
+                            <button onClick={() => exportSave()}><HardDriveDownload/>Export</button>
+                            <input
+                                type="file"
+                                id="load-save"
+                                onChange={(e) => importSave(e)}
+                                style={{display: "none"}}
+                            />
 
+                            <label htmlFor="load-save" className="btn">
+                                <HardDriveUpload/> Import
+                            </label>
+                        </nav>
 
                     </div>
                 )}

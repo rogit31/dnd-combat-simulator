@@ -1,0 +1,23 @@
+.navWrapper{
+    display: flex;
+    gap: 8px;
+    background-color: var(--neutral2);
+    padding: 8px;
+    justify-content: space-around;
+    max-width: 300px;
+    border-radius: 20px;
+    margin: 0 auto;
+    border: 1px solid rgba(256, 256, 256, 0.2);
+    box-shadow: rgba(0, 0, 0, .3) 2px 1px 1px;
+    li{
+        list-style: none;
+        transition: color .1s ease;
+        color: var(--accent2);
+        &:hover{
+            color: var(--accent1);
+        }
+        & .active{
+            color: var(--accent1);
+        }
+    }
+}
