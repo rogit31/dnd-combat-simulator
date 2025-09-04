@@ -2,7 +2,6 @@ import "./globals.css";
 import { Metadata } from "next";
 import Header from "@/app/components/header/Header";
 import React from "react";
-import MenuNav from "@/app/components/menuNav/MenuNav";
 
 export const metadata: Metadata = {
   title: "Better D&D",
@@ -18,7 +17,6 @@ export default function RootLayout({
     <html lang="en">
       <body>
       <Header />
-      <MenuNav/>
         {children}
       </body>
     </html>

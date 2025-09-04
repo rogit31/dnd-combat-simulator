@@ -4,7 +4,7 @@
     background-color: var(--neutral2);
     padding: 8px;
     justify-content: space-around;
-    max-width: 300px;
+    width: 200px;
     border-radius: 20px;
     margin: 0 auto;
     border: 1px solid rgba(256, 256, 256, 0.2);
@@ -20,4 +20,10 @@
             color: var(--accent1);
         }
     }
+}
+.outerWrapper {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 8px;
 }

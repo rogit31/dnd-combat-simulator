@@ -12,7 +12,7 @@ function MenuNav() {
     const path = usePathname();
 
     return (
-        <nav className={styles.outterWrapper}>
+        <nav className={styles.outerWrapper}>
             <ul className={styles.navWrapper}>
                 <li>
                     <Link href={'/'}>

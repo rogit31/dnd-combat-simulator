@@ -3,5 +3,7 @@
         color: var(--accent2);
         padding-left: 1rem;
     }
+    display: flex;
+    position: relative;
 }
 
