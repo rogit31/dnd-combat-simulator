@@ -1,6 +1,8 @@
 import React from 'react';
 import styles from "./CharacterCard.module.css";
 import {HandCoins, HeartPulse, Pencil, Shield, SquareUserRound, Trash} from "lucide-react";
+import {useMutation, useQueryClient} from "@tanstack/react-query";
+import {deleteMock} from "@/app/layout";
 
 type CharacterPreview = {
     id: number,
@@ -14,6 +16,22 @@ type CharacterPreview = {
 }
 
 function CharacterCard({character} : {character: CharacterPreview}) {
+
+    const queryClient = useQueryClient();
+
+    const deleteMutation = useMutation({
+        mutationFn: (id: number) => deleteMock(id),
+        onSuccess: async () => {
+            queryClient.invalidateQueries({queryKey: ["characters"]})
+        }
+    })
+
+    function handleDelete(e: React.MouseEvent){
+        e.stopPropagation();
+        e.preventDefault();
+        deleteMutation.mutate(character.id);
+    }
+
     return (
         <div key={character.id} className={styles.character}>
             <a className={styles.characterTopWrapper} href={`/view-character/${character.id}`}>
@@ -42,7 +60,7 @@ function CharacterCard({character} : {character: CharacterPreview}) {
                         <button>
                             <Pencil/>
                         </button>
-                        <button>
+                        <button onClick={(e) => handleDelete(e)}>
                             <Trash/>
                         </button>
                     </nav>

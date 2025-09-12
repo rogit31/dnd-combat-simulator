@@ -1,6 +1,5 @@
 import {Rarity} from "@/types/dndBeyondApiType";
 import {CharacterClass} from "@/src/models/character/layers/charclass/CharacterClass";
-import {TsConfigJson} from "type-fest";
 
 /**
  * Side of a character in the battle.
@@ -90,6 +89,24 @@ export interface Character {
     healSelf(value: number): void;
 
     isAlive(): boolean
+}
+
+export interface CharacterPreview {
+    name: string,
+    id: number,
+    HP: number,
+    AC: number,
+    gold: number,
+    avatar?: string,
+    class: {
+        name: string,
+        level: number
+    }
+    inventory: {
+        name: string,
+        weight: number,
+        rarity: string
+    }[]
 }
 
 export interface ClassData {
