@@ -1,4 +1,4 @@
-import {Action, BattleContext} from "@/types";
+import {ActionType, BattleContext} from "@/types";
 import {decideAction} from "@/src/systems/ai/decideAction";
 import {spells} from "@/src/data/spells/spells";
 import { Character } from "@/src/models/character/Character";
@@ -6,7 +6,7 @@ import {SpellAction} from "@/src/models/character/actions/Action";
 
 
 // Test Actions
-export const fireball: Action = {
+export const fireball: ActionType = {
     name: "Fireball",
     actionType: "spell",
     level: 3,
@@ -32,7 +32,7 @@ export const fireball: Action = {
     }]
 };
 
-export const magicMissile: Action = {
+export const magicMissile: ActionType = {
     name: "Magic Missile",
     actionType: "spell",
     level: 1,
@@ -59,7 +59,7 @@ export const magicMissile: Action = {
     }]
 };
 
-export const cureWounds: Action = {
+export const cureWounds: ActionType = {
     name: "Cure Wounds",
     actionType: "spell",
     level: 1,
@@ -76,7 +76,7 @@ export const cureWounds: Action = {
     }]
 };
 
-export const longswordAttack: Action = {
+export const longswordAttack: ActionType = {
     name: "Longsword Attack",
     actionType: "attack",
     attackBonus: 5, // +3 STR + 2 Prof
@@ -88,7 +88,7 @@ export const longswordAttack: Action = {
     }
 };
 
-export const shortbowAttack: Action = {
+export const shortbowAttack: ActionType = {
     name: "Shortbow Attack",
     actionType: "attack",
     attackBonus: 4, // +2 DEX + 2 Prof
@@ -100,7 +100,7 @@ export const shortbowAttack: Action = {
     }
 };
 
-export const cantrip: Action = {
+export const cantrip: ActionType = {
     name: "Fire Bolt",
     actionType: "spell",
     attackBonus: 6, // +3 spell mod + 3 prof

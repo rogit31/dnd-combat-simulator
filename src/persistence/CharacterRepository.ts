@@ -50,7 +50,12 @@ export class CharacterRepository extends AbstractRepository {
             if (!parsed.has(r.name)){
                 parsed.set(r.name, new Character(r))
             } else {
-                parsed.get(r.name)!.inventory.push(new Item({name: r.itemName, weightPer: r.itemWeight, description: ""}))
+                parsed.get(r.name)!.inventory.addItem(
+                    new Item({name: r.itemName,
+                    weightPer: r.itemWeight,
+                    description: "",
+                    consumable: false}),
+                    1)
             }
         })
         return parsed;

@@ -1,22 +1,18 @@
 import {
-    Action as ActionType,
+    ActionType as ActionType,
     UsageConstraint,
     AOEType,
     DCType,
-    ActionConstructorArgs, RollSet, BaseAction
+    ActionConstructorArgs, RollSet
 } from "../../../../types"
 
-export class Action implements BaseAction {
+export class Action {
     name: string;
     actionTime?: "action" | "bonusAction" | "freeAction" | "legendaryAction" | "reaction" | "lairAction" | "passive";
     actionType: "attack" | "spell" | "item" | "feature";
     targetingBehaviour?: "random" | "lowestHP" | "highestHP" | "highestLVL" | "lowestLVL" | "highestDPM";
     range?: string;
-    healingRoll?: RollSet;
-    damageRoll?: RollSet;
-    appliesConditions?: [];
     area_of_effect?: AOEType;
-    effects?: [];
     usageConstraints?: UsageConstraint[];
 
     constructor(data: ActionType) {
@@ -25,11 +21,7 @@ export class Action implements BaseAction {
         this.actionType = this.inferActionType(data);
         this.targetingBehaviour = data.targetingBehaviour ?? 'lowestHP';
         this.range = data.range ?? "5 feet";
-        this.healingRoll = data.healingRoll;
-        this.damageRoll = data.damageRoll;
-        this.appliesConditions = data.appliesConditions;
         this.area_of_effect = data.area_of_effect;
-        this.effects = data.effects;
         this.usageConstraints = data.usageConstraints;
     }
 
@@ -52,7 +44,6 @@ export class Action implements BaseAction {
         // Default to feature
         return "feature";
     }
-
 }
 
 // Factory functions for creating specific action types with better defaults

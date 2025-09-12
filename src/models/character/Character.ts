@@ -1,160 +1,291 @@
 import {
-    AbilityScores,
-    Action,
+    AbilityScore, Action,
+    CharacterConstructorArgs, ConditionEvaluator,
     Conditions,
-    SavingThrowMod,
-    CharacterConstructorArgs, DamageSet, DamageType
+    DamageSet,
+    DamageType
 } from "@/types";
-import {Item} from "@/src/models/item/item";
-import {CharacterClass} from "@/src/models/character/layers/charclass/CharacterClass";
+import {CharacterClass} from "../character/layers/charclass/CharacterClass";
+import {ModifierManager} from "../character/modifiers/ModifierManager";
+import {Race} from "../character/layers/race/Race";
+import {Background} from "../character/layers/background/Background";
+import {InventoryManager} from "../item/Inventory";
+import {ConditionManager} from "../character/condition/ConditionManager";
+import {ActionManager} from "../character/actions/ActionManager";
+import {Item} from "../item/item";
+import {Feature} from "../character/feature/Feature"
 
+
+/*
+Character is a class which compiles many core behaviours of a DnD characters. Many of the responsibilities
+of the character is managed by other Manager classes, and character mostly acts as an easy access point
+for all the various Managers. It also keeps track of HP, initiative, name, speed, and level. On initialization,
+character will use the given classes, race, and background to initialize its ActionManager, ModifierManager,
+and InventoryManager.
+ */
 export class Character {
-    id: string;
-    level?: number;
-    AC: number;
-    maxHP: number;
-    name: string;
-    HP: number;
-    side: 'ally' | 'enemy';
-    classes: Map<CharacterClass, number>;
-    abilityScores: AbilityScores;
-    actions: Action[];
-    conditions: Conditions;
-    initiative?: number;
-    savingThrows: SavingThrowMod;
-    resistances?: DamageType[];
-    immunities?: DamageType[];
-    vulnerabilities?: DamageType[];
-    inventory: Item[];
-
+    public id: string;
+    public level: number;
+    public maxHP: number;
+    public name: string;
+    public HP: number;
+    public side: 'ally' | 'enemy';
+    public initiative?: number;
+    public speed: number;
+    public classes: Map<CharacterClass, number>;
+    public race: Race;
+    public background: Background;
+    public actions: ActionManager;
+    public conditions: ConditionManager;
+    public inventory: InventoryManager;
+    public modifiers: ModifierManager;
 
     constructor(data: CharacterConstructorArgs) {
         this.id = data.id;
-        this.level = data.level;
-        this.AC = data.AC;
+        this.level = data.level ?? 1;
         this.maxHP = data.maxHP ?? data.HP;
         this.name = data.name;
         this.side = data.side;
         this.HP = data.HP ?? this.maxHP;
         this.classes = data.classes;
-        this.resistances = data.resistances;
-        this.immunities = data.immunities;
-        this.vulnerabilities = data.immunities;
-        this.inventory = []; //TODO: Add constructor argument as well
+        this.race = data.race;
+        this.background = data.background;
+        this.conditions = new ConditionManager({});
+        this.inventory = new InventoryManager(100);
 
-        this.abilityScores = data.abilityScores ?? {
-            strength: 10,
-            dexterity: 10,
-            constitution: 10,
-            intelligence: 10,
-            wisdom: 10,
-            charisma: 10
-        };
+        /** placeholder **/
+        this.speed = 0;
 
-        const baseSavingThrows: SavingThrowMod = {
-            strength: calculateAbilityModifier(this.abilityScores.strength),
-            dexterity: calculateAbilityModifier(this.abilityScores.dexterity),
-            constitution: calculateAbilityModifier(this.abilityScores.constitution),
-            intelligence: calculateAbilityModifier(this.abilityScores.intelligence),
-            wisdom: calculateAbilityModifier(this.abilityScores.wisdom),
-            charisma: calculateAbilityModifier(this.abilityScores.charisma)
-        };
+        this.modifiers = new ModifierManager({
+            abilityScores: {
+                strength: 10,
+                dexterity: 10,
+                constitution: 10,
+                intelligence: 10,
+                wisdom: 10,
+                charisma: 10
+            },
+            proficiency: this.calculateProficiency(this.level)
+    });
 
-        this.savingThrows = {
-            ...baseSavingThrows,
-            ...data.savingThrows
-        };
-
-        this.actions = data.actions ?? [];
-
-        this.conditions = data.conditions ?? {
-            exhausted: false,
-            restrained: false,
-            poisoned: false,
-            grappled: false,
-            frightened: false,
-            blinded: false,
-            prone: false,
-            invisible: false,
-            deafened: false,
-            charmed: false,
-            unconscious: false,
-            stunned: false,
-            petrified: false,
-            paralyzed: false,
-            incapacitated: false
-        };
+        this.actions = new ActionManager();
 
         this.initiative = data.initiative;
+
+        for (const charClass of this.classes.keys()) {
+            charClass.applyModifiers(this);
+        }
+        this.race.applyModifiers(this);
+        this.background.applyModifiers(this);
     }
 
+    private calculateProficiency(level: number) {
+        return Math.ceil(level / 4) + 1;
+    }
 
-    isAlive() {
+    public isAlive() {
         return this.HP > 0;
     }
 
-    canAct() {
+    public canAct() {
         return this.isAlive() && !(
-            this.conditions.incapacitated ||
-            this.conditions.paralyzed ||
-            this.conditions.petrified ||
-            this.conditions.stunned ||
-            this.conditions.unconscious
+            this.conditions.conditions.incapacitated ||
+            this.conditions.conditions.paralyzed ||
+            this.conditions.conditions.petrified ||
+            this.conditions.conditions.stunned ||
+            this.conditions.conditions.unconscious
         );
     }
 
-    takeDamage(damageSet: DamageSet) {
-        //TODO: Make a case for if the character has a vuln and resistance at the same time.
-        //obviously in that case they take the normal amount of damage.
+    public takeDamage(damageSet: DamageSet) {
         for (const damage of damageSet) {
 
-            if (this.immunities?.includes(damage.type)) {
+            if (this.conditions.isImmune(damage.type)) {
                 continue; //do nothing
             }
 
-            if (this.resistances?.includes(damage.type)) {
+            if (this.conditions.isVulnerable(damage.type) && this.conditions.isResistant(damage.type)) {
+                this.HP = Math.max(0, this.HP - damage.value);
+                continue;
+            }
+
+            if (this.conditions.isResistant(damage.type)) {
                 this.HP = Math.max(0, this.HP - Math.floor(damage.value / 2));
                 continue;//set to itself - the floor of dmg /2
             }
 
-            if (this.vulnerabilities?.includes(damage.type)) {
+            if (this.conditions.isVulnerable(damage.type)) {
                 this.HP = Math.max(0, this.HP - (damage.value * 2));
                 continue;
             }
 
             this.HP = Math.max(0, this.HP - damage.value);
-
         }
-
     }
 
-    healSelf(value: number) {
+    public healSelf(value: number) {
         this.HP = Math.min(this.HP + value, this.maxHP);
     }
 
     public reset() {
         this.HP = this.maxHP;
-        this.conditions = {
-            exhausted: false,
-            restrained: false,
-            poisoned: false,
-            grappled: false,
-            frightened: false,
-            blinded: false,
-            prone: false,
-            invisible: false,
-            deafened: false,
-            charmed: false,
-            unconscious: false,
-            stunned: false,
-            petrified: false,
-            paralyzed: false,
-            incapacitated: false,
-        };
+        this.conditions.reset();
         this.initiative = undefined;
     }
-}
 
-function calculateAbilityModifier(abilityScore: number) {
-    return Math.floor((abilityScore - 10) / 2)
+    public getModifier(stat: string) {
+        return this.modifiers.getModifier(stat);
+    }
+
+    public getStat(stat: AbilityScore) {
+        return this.modifiers.abilityScores[stat];
+    }
+
+    public addModifier(stat: string, source: string, abilityScore?: AbilityScore, amount?: number) {
+        if (abilityScore) {
+            this.modifiers.addModifier(stat, source, abilityScore, amount);
+        }
+    }
+
+    public removeModifier(source: string) {
+        this.modifiers.removeModifier(source);
+    }
+
+    public getInventory() {
+        return this.inventory.inventory;
+    }
+
+    public getGold() {
+        return this.inventory.gold;
+    }
+
+    public addGold(amount: number) {
+        this.inventory.addGold(amount)
+    }
+
+    public spendGold(amount: number) {
+        this.inventory.spendGold(amount)
+    }
+
+    public addItem(item: Item, quantity?: number) {
+        this.inventory.addItem(item, quantity ?? 1);
+    }
+
+    public useItem(item: Item, quantity?: number) {
+        if (item.consumable) {
+            this.inventory.removeItem(item, quantity ?? 1);
+        }
+    }
+
+    public dropItem(item: Item, quantity?: number) {
+        this.inventory.removeItem(item, quantity ?? 1);
+    }
+
+    public hasCondition(condition: keyof Conditions) {
+        return this.conditions.conditions[condition];
+    }
+
+    public giveCondition(condition: keyof Conditions) {
+        this.conditions.giveCondition(condition);
+    }
+
+    public removeCondition(condition: keyof Conditions) {
+        this.conditions.removeCondition(condition);
+    }
+
+    public getVulnerabilities() {
+        return this.conditions.getVulnerabilities();
+    }
+
+    public isVulnerable(damageType: DamageType): boolean {
+        return this.conditions.isVulnerable(damageType)
+    }
+
+    public getResistances() {
+        return this.conditions.getResistances();
+    }
+
+    public isResistant(damageType: DamageType): boolean {
+        return this.conditions.isResistant(damageType)
+    }
+
+    public getImmunities() {
+        return this.conditions.getImmunities();
+    }
+
+    public isImmune(damageType: DamageType): boolean {
+            return this.conditions.isImmune(damageType)
+    }
+
+    public hasAdvantage(stat: string) {
+        return this.conditions.hasAdvantage(stat);
+    }
+
+    public hadDisadvantage(stat: string) {
+        this.conditions.hasAdvantage(stat);
+    }
+
+    public giveAdvantage(stat: string): void {
+        this.conditions.giveAdvantage(stat);
+    }
+
+    public removeAdvantage(stat: string) {
+        this.conditions.removeAdvantage(stat);
+    }
+
+    public giveDisadvantage(stat: string) {
+        this.conditions.giveDisadvantage(stat);
+    }
+
+    public removeDisadvantage(stat: string) {
+        this.conditions.removeDisadvantage(stat);
+    }
+
+    public getActions() {
+        return this.actions.getActions();
+    }
+
+    public addAction(action: Action) {
+        this.actions.addAction(action);
+    }
+
+    public getSpells() {
+        return this.actions.getSpells();
+    }
+
+    public getSpellSlots(level: number) {
+        return this.actions.getSpellSlots(level);
+    }
+
+    public useSpellSlot(level: number, amount?: number) {
+        this.actions.useSpellSlots(level, amount);
+    }
+
+    public addSpellSlots(level: number, amount?: number) {
+        this.actions.addSpellSlot(level, amount);
+    }
+
+    public getFeatures() {
+        const feats: Feature[] = [];
+
+        for (const c of this.classes.keys()) {
+            for (const f of c.getFeatures()) {
+                feats.push(f);
+            }
+        }
+
+        if (this.race) {
+            for (const f of this.race.getFeatures()) {
+                feats.push(f);
+            }
+        }
+
+        if (this.background) {
+            for (const f of this.background.getFeatures()) {
+                feats.push(f);
+            }
+        }
+
+        return feats;
+    }
 }

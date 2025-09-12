@@ -1,5 +1,5 @@
 //Takes in an array of allies and enemies, and runs a simulation x amount of times
-import {Action, BattleContext, Character, ResourceKey} from "@/types";
+import {ActionType, BattleContext, Character, ResourceKey} from "@/types";
 import {decideAction} from '@/src/systems/ai/decideAction';
 import chalk from 'chalk';
 
@@ -207,7 +207,7 @@ function consumeResource(character: Character, cost: number, key: ResourceKey, t
 }
 
 
-function makeAction(actor: Character, action: Action, targets: Character[]){
+function makeAction(actor: Character, action: ActionType, targets: Character[]){
 
     // Early return if no targets
     if(targets.length === 0) {
@@ -363,7 +363,7 @@ function makeAction(actor: Character, action: Action, targets: Character[]){
     }
 }
 
-function calculateRollSetDamage(rollSet: Action['damageRoll']): number {
+function calculateRollSetDamage(rollSet: ActionType['damageRoll']): number {
     if (!rollSet) return 0;
 
     let total = 0;
@@ -377,7 +377,7 @@ function calculateRollSetDamage(rollSet: Action['damageRoll']): number {
     return total;
 }
 
-function calculateRollSetHealing(rollSet: Action['healingRoll']): number {
+function calculateRollSetHealing(rollSet: ActionType['healingRoll']): number {
     if (!rollSet) return 0;
 
     let total = 0;

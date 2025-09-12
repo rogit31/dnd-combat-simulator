@@ -1,6 +1,10 @@
 import {Rarity} from "@/types/dndBeyondApiType";
 import {CharacterClass} from "@/src/models/character/layers/charclass/CharacterClass";
-import {TsConfigJson} from "type-fest";
+import {AbilityModifier} from "@/src/models/character/modifiers/CharacterModifier";
+import {Race} from "@/src/models/character/layers/race/Race"
+import {Background} from "@/src/models/character/layers/background/Background"
+import {Feature} from "@/src/models/character/feature/Feature"
+// import {TsConfigJson} from "type-fest";
 
 /**
  * Side of a character in the battle.
@@ -43,80 +47,167 @@ export interface Character {
     name: string;
     /** Level of the character, used mainly for PCs. */
     level?: number;
-    /** Optional override for proficiency bonus. */
-    proficiencyBonus?: number;
     /** Current hit points. */
-    HP: number;
+    HP?: number;
     /** Maximum hit points. */
-    maxHP?: number;
-    /** Armor Class. */
-    AC: number;
+    maxHP: number;
     /** Class of the character (if any). */
     classes: Map<CharacterClass, number>;
-    /** Character ability scores. */
-    abilityScores: AbilityScores;
-    /** Optional override for spellcasting modifier. */
-    spellCastingMod?: number;
-    /** Saving throw modifiers. */
-    savingThrows?: Partial<SavingThrowMod>;
     /** List of actions the character can take. */
-    actions: Action[];
+    actions: ActionManager;
     /** Character's side in the battle. */
     side: side;
     /** Initiative roll result. */
     initiative?: number;
     /** Active conditions on the character. */
-    conditions?: Conditions;
-    /** Character's expendable resources. */
-    resources?: Resources;
-    /** Characters resistances, from which they will take half damage from, rounded down. */
-    resistances?: DamageType[];
-    /** Character's immunities, from which they will take no damage. */
-    immunities?: DamageType[];
-    /** Character's vulnerabilities, from which they will take double the damage. */
-    vulnerabilities?: DamageType[];
+    conditions: ConditionManager;
     /** Character's race or specie. */
-    race?: string; //TODO: change to an actual object
+    race: Race;
     /** Character's background. */
-    background?: string; //TODO: figure out a better data shape for this
-
-    //TODO: add inventory
-    // inventory: Inventory;
-    /** Resets a characters temp changes */
-    reset: () => void;
-
-    takeDamage(damageSet: DamageSet): void;
-
-    healSelf(value: number): void;
-
-    isAlive(): boolean
-}
-
-export interface ClassData {
-    level: number,
-    hitDice: number,
-    name: string,
-    // classFeatures: [] TODO: add here
-}
-
-export interface Item {
-    id: number;
-    description: string,
-    quantity: number;
-    isAttuned: boolean;
-    equipped: boolean;
-    rarity: Rarity;
-
+    background: Background;
+    /** Character's inventory **/
+    inventory: InventoryManager;
+    /** Character's stats **/
+    modifiers: ModifierManager;
 }
 
 /**
  * Arguments used to construct a Character, allowing savingThrows to be optional.
  */
-export type CharacterConstructorArgs =
-    Omit<Character, 'savingThrows' | 'reset' | 'takeDamage' | 'healSelf' | 'isAlive'>
-    & {
-    savingThrows?: Partial<SavingThrowMod>;
+export type CharacterConstructorArgs = Omit<Character,
+    'modifiers' |
+    'inventory' |
+    'conditions' |
+    'actions'>;
+
+export interface ActionManager {
+    actions: ActionType[]
+    spellSlots: Map<number, number>
+
+    addAction(action: ActionType): void;
+    getSpells(): ActionType[];
+    getActions(): ActionType[];
+    getFeatureActions(): ActionType[];
+}
+
+
+export interface ConditionManager {
+    conditions: Conditions;
+    advantage: string[];
+    disadvantage: string[];
+    resistances: DamageType[];
+    immunities: DamageType[];
+    vulnerabilities: DamageType[];
+
+    addResistance(res: DamageType): void;
+    addImmunity(imm: DamageType): void;
+    addVulnerability(vul: DamageType): void;
+}
+
+export type ConditionManagerConstructorArgs = {
+    conditions?: Conditions;
+    advantage?: string[];
+    disadvantage?: string[];
+    resistances?: DamageType[];
+    immunities?: DamageType[];
+    vulnerabilities?: DamageType[];
 };
+
+export interface InventoryManager {
+    inventory: Map<Item, number>;
+    maxLoad: number;
+    currLoad: number;
+    gold: number;
+}
+
+export type InventoryManagerConstructorArgs = Omit<InventoryManager, 'currLoad'>;
+
+export interface ModifierManager {
+    abilityScores: AbilityScores;
+    modifiers: Map<string, AbilityModifier>
+    sources: Map<string, string[]>;
+    proficiency: number;
+
+    addModifier(stat: string, source: string, base: AbilityScore): void;
+    removeModifier(source: string): void;
+}
+
+export type ModifierManagerConstructorArgs = Omit<ModifierManager,
+    'modifiers' |
+    'sources' |
+    'addModifier' |
+    'removeModifier'
+>;
+
+export interface RaceInter {
+    name: string;
+    resistances: DamageType[];
+    immunities: DamageType[];
+    vulnerabilities: DamageType[];
+    speed: number;
+    size: "Tiny" | "Small" | "Medium" | "Large";
+    abilityScoreIncrease: AbilityScores;
+    features: Feature[];
+
+    getFeatures(): Feature[];
+}
+
+export type RaceConstructorArgs = {
+    name: string;
+    speed: number;
+    size: "Tiny" | "Small" | "Medium" | "Large";
+    abilityScoreIncrease: AbilityScores;
+} & Partial<RaceInter>;
+
+export interface BackgroundInter {
+    name: string;
+    proficiencies: Map<string, AbilityScore>;
+    startingEquipment: Map<Item, number>;
+    features: Feature[];
+
+    getFeatures(): Feature[];
+}
+
+export type BackgroundConstructorArgs = {
+    name: string;
+    proficiencies: Map<string, AbilityScore>;
+    startingEquipment: Map<Item, number>;
+} & Partial<BackgroundInter>;
+
+export interface CharClass {
+    name: string;
+    spellCastingModifierBase?: AbilityScore;
+    hitDie: DieFormat[];
+    hitPointsAtFirstLevel: number;
+    hitPointsScaling: {
+        base: DieFormat[],
+        modifier: AbilityScore
+    }
+    startingEquipment: Map<Item, number>;
+    features: Feature[];
+    proficiencies: Map<string, AbilityScore>;
+}
+
+export type CharClassConstructorArgs = CharClass;
+
+export interface Item {
+    id: number;
+    name: string;
+    weightPer: number;
+    description: string,
+    consumable: boolean,
+    isAttuned: boolean;
+    equipped: boolean;
+    rarity: Rarity;
+}
+
+export type ItemConstructorArgs = {
+    id :number,
+    name: string,
+    weightPer: number,
+    description: string,
+} & Partial<Item>;
+
 
 /** Explicitly typed ally character. */
 export type Ally = Character & { side: 'ally' };
@@ -127,7 +218,7 @@ export type Enemy = Character & { side: 'enemy' };
  * Base structure for actions a character can take.
  * Extremely flexible to support homebrew and nonstandard features.
  */
-export interface BaseAction {
+export interface Action {
     name: string;
     actionTime?: "action" | "bonusAction" | "freeAction" | "legendaryAction" | "reaction" | "lairAction" | "passive";
     actionType: "attack" | "spell" | "item" | "feature";
@@ -144,10 +235,10 @@ export interface BaseAction {
 /** Constructor args for an Action. */
 export type ActionConstructorArgs = {
     name: string;
-} & Partial<Action>;
+} & Partial<ActionType>;
 
 /** Action representing a spell. */
-export interface SpellAction extends BaseAction {
+export interface SpellAction extends Action {
     actionType: "spell";
     duration?: string;
     concentration?: boolean;
@@ -157,23 +248,23 @@ export interface SpellAction extends BaseAction {
 }
 
 /** Action representing a physical or weapon attack. */
-export interface AttackAction extends BaseAction {
+export interface AttackAction extends Action {
     actionType: "attack";
     attackBonus?: number;
 }
 
 /** Action that uses a consumable or item. */
-export interface ItemAction extends BaseAction {
+export interface ItemAction extends Action {
     actionType: "item";
 }
 
 /** Action that stems from a class feature or passive. */
-export interface FeatureAction extends BaseAction {
+export interface FeatureAction extends Action {
     actionType: "feature";
 }
 
 /** Union of all action types. */
-export type Action = AttackAction | SpellAction | ItemAction | FeatureAction;
+export type ActionType = AttackAction | SpellAction | ItemAction | FeatureAction;
 
 /** Area of Effect shape and size. */
 export interface AOEType {
@@ -431,10 +522,10 @@ export interface TriggerEffect<K extends Trigger = Trigger> {
     source: string; // for UI/debug
 }
 
-export interface Feature {
+export interface FeatureInter {
     name: string;
     /** Passive, always-on numeric changes. */
-    modifiers?: StatModifier[];
+    modifiers?: {stat: string, amount: number}[];
     /** Event-driven behaviour. */
     triggers?: TriggerEffect[];
 }

@@ -1,4 +1,4 @@
-import {Action as ActionType, BattleContext, Character, Scaling} from "@/types";
+import {ActionType as ActionType, BattleContext, Character, Scaling} from "@/types";
 import {CharacterClass} from "@/src/models/character/layers/charclass/CharacterClass";
 
 /**
