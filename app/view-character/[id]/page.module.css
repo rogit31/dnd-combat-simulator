@@ -1,0 +1,48 @@
+.wrapper{
+    border: 1px solid white;
+}
+.characterSheet{
+    max-width: 1600px;
+    margin: 0 auto;
+}
+.metaWrapper{
+    border: 1px solid white;
+    padding: 4px;
+    border-radius: 4px;
+    display: flex;
+    gap: 16px;
+
+}
+.meta{
+    display: flex;
+    flex-direction: column;
+}
+.stat{
+    padding: 8px;
+    border-radius: 4px;
+    gap: 8px;
+    display: flex;
+    & > div:nth-child(1){
+        display: flex;
+        flex-direction: column;
+        font-size: 12px;
+    }
+}
+.statWrapper{
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    border: 1px solid white;
+    border-radius: 4px;
+}
+.statNumberWrapper{
+    min-width: 80px;
+}
+.skills div{
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.statNumber{
+    font-size: 2rem;
+}

@@ -14,7 +14,10 @@
     "test:coverage": "jest --coverage"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.85.5",
     "chalk": "^5.4.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.541.0",
     "next": "^15.3.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
@@ -22,6 +25,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@tanstack/eslint-plugin-query": "^5.83.1",
     "@types/jest": "^29.5.0",
     "@types/node": "^22.15.29",
     "@types/react": "^19",

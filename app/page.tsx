@@ -3,22 +3,29 @@
 //TODO: Manager global context for the db and for character data.
 //TODO: Consider zustand for global context management
 
-import {useState, useEffect, useRef} from 'react';
+import React, { useRef } from 'react';
 import styles from "./page.module.css";
 import {WebDB} from "@/src/database/web";
-import {CharacterRepository} from "@/src/persistence/CharacterRepository";
-import {Character} from "@/src/models/character/Character";
-import {manualTests} from "@/tests/manutalTests";
+import CharacterCard from "@/app/components/characters/CharacterCard";
+import {HardDriveDownload, HardDriveUpload} from "lucide-react";
+import {useQuery} from "@tanstack/react-query";
+import {fetchMock} from "@/app/layout";
+
+
 
 export default function Home() {
-    const [characters, setCharacters] = useState<Map<string, Character>>();
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+
+    const { data, isLoading } = useQuery({
+        queryKey: ["characters"],
+        queryFn: fetchMock,
+    });
+
     const db = useRef<null | WebDB>(null);
 
     //Specifically to enable manual tests here without worrying about extending the window type.
+    //it's actually just not working now for some reason, will just disable for now.
     /* eslint-disable */
-    (window as any).manualTests = manualTests;
+    // (window as any).manualTests = manualTests;
     /* eslint-enable */
 
     async function exportSave() {
@@ -58,27 +65,27 @@ export default function Home() {
         // setCharacters(result);
     }
 
-    useEffect(() => {
-        async function fetchData() {
-            try {
-                db.current = await WebDB.getInstance();
-                const repo = new CharacterRepository(db.current);
-                const result = await repo.getData();
-                // Update state with results
-                setCharacters(result);
-                setLoading(false);
+    // useEffect(() => {
+    //     async function fetchData() {
+    //         try {
+    //             db.current = await WebDB.getInstance();
+    //             const repo = new CharacterRepository(db.current);
+    //             const result = await repo.getData();
+    //             // Update state with results
+    //             setCharacters(result);
+    //             setLoading(false);
+    //
+    //         } catch (err) {
+    //             console.error('Database initialization failed:', err);
+    //             setError(err instanceof Error ? err.message : 'Unknown error');
+    //             setLoading(false);
+    //         }
+    //     }
+    //
+    //     fetchData();
+    // }, []); // Empty dependency array means this runs once on mount
 
-            } catch (err) {
-                console.error('Database initialization failed:', err);
-                setError(err instanceof Error ? err.message : 'Unknown error');
-                setLoading(false);
-            }
-        }
-
-        fetchData();
-    }, []); // Empty dependency array means this runs once on mount
-
-    if (loading) {
+    if (isLoading || typeof data === 'undefined') {
         return (
             <div className={styles.page}>
                 <main className={styles.main}>
@@ -89,37 +96,33 @@ export default function Home() {
         );
     }
 
-    if (error) {
-        return (
-            <div className={styles.page}>
-                <main className={styles.main}>
-                    <h1>D&D Battle simulator</h1>
-                    <p>Error: {error}</p>
-                </main>
-            </div>
-        );
-    }
-
     return (
         <div className={styles.page}>
-            <main className={styles.main}>
-                <h1>D&D Battle simulator</h1>
-                {characters!.size === 0 ? (
+            <main>
+                {data.length === 0 ? (
                     <p>No characters found</p>
                 ) : (
                     <div>
                         <h2>Characters:</h2>
                         <div className={styles.charactersWrapper}>
-                            {characters!.values().map((character) => (
-                                <div key={character.id} className={styles.character}>
-                                    <h3>{character.name}</h3>
-                                    <p>HP: {character.HP}</p>
-                                    <p>AC: {character.AC}</p>
-                                </div>
+                            {data.map((character) => (
+                                <CharacterCard character={character} key={character.id}/>
                             ))}
                         </div>
-                        <button onClick={() => exportSave()}>Save sqlite file</button>
-                        <input onChange={(e) => importSave(e)} id={'load-save'} type="file"/>
+                        <nav className={styles.saveActions}>
+                            <button onClick={() => exportSave()}><HardDriveDownload/>Export</button>
+                            <input
+                                type="file"
+                                id="load-save"
+                                onChange={(e) => importSave(e)}
+                                style={{display: "none"}}
+                            />
+
+                            <label htmlFor="load-save" className="btn">
+                                <HardDriveUpload/> Import
+                            </label>
+                        </nav>
+
                     </div>
                 )}
             </main>
