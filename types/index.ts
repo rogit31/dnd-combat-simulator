@@ -554,31 +554,49 @@ export type ValueRef = { type: "literal"; value: number | string | boolean } | {
  * including a giant's belt or smth, we would use final here. **/
 export type ModPhase = "base" | "bonus" | "final";
 
+/** List of standard dnd skills. **/
 export enum SkillProficiencies {
-    strength,
     athletics,
-    dexterity,
     acrobatics,
     sleightOfHand,
     stealth,
-    intelligence,
     arcana,
     history,
     investigation,
     nature,
     religion,
-    wisdom,
     animalHandling,
     insight,
     medicine,
     perception,
     survival,
-    charisma,
     deception,
     intimidation,
     performance,
     persuasion
 }
 
+/** Record from ability score to skill proficiency. **/
+export const abilityToSkills: Record<keyof AbilityScores, SkillProficiencies[]> = {
+    strength: [SkillProficiencies.athletics],
+    dexterity: [SkillProficiencies.acrobatics, SkillProficiencies.sleightOfHand, SkillProficiencies.stealth],
+    constitution: [],
+    intelligence: [SkillProficiencies.arcana, SkillProficiencies.history, SkillProficiencies.investigation, SkillProficiencies.nature, SkillProficiencies.religion],
+    wisdom: [SkillProficiencies.animalHandling, SkillProficiencies.insight, SkillProficiencies.medicine, SkillProficiencies.perception, SkillProficiencies.survival],
+    charisma: [SkillProficiencies.deception, SkillProficiencies.intimidation, SkillProficiencies.performance, SkillProficiencies.persuasion],
+};
+
 /** A potential target for modifiers. **/
 export type target = Character;
+
+/** Temporary data type to preview character data on the character card in the homepage. **/
+export interface CharacterPreview{
+    name: string,
+    id: number,
+    HP: number,
+    AC: number,
+    gold: number,
+    avatar?: string,
+    class: {name: string, level: number},
+    inventory: {name: string, weight: number, rarity: string}[],
+}

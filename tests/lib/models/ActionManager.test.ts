@@ -52,7 +52,7 @@ describe('AbilityModifierTest', () => {
     });
 
     test("Should return only demanded actions when getting actions", () => {
-        expect(manager.getActions().length).toEqual(2);
+        expect(manager.getActions().length).toEqual(6);
         expect(manager.getSpells().length).toEqual(3);
         expect(manager.getFeatureActions().length).toEqual(1);
         expect(manager.getSpells(1).length).toEqual(1);

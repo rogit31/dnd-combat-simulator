@@ -1,8 +1,10 @@
 import React from 'react';
-import {ArrowLeft, Circle, Diamond} from "lucide-react";
+import {ArrowLeft} from "lucide-react";
 import Link from "next/link";
 
 import styles from './page.module.css';
+import {AbilityScores, abilityToSkills, SkillProficiencies} from "@/types";
+import SkillDisplay from "@/app/view-character/[id]/SkillDisplay";
 
 interface CharacterProps {
     params: Promise<{ id: number }>;
@@ -90,8 +92,6 @@ async function Page({params}: CharacterProps) {
     // const character = characters.get(id);
     // and then use the data below to display the full character
 
-    const diamondSize = 12;
-
     return (
         <div className={styles.wrapper}>
 
@@ -113,175 +113,32 @@ async function Page({params}: CharacterProps) {
                 </div>
 
                 <div className={styles.statWrapper}>
+                    {Object.entries(JSON.stats).map(([abilityName, abilityValue]) => {
+                        const skillsForAbility = abilityToSkills[abilityName as keyof AbilityScores] || [];
 
-                    <div className={styles.stat}>
-                        <div className={styles.statNumberWrapper}>
-                            <span className={styles.statNumber}>{JSON.stats.strength}</span>
-                            Strength
-                        </div>
+                        return (
+                            <div key={abilityName}>
+                                <div className={styles.stat}>
+                                    <div className={styles.statNumberWrapper}>
+                                        <span className={styles.statNumber}>{abilityValue}</span>
+                                        {abilityName.charAt(0).toUpperCase() + abilityName.slice(1)}
+                                    </div>
 
-                        <div className={styles.skills}>
-                            <div>
-                                <Diamond size={diamondSize}/>
-                                Saving throw
-                            </div>
-                            <div>
-                                <Circle size={diamondSize}/>
-                                Athletics
-                            </div>
-                        </div>
-                    </div>
+                                    <div className={styles.skills}>
 
-                    <hr/>
+                                    <SkillDisplay abilityScoreValue={abilityValue} name={"Saving Throw"} />
 
-                    <div className={styles.stat}>
+                                        {skillsForAbility.map((skill) => (
+                                            <SkillDisplay key={SkillProficiencies[skill]} abilityScoreValue={abilityValue} name={SkillProficiencies[skill]} />
+                                        ))}
 
-                        <div className={styles.statNumberWrapper}>
-                            <span className={styles.statNumber}>{JSON.stats.dexterity}</span>
-                            Dexterity
-                        </div>
-                        <div className={styles.skills}>
-                            <div>
-                                <Diamond size={diamondSize}/>
-                                Saving throw
-                            </div>
-                            <div>
-                                <Circle size={diamondSize}/>
-                                Acrobatics
-                            </div>
-                            <div>
-                                <Circle size={diamondSize}/>
-                                Sleight of Hand
-                            </div>
-                            <div>
-                                <Circle size={diamondSize}/>
-                                Stealth
-                            </div>
-                        </div>
-                    </div>
+                                    </div>
+                                </div>
 
-                    <hr/>
-
-                    <div className={styles.stat}>
-
-                        <div className={styles.statNumberWrapper}>
-                            <span className={styles.statNumber}>{JSON.stats.constitution}</span>
-                            Constitution
-                        </div>
-                        <div className={styles.skills}>
-                            <div>
-                                <Diamond size={diamondSize}/>
-                                Saving throw
+                                {abilityName !== 'charisma' && <hr/>}
                             </div>
-                        </div>
-                    </div>
-
-                    <hr/>
-
-
-                    <div className={styles.stat}>
-                        <div className={styles.statNumberWrapper}>
-                            <span className={styles.statNumber}>{JSON.stats.intelligence}</span>
-                            Intelligence
-                        </div>
-                        <div className={styles.skills}>
-                            <div>
-                                <Diamond size={diamondSize}/>
-                                Saving throw
-                            </div>
-                            <div>
-                                <Circle size={diamondSize}/>
-                                Arcana
-                            </div>
-                            <div>
-                                <Circle size={diamondSize}/>
-                                History
-                            </div>
-                            <div>
-                                <Circle size={diamondSize}/>
-                                Investigation
-                            </div>
-                            <div>
-                                <Circle size={diamondSize}/>
-                                Nature
-                            </div>
-                            <div>
-                                <Circle size={diamondSize}/>
-                                Religion
-                            </div>
-                        </div>
-                    </div>
-
-                    <hr/>
-
-                    <div className={styles.stat}>
-
-                        <div className={styles.statNumberWrapper}>
-                            <span className={styles.statNumber}>{JSON.stats.wisdom}</span>
-                            Wisdom
-                        </div>
-
-                        <div className={styles.skills}>
-                            <div>
-                                <Diamond size={diamondSize}/>
-                                Saving throw
-                            </div>
-                            <div>
-                                <Circle size={diamondSize}/>
-                                Animal Handling
-                            </div>
-                            <div>
-                                <Circle size={diamondSize}/>
-                                Insight
-                            </div>
-                            <div>
-                                <Circle size={diamondSize}/>
-                                Medicine
-                            </div>
-                            <div>
-                                <Circle size={diamondSize}/>
-                                Perception
-                            </div>
-                            <div>
-                                <Circle size={diamondSize}/>
-                                Survival
-                            </div>
-                        </div>
-                    </div>
-
-                    <hr/>
-
-                    <div className={styles.stat}>
-
-                        <div className={styles.statNumberWrapper}>
-                            <span className={styles.statNumber}>{JSON.stats.charisma}</span>
-                            Charisma
-                        </div>
-
-                        <div className={styles.skills}>
-                            <div>
-                                <Diamond size={diamondSize}/>
-                                Saving throw
-                            </div>
-                            <div>
-                                <Circle size={diamondSize}/>
-                                Deception
-                            </div>
-                            <div>
-                                <Circle size={diamondSize}/>
-                                Intimidation
-                            </div>
-                            <div>
-                                <Circle size={diamondSize}/>
-                                Performance
-                            </div>
-                            <div>
-                                <Circle size={diamondSize}/>
-                                Persuasion
-                            </div>
-                        </div>
-
-                    </div>
+                        );
+                    })}
                 </div>
 
             </div>
