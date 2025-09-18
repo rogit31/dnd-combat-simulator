@@ -64,6 +64,7 @@ h1, h2, h3, h4, h5, h6 {
   --accent1: #176096;
   --accent2: #16dc16;
   --title: "Archivo black", sans-serif;
+  --gradient1: linear-gradient(90deg,rgba(233, 44, 44, 1) 0%, rgba(249, 93, 10, 1) 100%);
 }
 
 h1,h2{

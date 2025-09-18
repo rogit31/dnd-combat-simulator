@@ -1,0 +1,12 @@
+.result{
+    font-size: 3rem;
+    padding: 18px;
+    border: 1px solid white;
+    position: absolute;
+    bottom: 18px;
+    right: 18px;
+    border-radius: 4px;
+    width: 100px;
+    text-align: center;
+    background-color: var(--neutral2);
+}

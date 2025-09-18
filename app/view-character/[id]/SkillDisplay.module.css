@@ -1,0 +1,16 @@
+.skillButton{
+    padding: 2px 10px;
+}
+
+.skillWrapper{
+    flex: 1;
+    span{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 4px;
+    }
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}

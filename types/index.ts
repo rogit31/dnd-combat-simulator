@@ -71,7 +71,6 @@ export interface Character {
     modifiers: ModifierManager;
     /** Character's abilityScores **/
     abilityScores?: AbilityScores;
-
 }
 
 /**
@@ -639,4 +638,16 @@ export const modifiableToAbility: Record<Modifiable, AbilityScore> = {
 };
 
 /** A potential target for modifiers. **/
-// export type target = Character;
+export type target = Character;
+
+/** Temporary data type to preview character data on the character card in the homepage. **/
+export interface CharacterPreview{
+    name: string,
+    id: number,
+    HP: number,
+    AC: number,
+    gold: number,
+    avatar?: string,
+    class: {name: string, level: number},
+    inventory: {name: string, weight: number, rarity: string}[],
+}
