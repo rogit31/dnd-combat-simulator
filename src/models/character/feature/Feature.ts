@@ -1,5 +1,5 @@
 import {Action} from "../actions//Action";
-import {AbilityScore} from "../../../../types";
+import {Modifiable, Resources} from "../../../../types";
 
 /*
 feature is going to be a little difficult to deal with
@@ -15,15 +15,15 @@ export class Feature {
     public name: string;
     public description: string;
     public actions?: Action[];
-    public mods?: {stat: string; amount: number, base: AbilityScore}[];
-    public customStat?: {statName: string, amount: number};
+    public mods?: {stat: Modifiable; amount: number}[];
+    public resources?: Resources;
 
     constructor(name: string, description: string,
-                actions?: Action[], mods?: {stat: string; amount: number, base: AbilityScore}[], customStat?: {statName: string, amount: number}) {
+                actions?: Action[], mods?: {stat: Modifiable; amount: number}[], resources?: Resources) {
         this.name = name;
         this.description = description;
         this.actions = actions;
         this.mods = mods;
-        this.customStat = customStat;
+        this.resources = resources;
     }
 }

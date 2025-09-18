@@ -22,6 +22,10 @@ export class InventoryManager {
         this.currLoad += item.weightPer *  quantity;
     }
 
+    /**
+     * remove a quantity of an item from inventory, if none are left after
+     * removal, delete the entry from the inventory map
+     */
     public removeItem(item: Item, quantity: number) {
         const supply = this.inventory.get(item);
         if (supply) {

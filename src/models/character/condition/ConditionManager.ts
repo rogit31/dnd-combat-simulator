@@ -1,4 +1,4 @@
-import {Condition, ConditionManagerConstructorArgs, Conditions, DamageType} from "@/types";
+import {Condition, ConditionManagerConstructorArgs, Conditions, DamageType, Modifiable} from "@/types";
 
 /*
 ConditionManager keeps track of temporary conditions, whether positive or negative.
@@ -7,8 +7,8 @@ a character has advantage or disadvantage on any rolls from any effects (i.e. en
  */
 export class ConditionManager {
     public conditions: Conditions;
-    private advantage: string[];
-    private disadvantage: string[];
+    private advantage: Modifiable[];
+    private disadvantage: Modifiable[];
     private resistances: DamageType[];
     private immunities: DamageType[];
     private vulnerabilities: DamageType[];
@@ -50,27 +50,27 @@ export class ConditionManager {
         this.vulnerabilities.push(vulnerability);
     }
 
-    public hasAdvantage(stat: string) {
+    public hasAdvantage(stat: Modifiable) {
         return this.advantage.includes(stat);
     }
 
-    public giveAdvantage(stat: string) {
+    public giveAdvantage(stat: Modifiable) {
         this.advantage.push(stat);
     }
 
-    public removeAdvantage(stat: string) {
+    public removeAdvantage(stat: Modifiable) {
         this.advantage.splice(this.advantage.indexOf(stat), 1);
     }
 
-    public hasDisdvantage(stat: string) {
+    public hasDisdvantage(stat: Modifiable) {
         return this.disadvantage.includes(stat);
     }
 
-    public giveDisadvantage(stat: string) {
+    public giveDisadvantage(stat: Modifiable) {
         this.disadvantage.push(stat);
     }
 
-    public removeDisadvantage(stat: string) {
+    public removeDisadvantage(stat: Modifiable) {
         this.disadvantage.splice(this.disadvantage.indexOf(stat), 1);
     }
 
@@ -98,11 +98,11 @@ export class ConditionManager {
         return this.vulnerabilities.includes(damageType);
     }
 
-    public giveCondition(condition: keyof Conditions) {
+    public giveCondition(condition: Condition) {
         this.conditions[condition] = true;
     }
 
-    public removeCondition(condition: keyof Conditions) {
+    public removeCondition(condition: Condition) {
         this.conditions[condition] = false;
     }
 

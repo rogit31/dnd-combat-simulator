@@ -1,6 +1,6 @@
 import {CharacterLayer} from "../CharacterLayer";
 import {Character} from "../../Character"
-import {AbilityScore, DieFormat, Item, CharClassConstructorArgs} from "../../../../../types";
+import {AbilityScore, DieFormat, Item, CharClassConstructorArgs, Modifiable} from "../../../../../types";
 
 /** Represents the classes a character can have. **/
 export class CharacterClass extends CharacterLayer{
@@ -20,18 +20,17 @@ export class CharacterClass extends CharacterLayer{
     };
 
     private startingEquipment: Map<Item, number>;
-    private proficiencies: Map<string, AbilityScore>;
+    private proficiencies: Modifiable[];
 
 
     public applyModifiers(character: Character) {
-        for (const kv of this.proficiencies) {
-            character.modifiers.addModifier(kv[0],
-                this.name,
-                kv[1])
+        for (const prof of this.proficiencies) {
+            character.modifiers.addModifier(prof,
+                this.name)
         }
 
-        for (const kv of this.startingEquipment) {
-            character.addItem(kv[0], kv[1]);
+        for (const itemAmount of this.startingEquipment) {
+            character.addItem(itemAmount[0], itemAmount[1]);
         }
 
         this.applyFeatures(character);

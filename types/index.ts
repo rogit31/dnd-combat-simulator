@@ -69,6 +69,9 @@ export interface Character {
     inventory: InventoryManager;
     /** Character's stats **/
     modifiers: ModifierManager;
+    /** Character's abilityScores **/
+    abilityScores?: AbilityScores;
+
 }
 
 /**
@@ -106,8 +109,8 @@ export interface ConditionManager {
 
 export type ConditionManagerConstructorArgs = {
     conditions?: Conditions;
-    advantage?: string[];
-    disadvantage?: string[];
+    advantage?: Modifiable[];
+    disadvantage?: Modifiable[];
     resistances?: DamageType[];
     immunities?: DamageType[];
     vulnerabilities?: DamageType[];
@@ -161,7 +164,7 @@ export type RaceConstructorArgs = {
 
 export interface BackgroundInter {
     name: string;
-    proficiencies: Map<string, AbilityScore>;
+    proficiencies: Modifiable[];
     startingEquipment: Map<Item, number>;
     features: Feature[];
 
@@ -170,7 +173,7 @@ export interface BackgroundInter {
 
 export type BackgroundConstructorArgs = {
     name: string;
-    proficiencies: Map<string, AbilityScore>;
+    proficiencies: Modifiable[];
     startingEquipment: Map<Item, number>;
 } & Partial<BackgroundInter>;
 
@@ -185,7 +188,7 @@ export interface CharClass {
     }
     startingEquipment: Map<Item, number>;
     features: Feature[];
-    proficiencies: Map<string, AbilityScore>;
+    proficiencies: Modifiable[];
 }
 
 export type CharClassConstructorArgs = CharClass;
@@ -379,25 +382,27 @@ export type UsageConstraint =
     | { type: "condition"; condition: string };
 
 /** A flat or tiered resource pool. */
-export type ResourcePool =
-    | {
+export type tieredResource = {
+    type: "tiered";
+    label ? : string;
+    tiers: Map<number, { current: number; max: number }>;
+    recharge ? : "shortRest" | "longRest";
+}
+
+export type flatResource = {
     type: "flat";
     label?: string;
     current: number;
     max: number;
     recharge?: "shortRest" | "longRest" | "daily" | "encounter";
 }
-    | {
-    type: "tiered";
-    label?: string;
-    tiers: Record<number, { current: number; max: number }>;
-    recharge?: "shortRest" | "longRest";
-};
+
+export type ResourcePool = flatResource | tieredResource;
 
 /**
  * Tracks a character's expendable resources, like spell slots or ki.
  */
-export type Resources = Record<ResourceKey, ResourcePool>;
+export type Resources = Map<ResourceKey, ResourcePool>;
 
 /** Common predefined and custom resource names. */
 export type ResourceKey =
@@ -539,11 +544,14 @@ export type ConditionOp =
 
 export type ConditionEvaluator = () => boolean;
 
-export type Condition = {
-    conditionOp: ConditionOp;
-    arg1: ValueRef;
-    arg2: ValueRef;
-}
+// export type Condition = {
+//     conditionOp: ConditionOp;
+//     arg1: ValueRef;
+//     arg2: ValueRef;
+// }
+
+export type Condition =
+    | keyof Conditions;
 
 /** Represents the different types an argument to a condition can have,
  * noteably, either a literal number, string, or boolean, or the path to a property of a character. For example,
@@ -555,30 +563,80 @@ export type ValueRef = { type: "literal"; value: number | string | boolean } | {
 export type ModPhase = "base" | "bonus" | "final";
 
 export enum SkillProficiencies {
-    strength,
     athletics,
-    dexterity,
     acrobatics,
     sleightOfHand,
     stealth,
-    intelligence,
     arcana,
     history,
     investigation,
     nature,
     religion,
-    wisdom,
     animalHandling,
     insight,
     medicine,
     perception,
     survival,
-    charisma,
     deception,
     intimidation,
     performance,
     persuasion
 }
 
+export enum SavingThrows {
+    strengthSave = 18,
+    dexteritySave,
+    constitutionSave,
+    intelligenceSave,
+    wisdomSave,
+    charismaSave
+}
+
+export enum CombatStats {
+    AC = 24,
+    initiative
+}
+
+export type Modifiable = SkillProficiencies | SavingThrows | CombatStats;
+
+/** Record from ability score to skill proficiency. **/
+export const abilityToSkills: Record<AbilityScore, SkillProficiencies[]> = {
+    strength: [SkillProficiencies.athletics],
+    dexterity: [SkillProficiencies.acrobatics, SkillProficiencies.sleightOfHand, SkillProficiencies.stealth],
+    constitution: [],
+    intelligence: [SkillProficiencies.arcana, SkillProficiencies.history, SkillProficiencies.investigation, SkillProficiencies.nature, SkillProficiencies.religion],
+    wisdom: [SkillProficiencies.animalHandling, SkillProficiencies.insight, SkillProficiencies.medicine, SkillProficiencies.perception, SkillProficiencies.survival],
+    charisma: [SkillProficiencies.deception, SkillProficiencies.intimidation, SkillProficiencies.performance, SkillProficiencies.persuasion],
+};
+
+export const modifiableToAbility: Record<Modifiable, AbilityScore> = {
+    [SavingThrows.strengthSave]: "strength",
+    [SavingThrows.dexteritySave]: "dexterity",
+    [SavingThrows.constitutionSave]: "constitution",
+    [SavingThrows.intelligenceSave]: "intelligence",
+    [SavingThrows.wisdomSave]: "wisdom",
+    [SavingThrows.charismaSave]: "charisma",
+    [SkillProficiencies.athletics]: "strength",
+    [SkillProficiencies.acrobatics]: "dexterity",
+    [SkillProficiencies.arcana]: "intelligence",
+    [SkillProficiencies.sleightOfHand]: "dexterity",
+    [SkillProficiencies.stealth]: "dexterity",
+    [SkillProficiencies.history]: "intelligence",
+    [SkillProficiencies.investigation]: "intelligence",
+    [SkillProficiencies.nature]: "intelligence",
+    [SkillProficiencies.religion]: "intelligence",
+    [SkillProficiencies.animalHandling]: "wisdom",
+    [SkillProficiencies.insight]: "wisdom",
+    [SkillProficiencies.perception]: "wisdom",
+    [SkillProficiencies.medicine]: "wisdom",
+    [SkillProficiencies.survival]: "wisdom",
+    [SkillProficiencies.performance]: "charisma",
+    [SkillProficiencies.deception]: "charisma",
+    [SkillProficiencies.persuasion]: "charisma",
+    [SkillProficiencies.intimidation]: "charisma",
+    [CombatStats.AC]: "dexterity",
+    [CombatStats.initiative]: "dexterity"
+};
+
 /** A potential target for modifiers. **/
-export type target = Character;
+// export type target = Character;

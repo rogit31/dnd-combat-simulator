@@ -52,7 +52,7 @@ describe('AbilityModifierTest', () => {
     });
 
     test("Should return only demanded actions when getting actions", () => {
-        expect(manager.getActions().length).toEqual(2);
+        expect(manager.getActions().length).toEqual(6);
         expect(manager.getSpells().length).toEqual(3);
         expect(manager.getFeatureActions().length).toEqual(1);
         expect(manager.getSpells(1).length).toEqual(1);
@@ -61,8 +61,14 @@ describe('AbilityModifierTest', () => {
 
     test("Should add specified spellslots", () => {
         manager.addSpellSlot(1, 5);
-        manager.addSpellSlot(2);
+        expect(manager.getSpellSlots(1)).toEqual(0);
+        manager.setMaxSpellSlots(1, 5);
+        manager.addSpellSlot(1, 5);
         expect(manager.getSpellSlots(1)).toEqual(5);
+        manager.setMaxSpellSlots(2, 1);
+        manager.addSpellSlot(2);
+        expect(manager.getSpellSlots(2)).toEqual(1);
+        manager.addSpellSlot(2);
         expect(manager.getSpellSlots(2)).toEqual(1);
 
         manager.useSpellSlots(1, 2);

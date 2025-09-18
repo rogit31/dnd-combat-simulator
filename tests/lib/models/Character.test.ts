@@ -3,7 +3,7 @@ import {Character} from "../../../src/models/character/Character"
 import {Background} from "../../../src/models/character/layers/background/Background";
 import {Race} from "../../../src/models/character/layers/race/Race";
 import {CharacterClass} from "../../../src/models/character/layers/charclass/CharacterClass";
-import {AbilityScore} from "@/types";
+import {SavingThrows, SkillProficiencies, Resources, ResourceKey, ResourcePool} from "../../../types";
 import {Item} from "../../../src/models/item/item"
 import {Feature} from "../../../src/models/character/feature/Feature";
 import {Action} from "../../../src/models/character/actions/Action";
@@ -15,25 +15,32 @@ describe('Character', () => {
     let feat1: Feature;
     let feat2: Feature;
     let feat3: Feature;
+    let feat4: Feature;
     let back: Background;
     let race: Race;
     let charClass: CharacterClass;
 
     function setupFeatures() {
         feat1 = new Feature("feat1", "", [new Action({name: "act1", actionType: "feature"})]);
-        feat2 = new Feature("feat2", "", undefined, [{stat: "deception", amount: 15, base: "charisma"}]);
-        feat3 = new Feature("feat3", "", [new Action({name: "act2", actionType: "feature"})], [{stat: "testStat", amount: 2, base: "strength"}]);
+        feat2 = new Feature("feat2", "", undefined, [{stat: SkillProficiencies.deception, amount: 15}]);
+        feat3 = new Feature("feat3", "", [new Action({name: "act2", actionType: "feature"})], [{stat: SavingThrows.intelligenceSave, amount: 2}]);
+        const resources : Resources = new Map<ResourceKey, ResourcePool>();
+        resources.set("ki", {
+            type: "flat",
+            current: 4,
+            max: 4,
+            recharge: "longRest"
+        })
+        feat4 = new Feature("feat4", "", undefined, undefined, resources);
     }
 
     function setupBackground(): void {
-        const proficiencies = new Map<string, AbilityScore>();
-        proficiencies.set("stealth", "dexterity");
         const items = new Map<Item, number>;
         items.set(new Item({id:1, name:"item1", weightPer: 4, description: ""}), 3);
         back = new Background(
             {
                 name: "back1",
-                proficiencies: proficiencies,
+                proficiencies: [SkillProficiencies.stealth],
                 startingEquipment: items,
                 features: [feat1]
             }
@@ -62,9 +69,6 @@ describe('Character', () => {
     }
 
     function setupClasses(): void {
-        const proficiencies = new Map<string, AbilityScore>();
-        proficiencies.set("athletics", "strength");
-        proficiencies.set("survival", "wisdom");
         charClass = new CharacterClass(
             {
                 name: "class1",
@@ -76,8 +80,8 @@ describe('Character', () => {
                     modifier: "strength"
                 },
                 startingEquipment: new Map<Item, number>(),
-                features: [feat3],
-                proficiencies: proficiencies
+                features: [feat3, feat4],
+                proficiencies: [SkillProficiencies.athletics, SkillProficiencies.survival]
             }
         )
     }
@@ -124,17 +128,20 @@ describe('Character', () => {
         expect(char1.getStat("constitution")).toEqual(11);
         expect(char1.getStat("intelligence")).toEqual(10);
 
-        expect(char1.getModifier("strength")).toEqual(1);
-        expect(char1.getModifier("dexterity")).toEqual(0);
-        expect(char1.getModifier("stealth")).toEqual(2);
-        expect(char1.getModifier("athletics")).toEqual(3);
-        expect(char1.getModifier("survival")).toEqual(2);
-        expect(char1.getModifier("history")).toEqual(0);
+        expect(char1.getAbilityScoreModifier("strength")).toEqual(1);
+        expect(char1.getAbilityScoreModifier("dexterity")).toEqual(0);
+        expect(char1.getAbilityScoreModifier("intelligence")).toEqual(0);
+        expect(char1.getModifier(SavingThrows.intelligenceSave)).toEqual(2);
+        expect(char1.getModifier(SavingThrows.constitutionSave)).toEqual(0);
+        expect(char1.getModifier(SkillProficiencies.stealth)).toEqual(2);
+        expect(char1.getModifier(SkillProficiencies.athletics)).toEqual(3);
+        expect(char1.getModifier(SkillProficiencies.survival)).toEqual(2);
+        expect(char1.getModifier(SkillProficiencies.history)).toEqual(0);
 
-        expect(char2.getModifier("stealth")).toEqual(4);
-        expect(char2.getModifier("athletics")).toEqual(5);
-        expect(char2.getModifier("survival")).toEqual(4);
-        expect(char2.getModifier("history")).toEqual(0);
+        expect(char2.getModifier(SkillProficiencies.stealth)).toEqual(4);
+        expect(char2.getModifier(SkillProficiencies.athletics)).toEqual(5);
+        expect(char2.getModifier(SkillProficiencies.survival)).toEqual(4);
+        expect(char2.getModifier(SkillProficiencies.history)).toEqual(0);
     });
 
     test("should inherit items from layers", () => {
@@ -145,7 +152,7 @@ describe('Character', () => {
     });
 
     test("Feats should affect the characters stats and actions", () => {
-        expect(char1.getFeatures().length).toEqual(3);
+        expect(char1.getFeatures().length).toEqual(4);
         expect(char1.getFeatures().includes(feat1)).toBe(true);
         expect(char1.getFeatures().includes(feat2)).toBe(true);
         expect(char1.getFeatures().includes(feat3)).toBe(true);
@@ -154,8 +161,21 @@ describe('Character', () => {
         expect(char1.getActions()[0].name).toEqual("act2");
         expect(char1.getActions()[1].name).toEqual("act1");
 
-        expect(char1.getModifier("deception")).toEqual(15);
-        expect(char1.getModifier("testStat")).toEqual(3);
+        expect(char1.getModifier(SkillProficiencies.deception)).toEqual(15);
     });
+
+    test("Feats should give resource pools", () => {
+        expect(char1.getResources().size).toEqual(1);
+        expect(char1.getResource("ki")?.max).toEqual(4);
+        expect(char1.getResource("ki")?.type).toEqual("flat");
+        expect(char1.getResource("ki")?.current).toEqual(4);
+        char1.useResource("ki", 2);
+        expect(char1.getResource("ki")?.current).toEqual(2);
+        expect(char1.useResource("ki", 4)).toBe(false);
+        expect(char1.getResource("ki")?.current).toEqual(2);
+        expect(char1.getResource("rageCharges")?.current).toEqual(undefined);
+
+
+    })
 
 })

@@ -1,9 +1,9 @@
-import {BackgroundConstructorArgs, AbilityScore, Item} from "../../../../../types";
+import {BackgroundConstructorArgs, Item, Modifiable} from "../../../../../types";
 import {Character} from "../../Character"
 import {CharacterLayer} from "../CharacterLayer";
 
 export class Background extends CharacterLayer{
-    private proficiencies: Map<string, AbilityScore>;
+    private proficiencies: Modifiable[];
     private startingEquipment: Map<Item, number>;
 
     constructor(data: BackgroundConstructorArgs) {
@@ -13,10 +13,9 @@ export class Background extends CharacterLayer{
     }
 
     public applyModifiers(character: Character) {
-        for (const kv of this.proficiencies) {
-            character.modifiers.addModifier(kv[0],
-                this.name,
-                kv[1])
+        for (const prof of this.proficiencies) {
+            character.modifiers.addModifier(prof,
+                this.name)
         }
 
         for (const kv of this.startingEquipment) {
