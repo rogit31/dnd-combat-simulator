@@ -638,7 +638,7 @@ export const modifiableToAbility: Record<Modifiable, AbilityScore> = {
 };
 
 /** A potential target for modifiers. **/
-export type target = Character;
+// export type target = Character;
 
 /** Temporary data type to preview character data on the character card in the homepage. **/
 export interface CharacterPreview{
