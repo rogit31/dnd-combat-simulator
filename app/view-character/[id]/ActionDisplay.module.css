@@ -1,0 +1,20 @@
+.wrapper{
+    border: 1px solid white;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 2px;
+}
+.nameWrapper{
+    display: flex;
+    flex-direction: column;
+}
+.source, .damageType, .toHit, .range{
+    font-size: .8rem;
+    opacity: .8;
+}
+.toHitWrapper, .damageWrapper{
+    border: 1px solid white;
+    padding: 2px 6px;
+    border-radius: 2px;
+}

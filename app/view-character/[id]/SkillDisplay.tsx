@@ -1,24 +1,17 @@
 'use client'
-import React, {useState} from 'react';
+import React from 'react';
 import {Circle, Diamond} from "lucide-react";
 import styles from './SkillDisplay.module.css';
 import DiceRoller from "@/app/components/diceRoller/DiceRoller";
-import {RollSet} from "@/types";
+import {useDiceRoller} from "@/app/view-character/[id]/useDiceRoller";
 
 function SkillDisplay({abilityScoreValue, name}: { abilityScoreValue: number, name: string }) {
     const iconSize = 12;
-    const [showRoll, setShowRoll] = useState(false);
-    const [rollData, setRollData] = useState<null | RollSet>(null);
+    const {result, rollDice, clearRoll, autoHideMs} = useDiceRoller();
+
 
     function displayRoll(bonus: number){
-        const diceSet = {baseEffect: [{effect: {d: 20, n: 1, flatBonus: bonus}}]};
-        setRollData(diceSet);
-        setShowRoll(true);
-
-        // Auto-hide after 3 seconds
-        setTimeout(() => {
-            setShowRoll(false);
-        }, 3000);
+        rollDice({scaling: false, baseEffect: [{effect: {n: 1, d: 20, flatBonus: bonus}}]});
     }
 
     return (
@@ -42,7 +35,7 @@ function SkillDisplay({abilityScoreValue, name}: { abilityScoreValue: number, na
                         <button onClick={() => displayRoll(calcMod(abilityScoreValue))} className={styles.skillButton}>{'+ ' + calcMod(abilityScoreValue)}</button>
                     </div>
                 )}
-            {showRoll && rollData && <DiceRoller diceSet={rollData} />}
+            {result && <DiceRoller result={result} onClose={clearRoll} autoHideMs={autoHideMs}/>}
         </>
     );
 }
