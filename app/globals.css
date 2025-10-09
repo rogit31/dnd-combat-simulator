@@ -120,6 +120,12 @@ main{
   padding: 1rem;
 }
 
+/*---------------------global classes-------------------*/
+.label{
+  opacity: .8;
+  font-size: 0.8rem;
+}
+
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;

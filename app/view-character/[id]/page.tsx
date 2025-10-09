@@ -6,6 +6,7 @@ import styles from './page.module.css';
 import {AbilityScores, abilityToSkills, SkillProficiencies} from "@/types";
 import SkillDisplay from "@/app/view-character/[id]/SkillDisplay";
 import ActionDisplay from "@/app/view-character/[id]/ActionDisplay";
+import ItemDisplay from "@/app/view-character/[id]/ItemDisplay";
 
 interface CharacterProps {
     params: Promise<{ id: number }>;
@@ -79,18 +80,37 @@ const jsonData = {
     "inventory": [
         {
             "itemId": 1,
-            "itemName": "Item",
+            "itemName": "Dagger",
+            "itemType": "Weapon",
+            "range": 5,
+            "equipped": true,
+            "damage": {
+                "n": 1,
+                "d": 4,
+                "flatBonus": 2,
+                "type": "piercing"
+            },
             "itemWeight": 8
         },
         {
             "itemId": 2,
-            "itemName": "Item2",
+            "itemName": "LongBow",
+            "itemType": "Weapon",
+            "range": 160,
+            "equipped": false,
+            "damage": {
+                "n": 1,
+                "d": 6,
+                "flatBonus": 2,
+                "type": "piercing"
+            },
             "itemWeight": 9
         }
     ],
     "proficiencies": [
         {"proficiencyId": 1, "proficiencyName": "Light Armor", "category": "Armor"},
-        {"proficiencyId": 2, "proficiencyName": "Quarterstaff", "category": "Weapon"}
+        {"proficiencyId": 2, "proficiencyName": "Quarterstaff", "category": "Weapon"},
+        {"proficiencyId": 3, "proficiencyName": "Dagger", "category": "Weapon"}
     ],
     "features": [
         {
@@ -249,8 +269,7 @@ async function Page({params}: CharacterProps) {
                         <h2>Inventory</h2>
                         {jsonData.inventory.map((item) => (
                             <div key={item.itemId}>
-                                {item.itemName}
-                                {item.itemWeight}
+                                <ItemDisplay item={item}/>
                             </div>
                         ))}
                     </div>

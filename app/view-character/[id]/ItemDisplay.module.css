@@ -1,0 +1,18 @@
+.wrapper{
+    padding: 2px 16px;
+}
+.topRow{
+    display: grid;
+    grid-template-columns: 2fr 2fr 1fr 1fr;
+}
+
+.labelGroup{
+    display: flex;
+    flex-direction: column;
+
+    span{
+        opacity: .8;
+        font-size: .8rem;
+    }
+
+}
