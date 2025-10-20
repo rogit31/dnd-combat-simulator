@@ -1,19 +1,21 @@
-import React from 'react';
+"use client"
+import React, {useMemo, useState} from 'react';
 import {Anvil, ArrowLeft} from "lucide-react";
 import Link from "next/link";
 
 import styles from './page.module.css';
-import {AbilityScores, abilityToSkills, SkillProficiencies} from "@/types";
+import {AbilityScores, abilityToSkills, MockAction, MockCharacterType, SkillProficiencies} from "@/types";
 import SkillDisplay from "@/app/view-character/[id]/SkillDisplay";
 import ActionDisplay from "@/app/view-character/[id]/ActionDisplay";
 import ItemDisplay from "@/app/view-character/[id]/ItemDisplay";
+import {calculateAbilityModifier} from "@/util/util";
 
 interface CharacterProps {
     params: Promise<{ id: number }>;
 }
 
 //Dummy jsonData data:
-const jsonData = {
+const jsonData : MockCharacterType = {
     "characterId": 1,
     "name": "something",
     "HP": 20,
@@ -26,12 +28,12 @@ const jsonData = {
     "armorClass": 14,
     "actions": [
         {
-            "name": "Dagger",
+            "name": "Punch",
             "damage": {
                 "n": 1,
                 "d": 4,
                 "flatBonus": 2,
-                "type": "piercing"
+                "type": "blunt"
             },
             "range": 5,
             "AOE": false,
@@ -39,20 +41,6 @@ const jsonData = {
             "toHit": 5,
             "source": "equipment"
 
-        },
-        {
-            "name": "Longbow",
-            "damage": {
-                "n": 1,
-                "d": 6,
-                "flatBonus": 2,
-                "type": "piercing"
-            },
-            "range": 160,
-            "AOE": false,
-            "type": "rangedAttack",
-            "toHit": 5,
-            "source": "equipment"
         }
     ],
     "classes": [
@@ -90,6 +78,8 @@ const jsonData = {
                 "flatBonus": 2,
                 "type": "piercing"
             },
+            "primaryStat": "dexterity",
+            "AOE": false,
             "itemWeight": 8
         },
         {
@@ -104,6 +94,8 @@ const jsonData = {
                 "flatBonus": 2,
                 "type": "piercing"
             },
+            "primaryStat": "dexterity",
+            "AOE": false,
             "itemWeight": 9
         }
     ],
@@ -153,7 +145,9 @@ function formatClasses(classes: { className: string, level: number }[]) {
     return result;
 }
 
-async function Page({params}: CharacterProps) {
+
+
+function Page({params}: CharacterProps) {
 
     // Here we would await the parameter passed to the url of the page
     // and find the corresponding character associated with that id
@@ -161,6 +155,37 @@ async function Page({params}: CharacterProps) {
     // const id = await params;
     // const character = characters.get(id);
     // and then use the data below to display the full character
+
+    const [characterData, setCharacterData] = useState<MockCharacterType>(jsonData);
+
+    function toggleEquipped(itemId: number){
+
+        setCharacterData(prev => ({
+            ...prev,
+                inventory: prev.inventory.map((item) =>
+                item.itemId === itemId ?
+                    {...item, equipped: !item.equipped} :
+                    item
+                )
+        }))
+    }
+
+    const deriveActions = useMemo(() : MockAction[]=> {
+        const weaponActions = characterData.inventory
+            .filter(item => item.equipped)
+            .map(item => ({
+                name: item.itemName,
+                damage: item.damage,
+                range: item.range,
+                actionType: item.itemType === "Weapon" ? "attack" : "item",
+                type: item.range <= 10  ? "meleeAttack" : "rangedAttack",
+                source: "equipment",
+                AOE: item.AOE,
+                toHit: calculateAbilityModifier(characterData.stats[item.primaryStat]) //add proficiency if proficient
+            }));
+
+        return [...weaponActions, ...characterData.actions]
+    }, [characterData])
 
     return (
         <div className={styles.wrapper}>
@@ -173,38 +198,38 @@ async function Page({params}: CharacterProps) {
             <div className={styles.characterSheet}>
 
                 <div className={styles.metaWrapper}>
-                    <h2>{jsonData.name}</h2>
+                    <h2>{characterData.name}</h2>
 
                     <div className={styles.meta}>
-                        <span>{formatClasses(jsonData.classes)}</span>
-                        <span>{jsonData.race}</span>
-                        <span>{jsonData.background}</span>
+                        <span>{formatClasses(characterData.classes)}</span>
+                        <span>{characterData.race}</span>
+                        <span>{characterData.background}</span>
                     </div>
 
                     <div className={styles.crucialStats}>
                         <div className={styles.crucialStatWrapper}>
                             <p>Proficiency</p>
-                            {"+ " + jsonData.proficiencyBonus}
+                            {"+ " + characterData.proficiencyBonus}
                         </div>
 
                         <div className={styles.crucialStatWrapper}>
                             <p>Speed</p>
-                            {jsonData.speed + " ft."}
+                            {characterData.speed + " ft."}
                         </div>
 
                         <div className={styles.crucialStatWrapper}>
                             <p>Hit Points</p>
-                            <p>{jsonData.HP} / {jsonData.maxHP}</p>
+                            <p>{characterData.HP} / {characterData.maxHP}</p>
                         </div>
 
                         <div className={styles.crucialStatWrapper}>
                             <p>Armor Class</p>
-                            {jsonData.armorClass}
+                            {characterData.armorClass}
                         </div>
 
                         <div className={styles.crucialStatWrapper}>
                             <p>Initiative</p>
-                            {jsonData.initiative}
+                            {characterData.initiative}
                         </div>
 
                     </div>
@@ -219,7 +244,7 @@ async function Page({params}: CharacterProps) {
 
                     {/*left hand stats and saving throws block*/}
                     <div className={styles.statWrapper}>
-                        {Object.entries(jsonData.stats).map(([abilityName, abilityValue]) => {
+                        {Object.entries(characterData.stats).map(([abilityName, abilityValue]) => {
                             const skillsForAbility = abilityToSkills[abilityName as keyof AbilityScores] || [];
 
                             return (
@@ -252,7 +277,7 @@ async function Page({params}: CharacterProps) {
                     {/*Actions*/}
                     <div className={styles.actions}>
                         <h2>Actions</h2>
-                        {jsonData.actions.map((action) => (
+                        {deriveActions.map((action) => (
                                 <ActionDisplay key={action.name}
                                     action={action}
                                 />
@@ -267,9 +292,9 @@ async function Page({params}: CharacterProps) {
                     {/*Inventory*/}
                     <div className={styles.inventory}>
                         <h2>Inventory</h2>
-                        {jsonData.inventory.map((item) => (
+                        {characterData.inventory.map((item) => (
                             <div key={item.itemId}>
-                                <ItemDisplay item={item}/>
+                                <ItemDisplay item={item} toggleEquip={toggleEquipped}/>
                             </div>
                         ))}
                     </div>
@@ -277,7 +302,7 @@ async function Page({params}: CharacterProps) {
                     {/*Features */}
                     <div className={styles.features}>
                         <h2>Features</h2>
-                        {jsonData.features.map((feature) => (
+                        {characterData.features.map((feature) => (
                             <div key={feature.id}>
                                 {feature.name}
                                 {feature.description}

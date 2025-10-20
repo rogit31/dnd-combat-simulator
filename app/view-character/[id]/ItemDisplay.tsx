@@ -1,3 +1,4 @@
+"use client"
 import React from 'react';
 import styles from './ItemDisplay.module.css'
 import {Square, SquareCheck} from "lucide-react";
@@ -19,7 +20,7 @@ type ItemProps = {
 
 //TODO: Add equip action here
 
-function ItemDisplay({ item } : {item: ItemProps}) {
+function ItemDisplay({ item, toggleEquip } : {item: ItemProps, toggleEquip: (itemId: number) => void}, ) {
     return (
         <div className={styles.wrapper}>
             <div className={styles.topRow}>
@@ -39,7 +40,7 @@ function ItemDisplay({ item } : {item: ItemProps}) {
                     <span>Weight</span>
                 </div>
 
-                <div className={styles.labelGroup}>
+                <div className={`${styles.labelGroup} ${styles.equipped}`} onClick={() => toggleEquip(item.itemId)}>
                     {item.equipped ? <SquareCheck/> : <Square/>}
                     <span>Equipped</span>
                 </div>

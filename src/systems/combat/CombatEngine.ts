@@ -2,6 +2,7 @@
 import {ActionType, BattleContext, Character, ResourceKey} from "@/types";
 import {decideAction} from '@/src/systems/ai/decideAction';
 import chalk from 'chalk';
+import {calculateAbilityModifier} from "@/util/util";
 
 export class CombatEngine {
 
@@ -173,10 +174,6 @@ function rollDie(n: number = 1, sides: number = 20, bonus: number = 0){
         total += Math.floor(Math.random() * sides) + 1;
     }
     return total + bonus;
-}
-
-function calculateAbilityModifier(abilityScore: number): number{
-    return Math.floor((abilityScore - 10) / 2);
 }
 
 function checkHasAction(char: Character){

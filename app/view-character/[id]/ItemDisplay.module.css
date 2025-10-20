@@ -15,4 +15,10 @@
         font-size: .8rem;
     }
 
+    &.equipped{
+        &:hover{
+            cursor: pointer;
+        }
+    }
+
 }

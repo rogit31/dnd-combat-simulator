@@ -651,3 +651,84 @@ export interface CharacterPreview{
     class: {name: string, level: number},
     inventory: {name: string, weight: number, rarity: string}[],
 }
+
+export interface MockCharacterType{
+    characterId: number,
+    name: string,
+    HP: number,
+    maxHP: number,
+    race: string,
+    background: string,
+    proficiencyBonus: number,
+    speed: number,
+    initiative?: number,
+    armorClass: number,
+    actions: MockAction[],
+    classes: MockClass[],
+    stats: AbilityScores,
+    inventory: MockItem[],
+    proficiencies: MockProficiencies[],
+    features: MockFeatures[],
+    modifiers: MockModifiers[],
+}
+export interface MockDamage{
+    n: number,
+    d: number,
+    flatBonus: number,
+    type: string
+}
+export interface MockAction{
+    name: string,
+    damage: MockDamage,
+    range: number,
+    AOE: boolean,
+    type: string,
+    toHit: number,
+    source: string
+}
+
+export interface MockClass {
+    classId: number,
+    className: string,
+    level: number,
+    spellCastingMod: null | keyof AbilityScores,
+    hitDie: string,
+    hitPointsAtFirstLevel: number,
+    hitPointScaling: string,
+    proficienciesId: number,
+    modifiersId: number,
+    startingEquipmentId: number
+}
+
+export interface MockItem {
+    itemId: number,
+    itemName: string,
+    itemType: string,
+    range: number
+    equipped: boolean,
+    damage: MockDamage
+    primaryStat: keyof AbilityScores,
+    AOE: boolean,
+    itemWeight: number
+}
+
+export interface MockProficiencies {
+    proficiencyId: number,
+    proficiencyName: string,
+    category: string
+}
+
+export interface MockFeatures{
+    id: number,
+    name: string,
+    description: string
+}
+
+export interface MockModifiers {
+    modifierId: number,
+    origin: string,
+    target: string,
+    operation: string,
+    modCondition: string,
+    modPhase: string
+}
