@@ -9,133 +9,137 @@ import SkillDisplay from "@/app/view-character/[id]/SkillDisplay";
 import ActionDisplay from "@/app/view-character/[id]/ActionDisplay";
 import ItemDisplay from "@/app/view-character/[id]/ItemDisplay";
 import {calculateAbilityModifier} from "@/util/util";
+import {useQuery} from "@tanstack/react-query";
+import {fetchMock} from "@/app/layout";
+import characterCard from "@/app/components/characters/CharacterCard";
+import {useParams} from "next/navigation";
 
 interface CharacterProps {
     params: Promise<{ id: number }>;
 }
 
 //Dummy jsonData data:
-const jsonData : MockCharacterType = {
-    "characterId": 1,
-    "name": "something",
-    "HP": 20,
-    "maxHP": 22,
-    "race": "human",
-    "background": "acolyte",
-    "proficiencyBonus": 2,
-    "speed": 30,
-    "initiative": 4,
-    "armorClass": 14,
-    "actions": [
-        {
-            "name": "Punch",
-            "damage": {
-                "n": 1,
-                "d": 4,
-                "flatBonus": 2,
-                "type": "blunt"
-            },
-            "range": 5,
-            "AOE": false,
-            "type": "meleeAttack",
-            "toHit": 5,
-            "source": "equipment"
-
-        }
-    ],
-    "classes": [
-        {
-            "classId": 1,
-            "className": "Fighter",
-            "level": 3,
-            "spellCastingMod": null,
-            "hitDie": "d10",
-            "hitPointsAtFirstLevel": 10,
-            "hitPointScaling": "+6 per level",
-            "proficienciesId": 1,
-            "modifiersId": 1,
-            "startingEquipmentId": 1
-        }
-    ],
-    "stats": {
-        "strength": 16,
-        "dexterity": 12,
-        "constitution": 14,
-        "intelligence": 10,
-        "wisdom": 11,
-        "charisma": 13
-    },
-    "inventory": [
-        {
-            "itemId": 1,
-            "itemName": "Dagger",
-            "itemType": "Weapon",
-            "range": 5,
-            "equipped": true,
-            "damage": {
-                "n": 1,
-                "d": 4,
-                "flatBonus": 2,
-                "type": "piercing"
-            },
-            "primaryStat": "dexterity",
-            "AOE": false,
-            "itemWeight": 8
-        },
-        {
-            "itemId": 2,
-            "itemName": "LongBow",
-            "itemType": "Weapon",
-            "range": 160,
-            "equipped": false,
-            "damage": {
-                "n": 1,
-                "d": 6,
-                "flatBonus": 2,
-                "type": "piercing"
-            },
-            "primaryStat": "dexterity",
-            "AOE": false,
-            "itemWeight": 9
-        }
-    ],
-    "proficiencies": [
-        {"proficiencyId": 1, "proficiencyName": "Light Armor", "category": "Armor"},
-        {"proficiencyId": 2, "proficiencyName": "Quarterstaff", "category": "Weapon"},
-        {"proficiencyId": 3, "proficiencyName": "Dagger", "category": "Weapon"}
-    ],
-    "features": [
-        {
-            "id": 1,
-            "name": "Big boy",
-            "description": "You're a real big boy and you do 1d4 extra damage with any melee weapons."
-        },
-        {
-            "id": 2,
-            "name": "Death's Warden",
-            "description": "Once per day, when you drop to zero hit points you instead stay at 1."
-
-        }
-    ],
-    "modifiers": [
-        {
-            "modifierId": 1,
-            "origin": "Fighter",
-            "target": "strength",
-            "operation": "+",
-            "modCondition": "always",
-            "modPhase": "base"
-        },
-        {
-            "modifierId": 2,
-            "origin": "Wizard",
-            "target": "intelligence",
-            "operation": "+",
-            "modCondition": "always",
-            "modPhase": "base"
-        }
-    ]
-}
+// const jsonData : MockCharacterType = {
+//     "characterId": 1,
+//     "name": "something",
+//     "HP": 20,
+//     "maxHP": 22,
+//     "race": "human",
+//     "background": "acolyte",
+//     "proficiencyBonus": 2,
+//     "speed": 30,
+//     "initiative": 4,
+//     "armorClass": 14,
+//     "actions": [
+//         {
+//             "name": "Punch",
+//             "damage": {
+//                 "n": 1,
+//                 "d": 4,
+//                 "flatBonus": 2,
+//                 "type": "blunt"
+//             },
+//             "range": 5,
+//             "AOE": false,
+//             "type": "meleeAttack",
+//             "toHit": 5,
+//             "source": "equipment"
+//
+//         }
+//     ],
+//     "classes": [
+//         {
+//             "classId": 1,
+//             "className": "Fighter",
+//             "level": 3,
+//             "spellCastingMod": null,
+//             "hitDie": "d10",
+//             "hitPointsAtFirstLevel": 10,
+//             "hitPointScaling": "+6 per level",
+//             "proficienciesId": 1,
+//             "modifiersId": 1,
+//             "startingEquipmentId": 1
+//         }
+//     ],
+//     "stats": {
+//         "strength": 16,
+//         "dexterity": 12,
+//         "constitution": 14,
+//         "intelligence": 10,
+//         "wisdom": 11,
+//         "charisma": 13
+//     },
+//     "inventory": [
+//         {
+//             "itemId": 1,
+//             "itemName": "Dagger",
+//             "itemType": "Weapon",
+//             "range": 5,
+//             "equipped": true,
+//             "damage": {
+//                 "n": 1,
+//                 "d": 4,
+//                 "flatBonus": 2,
+//                 "type": "piercing"
+//             },
+//             "primaryStat": "dexterity",
+//             "AOE": false,
+//             "itemWeight": 8
+//         },
+//         {
+//             "itemId": 2,
+//             "itemName": "LongBow",
+//             "itemType": "Weapon",
+//             "range": 160,
+//             "equipped": false,
+//             "damage": {
+//                 "n": 1,
+//                 "d": 6,
+//                 "flatBonus": 2,
+//                 "type": "piercing"
+//             },
+//             "primaryStat": "dexterity",
+//             "AOE": false,
+//             "itemWeight": 9
+//         }
+//     ],
+//     "proficiencies": [
+//         {"proficiencyId": 1, "proficiencyName": "Light Armor", "category": "Armor"},
+//         {"proficiencyId": 2, "proficiencyName": "Quarterstaff", "category": "Weapon"},
+//         {"proficiencyId": 3, "proficiencyName": "Dagger", "category": "Weapon"}
+//     ],
+//     "features": [
+//         {
+//             "id": 1,
+//             "name": "Big boy",
+//             "description": "You're a real big boy and you do 1d4 extra damage with any melee weapons."
+//         },
+//         {
+//             "id": 2,
+//             "name": "Death's Warden",
+//             "description": "Once per day, when you drop to zero hit points you instead stay at 1."
+//
+//         }
+//     ],
+//     "modifiers": [
+//         {
+//             "modifierId": 1,
+//             "origin": "Fighter",
+//             "target": "strength",
+//             "operation": "+",
+//             "modCondition": "always",
+//             "modPhase": "base"
+//         },
+//         {
+//             "modifierId": 2,
+//             "origin": "Wizard",
+//             "target": "intelligence",
+//             "operation": "+",
+//             "modCondition": "always",
+//             "modPhase": "base"
+//         }
+//     ]
+// }
 
 function formatClasses(classes: { className: string, level: number }[]) {
     let result = '';
@@ -147,7 +151,7 @@ function formatClasses(classes: { className: string, level: number }[]) {
 
 
 
-function Page({params}: CharacterProps) {
+function Page({params} : CharacterProps) {
 
     // Here we would await the parameter passed to the url of the page
     // and find the corresponding character associated with that id
@@ -156,7 +160,21 @@ function Page({params}: CharacterProps) {
     // const character = characters.get(id);
     // and then use the data below to display the full character
 
-    const [characterData, setCharacterData] = useState<MockCharacterType>(jsonData);
+
+    const { id: idParam } = useParams();
+    const id = Array.isArray(idParam) ? Number(idParam[0]) : Number(idParam);
+
+    const data = localStorage.getItem("data");
+    let characterData: MockCharacterType | undefined;
+
+    if (data) {
+        const allData: MockCharacterType[] = JSON.parse(data);
+        characterData = allData.find(c => c.characterId === id);
+    }
+
+    //TODO: Fix this horrendous stuff above and actually either implement proper fetching with ReactQuery and page params
+    // or go full SPA and prop drill data down
+    // either way clean up the code in this page so it's not full of red
 
     function toggleEquipped(itemId: number){
 

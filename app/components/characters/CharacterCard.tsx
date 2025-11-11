@@ -3,19 +3,10 @@ import styles from "./CharacterCard.module.css";
 import {HandCoins, HeartPulse, Pencil, Shield, SquareUserRound, Trash} from "lucide-react";
 import {useMutation, useQueryClient} from "@tanstack/react-query";
 import {deleteMock} from "@/app/layout";
+import {MockCharacterType} from "@/types";
 
-type CharacterPreview = {
-    id: number,
-    HP: number,
-    AC: number,
-    gold: number,
-    avatar?: string,
-    name: string,
-    class : {name: string, level: number},
-    inventory: {name: string, weight: number, rarity: string}[]
-}
 
-function CharacterCard({character} : {character: CharacterPreview}) {
+function CharacterCard({character} : {character: MockCharacterType}) {
 
     const queryClient = useQueryClient();
 
@@ -29,12 +20,12 @@ function CharacterCard({character} : {character: CharacterPreview}) {
     function handleDelete(e: React.MouseEvent){
         e.stopPropagation();
         e.preventDefault();
-        deleteMutation.mutate(character.id);
+        deleteMutation.mutate(character.characterId);
     }
 
     return (
-        <div key={character.id} className={styles.character}>
-            <a className={styles.characterTopWrapper} href={`/view-character/${character.id}`}>
+        <div key={character.characterId} className={styles.character}>
+            <a className={styles.characterTopWrapper} href={`/view-character/${character.characterId}`}>
 
                 <div className={styles.avatar}>
                     {character.avatar ?
@@ -48,11 +39,15 @@ function CharacterCard({character} : {character: CharacterPreview}) {
                 <div className={styles.characterMetaWrapper}>
 
                     <h2>{character.name}</h2>
-                    <p>{character.class.name} - Level {character.class.level}</p>
+                    {character.classes.map((charClass) => (
+                        <div key={charClass.classId}>
+                            {charClass.className}
+                        </div>
+                        ))}
 
                     <div>
                         <span><HeartPulse/>{character.HP}</span>
-                        <span><Shield/>{character.AC}</span>
+                        <span><Shield/>{character.armorClass}</span>
                         <span><HandCoins/>{character.gold}</span>
                     </div>
 

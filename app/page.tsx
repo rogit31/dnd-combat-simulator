@@ -7,7 +7,7 @@ import React, { useRef } from 'react';
 import styles from "./page.module.css";
 import {WebDB} from "@/src/database/web";
 import CharacterCard from "@/app/components/characters/CharacterCard";
-import {HardDriveDownload, HardDriveUpload} from "lucide-react";
+import {HardDriveDownload, HardDriveUpload, SaveIcon} from "lucide-react";
 import {useQuery} from "@tanstack/react-query";
 import {fetchMock} from "@/app/layout";
 
@@ -15,7 +15,7 @@ import {fetchMock} from "@/app/layout";
 
 export default function Home() {
 
-    const { data, isLoading } = useQuery({
+    const { data, isLoading, error } = useQuery({
         queryKey: ["characters"],
         queryFn: fetchMock,
     });
@@ -65,6 +65,11 @@ export default function Home() {
         // setCharacters(result);
     }
 
+    async function saveLocal(){
+        console.log("data written: ", JSON.stringify(data));
+        localStorage.setItem("data", JSON.stringify(data));
+    }
+
     // useEffect(() => {
     //     async function fetchData() {
     //         try {
@@ -96,6 +101,17 @@ export default function Home() {
         );
     }
 
+    if(error){
+        return (
+            <div className={styles.page}>
+                <main className={styles.main}>
+                    <h1>Error: {(error as Error).message}</h1>
+                </main>
+
+            </div>
+        )
+    }
+
     return (
         <div className={styles.page}>
             <main>
@@ -106,7 +122,7 @@ export default function Home() {
                         <h2>Characters:</h2>
                         <div className={styles.charactersWrapper}>
                             {data.map((character) => (
-                                <CharacterCard character={character} key={character.id}/>
+                                <CharacterCard character={character} key={character.characterId}/>
                             ))}
                         </div>
                         <nav className={styles.saveActions}>
@@ -120,6 +136,10 @@ export default function Home() {
 
                             <label htmlFor="load-save" className="btn">
                                 <HardDriveUpload/> Import
+                            </label>
+
+                            <label htmlFor="json-save" className="btn" onClick={saveLocal}>
+                                <SaveIcon/> Save locally
                             </label>
                         </nav>
 
