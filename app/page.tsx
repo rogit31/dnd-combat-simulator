@@ -8,17 +8,12 @@ import styles from "./page.module.css";
 import {WebDB} from "@/src/database/web";
 import CharacterCard from "@/app/components/characters/CharacterCard";
 import {HardDriveDownload, HardDriveUpload, SaveIcon} from "lucide-react";
-import {useQuery} from "@tanstack/react-query";
-import {fetchMock} from "@/app/layout";
-
+import {useCharacters} from "@/app/hooks/useCharacter";
 
 
 export default function Home() {
 
-    const { data, isLoading, error } = useQuery({
-        queryKey: ["characters"],
-        queryFn: fetchMock,
-    });
+    const {data, isLoading, error} = useCharacters();
 
     const db = useRef<null | WebDB>(null);
 
@@ -69,26 +64,6 @@ export default function Home() {
         console.log("data written: ", JSON.stringify(data));
         localStorage.setItem("data", JSON.stringify(data));
     }
-
-    // useEffect(() => {
-    //     async function fetchData() {
-    //         try {
-    //             db.current = await WebDB.getInstance();
-    //             const repo = new CharacterRepository(db.current);
-    //             const result = await repo.getData();
-    //             // Update state with results
-    //             setCharacters(result);
-    //             setLoading(false);
-    //
-    //         } catch (err) {
-    //             console.error('Database initialization failed:', err);
-    //             setError(err instanceof Error ? err.message : 'Unknown error');
-    //             setLoading(false);
-    //         }
-    //     }
-    //
-    //     fetchData();
-    // }, []); // Empty dependency array means this runs once on mount
 
     if (isLoading || typeof data === 'undefined') {
         return (

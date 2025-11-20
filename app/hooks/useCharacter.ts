@@ -1,12 +1,14 @@
 "use client"
-import { useQuery } from "@tanstack/react-query";
-import {fetchMock} from "@/app/layout";
+import {useQuery, UseQueryResult} from "@tanstack/react-query";
+import {useRepository} from "@/app/RepositoryProvider";
+import {MockCharacterType} from "@/types";
 
 /** Custom react hook implementation that calls the fetch function and is used to populate data throughout the app. **/
-export function useCharacters() {
+export function useCharacters() : UseQueryResult<MockCharacterType[], unknown> {
+    const repo = useRepository();
     return useQuery({
         queryKey: ["characters"],
-        queryFn: fetchMock,
+        queryFn: () => repo.getData(),
         staleTime: 360,
     })
 }

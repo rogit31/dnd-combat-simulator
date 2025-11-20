@@ -1,12 +1,12 @@
 import {useMutation, useQueryClient} from "@tanstack/react-query";
-import {writeMock} from "@/app/layout";
 import {MockCharacterType} from "@/types";
+import {useRepository} from "@/app/RepositoryProvider";
 
 export function useUpdateCharacter() {
     const queryClient = useQueryClient();
-
+    const repo = useRepository();
     return useMutation({
-        mutationFn: writeMock,
+        mutationFn: (updatedCharacter: MockCharacterType) => repo.updateData(updatedCharacter),
         onSuccess: (updatedCharacter) => {
             queryClient.setQueryData(["characters"], (old: MockCharacterType[]) => {
                 return old.map(c =>
