@@ -13,6 +13,8 @@ import {useQuery} from "@tanstack/react-query";
 import {fetchMock} from "@/app/layout";
 import characterCard from "@/app/components/characters/CharacterCard";
 import {useParams} from "next/navigation";
+import {useCharacters} from "@/app/hooks/useCharacter";
+import {useUpdateCharacter} from "@/app/hooks/useUpdateCharacter";
 
 interface CharacterProps {
     params: Promise<{ id: number }>;
@@ -163,32 +165,32 @@ function Page({params} : CharacterProps) {
 
     const { id: idParam } = useParams();
     const id = Array.isArray(idParam) ? Number(idParam[0]) : Number(idParam);
+    const {data, isLoading, error} = useCharacters();
+    const updateCharacter = useUpdateCharacter();
 
-    const data = localStorage.getItem("data");
-    let characterData: MockCharacterType | undefined;
 
-    if (data) {
-        const allData: MockCharacterType[] = JSON.parse(data);
-        characterData = allData.find(c => c.characterId === id);
-    }
+    const characterData = data?.find(c => c.characterId == Number(id));
 
     //TODO: Fix this horrendous stuff above and actually either implement proper fetching with ReactQuery and page params
     // or go full SPA and prop drill data down
     // either way clean up the code in this page so it's not full of red
 
-    function toggleEquipped(itemId: number){
+    function toggleEquipped(itemId: number) {
+        if (!characterData) return;
 
-        setCharacterData(prev => ({
-            ...prev,
-                inventory: prev.inventory.map((item) =>
-                item.itemId === itemId ?
-                    {...item, equipped: !item.equipped} :
-                    item
-                )
-        }))
+        const updatedCharacter: MockCharacterType = {
+            ...characterData,
+            inventory: characterData.inventory.map(item =>
+                item.itemId === itemId ? { ...item, equipped: !item.equipped } : item
+            ),
+        };
+
+        updateCharacter.mutate(updatedCharacter);
     }
 
+
     const deriveActions = useMemo(() : MockAction[]=> {
+        if(!characterData) return [];
         const weaponActions = characterData.inventory
             .filter(item => item.equipped)
             .map(item => ({
@@ -204,6 +206,9 @@ function Page({params} : CharacterProps) {
 
         return [...weaponActions, ...characterData.actions]
     }, [characterData])
+
+    if (isLoading || typeof characterData == "undefined") return <p>Loading...</p>
+    if (error) return <p>Error loading data. Check console. </p>
 
     return (
         <div className={styles.wrapper}>

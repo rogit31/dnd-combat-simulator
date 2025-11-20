@@ -337,6 +337,18 @@ export async function fetchMock(): Promise<MockCharacterType[]> {
     }
 }
 
+export async function writeMock(data: MockCharacterType){
+    const jsonData = localStorage.getItem("data");
+
+    if(!jsonData){
+        console.error("Write mock was called but a local storage item `data` was not found.");
+        return data;
+    }
+    const storedData : MockCharacterType[] = JSON.parse(jsonData);
+    const newData = storedData.map(c  => c.characterId === data.characterId ? data : c);
+    localStorage.setItem("data", JSON.stringify(newData));
+    return data;
+}
 
 /** Mock delete function that operates on our mock data. Can optionally return a boolean or more structured data type to signal success or failure. **/
 export function deleteMock(id: number) : Promise<boolean> {
