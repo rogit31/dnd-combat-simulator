@@ -1,5 +1,6 @@
 import {AbstractRepository} from "@/src/persistence/AbstractRepository";
 import {MockCharacterType} from "@/types";
+import mockData from './../data/mockData.json';
 
 export class JsonRepo extends AbstractRepository{
 
@@ -25,9 +26,8 @@ export class JsonRepo extends AbstractRepository{
 
         if (!data) {
             try{
-                const response = await fetch('../data/mockData.json');
-                const mockData = await response.json();
-                localStorage.setItem("data", mockData);
+                console.log(mockData);
+                localStorage.setItem("data", JSON.stringify(mockData));
                 data = JSON.stringify(mockData);
             } catch (e) {
                 console.error("Error writing mock data to empty local storage: ", e);
